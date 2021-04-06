@@ -190,7 +190,7 @@ class _SignInState extends State<SignIn> {
           padding: EdgeInsets.all(_screenUtil.setWidth(50)),
           color: Colors.red,
           child: Text(
-            'الدخول كضيف',
+            'الدخول كزائر',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
