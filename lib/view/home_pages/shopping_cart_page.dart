@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../screen_util.dart';
 
 import 'cart_item.dart';
+import 'checkout_page.dart';
 
 class ShoppingCartPage extends StatefulWidget {
   @override
@@ -134,7 +135,10 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                             Container(
                               width: MediaQuery.of(context).size.width,
                               child: RaisedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => CheckoutPage()));
+                                },
                                 child: Text(
                                   'متابعة الشراء',
                                   style: TextStyle(
