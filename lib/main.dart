@@ -28,6 +28,8 @@ class App extends StatelessWidget {
       print('Version ${iosInfo.utsname.version}');
       print('Release ${iosInfo.utsname.release}');
       print('Sysname ${iosInfo.utsname.sysname}');
+      print('ID For Vendor ${iosInfo.identifierForVendor}');
+      print('Localied Model ${iosInfo.localizedModel}');
     }
   }
 
