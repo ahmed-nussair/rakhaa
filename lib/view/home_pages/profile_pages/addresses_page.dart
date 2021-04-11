@@ -3,7 +3,7 @@ import '../../screen_util.dart';
 
 import '../../custom_show_dialog.dart';
 import 'add_address.dart';
-import 'address_item.dart';
+import '../address_item.dart';
 
 class AddressesPage extends StatefulWidget {
   final List addresses;
