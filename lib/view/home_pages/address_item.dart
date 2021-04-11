@@ -7,8 +7,9 @@ class AddressItem extends StatelessWidget {
   final String secondLine;
   final String city;
   final String state;
-  final String country;
-  final String zipPostalCode;
+
+  // final String country;
+  // final String zipPostalCode;
   final double locationLatitude;
   final double locationLongitude;
 
@@ -18,9 +19,9 @@ class AddressItem extends StatelessWidget {
     @required this.firstLine,
     @required this.city,
     @required this.state,
-    @required this.country,
+    // @required this.country,
     this.secondLine = '',
-    @required this.zipPostalCode,
+    // @required this.zipPostalCode,
     @required this.locationLatitude,
     @required this.locationLongitude,
   });
@@ -69,37 +70,39 @@ class AddressItem extends StatelessWidget {
                 '$state, ',
                 style: TextStyle(fontSize: _screenUtil.setSp(40)),
               ),
-              Text(
-                '$country',
-                style: TextStyle(fontSize: _screenUtil.setSp(40)),
-              ),
+              // Text(
+              //   '$country',
+              //   style: TextStyle(fontSize: _screenUtil.setSp(40)),
+              // ),
             ],
           ),
-          Text(
-            'الرمز البريدي: $zipPostalCode',
-            style: TextStyle(fontSize: _screenUtil.setSp(40)),
-          ),
-          GestureDetector(
-            onTap: () {
-              String address = secondLine.isNotEmpty
-                  ? '$firstLine\n$secondLine'
-                  : '$firstLine';
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => LocationMap(
-                        latitude: locationLatitude,
-                        longitude: locationLongitude,
-                        address: address,
-                      )));
-            },
-            child: Text(
-              'Show location on the map',
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: _screenUtil.setSp(40),
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
+          // Text(
+          //   'الرمز البريدي: $zipPostalCode',
+          //   style: TextStyle(fontSize: _screenUtil.setSp(40)),
+          // ),
+          locationLatitude > 0 && locationLongitude > 0
+              ? GestureDetector(
+                  onTap: () {
+                    String address = secondLine.isNotEmpty
+                        ? '$firstLine\n$secondLine'
+                        : '$firstLine';
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => LocationMap(
+                              latitude: locationLatitude,
+                              longitude: locationLongitude,
+                              address: address,
+                            )));
+                  },
+                  child: Text(
+                    'Show location on the map',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: _screenUtil.setSp(40),
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                )
+              : Container(),
         ],
       ),
     );

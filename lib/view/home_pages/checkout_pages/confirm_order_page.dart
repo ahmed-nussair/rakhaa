@@ -7,6 +7,17 @@ import 'purchased_item.dart';
 import '../address_item.dart';
 
 class ConfirmOrderPage extends StatefulWidget {
+  final Function onChangeAddress;
+
+  // final Function onChangePaymentMethod;
+  final Function onConfirmOrder;
+
+  ConfirmOrderPage({
+    @required this.onChangeAddress,
+    // @required this.onChangePaymentMethod,
+    @required this.onConfirmOrder,
+  });
+
   @override
   _ConfirmOrderPageState createState() => _ConfirmOrderPageState();
 }
@@ -113,6 +124,8 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
           ],
         ),
         Divider(),
+
+        // Shipping Address Section
         Padding(
           padding: EdgeInsets.all(_screenUtil.setWidth(30)),
           child: Container(
@@ -131,10 +144,137 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
           secondLine: 'أمام مدرسة سعد بن أبي وقاص',
           city: 'مدينة نصر',
           state: 'القاهرة',
-          country: 'مصر',
-          zipPostalCode: '3432432',
+          // country: 'مصر',
+          // zipPostalCode: '3432432',
           locationLatitude: 0.0,
           locationLongitude: 0.0,
+        ),
+        Padding(
+          padding: EdgeInsets.all(_screenUtil.setWidth(10)),
+          child: Stack(
+            children: [
+              Container(
+                color: Color(0xff3573ac),
+                child: ListTile(
+                  onTap: () {
+                    widget.onChangeAddress();
+                  },
+                  title: Text(
+                    'هل تريد تغيير عنوان الشحن؟',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: _screenUtil.setSp(50),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 0.0,
+                bottom: 0.0,
+                left: _screenUtil.setWidth(30),
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                  size: _screenUtil.setSp(50),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Divider(),
+
+        // Payment Method Section
+
+        Padding(
+          padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+          child: Container(
+            alignment: Alignment.centerRight,
+            child: Text(
+              'طريقة الدفع',
+              style: TextStyle(
+                fontSize: _screenUtil.setSp(50),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                'نقدًا عند الاستلام',
+                style: TextStyle(
+                  fontSize: _screenUtil.setSp(50),
+                ),
+              ),
+              SizedBox(
+                width: _screenUtil.setWidth(20),
+              ),
+              Image.asset(
+                'assets/cash.png',
+                height: _screenUtil.setWidth(80),
+                width: _screenUtil.setWidth(80),
+              ),
+            ],
+          ),
+        ),
+        // Padding(
+        //   padding: EdgeInsets.all(_screenUtil.setWidth(10)),
+        //   child: Stack(
+        //     children: [
+        //       Container(
+        //         color: Color(0xff3573ac),
+        //         child: ListTile(
+        //           onTap: () {
+        //             widget.onChangePaymentMethod();
+        //           },
+        //           title: Text(
+        //             'هل تريد تغيير طريقة الدفع؟',
+        //             textAlign: TextAlign.center,
+        //             style: TextStyle(
+        //               color: Colors.white,
+        //               fontSize: _screenUtil.setSp(50),
+        //             ),
+        //           ),
+        //         ),
+        //       ),
+        //       Positioned(
+        //         top: 0.0,
+        //         bottom: 0.0,
+        //         left: _screenUtil.setWidth(30),
+        //         child: Icon(
+        //           Icons.arrow_back,
+        //           color: Colors.white,
+        //           size: _screenUtil.setSp(50),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        Divider(),
+
+        // Confirm Order Button
+        Padding(
+          padding: EdgeInsets.all(_screenUtil.setWidth(10)),
+          child: Container(
+            color: Color(0xff3573ac),
+            child: ListTile(
+              onTap: () {
+                widget.onConfirmOrder();
+              },
+              title: Text(
+                'تأكيد الطلب',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: _screenUtil.setSp(50),
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );

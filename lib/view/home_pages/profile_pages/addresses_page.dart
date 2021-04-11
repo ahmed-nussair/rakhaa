@@ -60,8 +60,8 @@ class _AddressesPageState extends State<AddressesPage> {
                           secondLine: _addressesList[index]['secondLine'],
                           city: _addressesList[index]['city'],
                           state: _addressesList[index]['state'],
-                          country: _addressesList[index]['country'],
-                          zipPostalCode: _addressesList[index]['zipPostalCode'],
+                          // country: _addressesList[index]['country'],
+                          // zipPostalCode: _addressesList[index]['zipPostalCode'],
                           locationLatitude:
                               double.parse(_addressesList[index]['latitude']),
                           locationLongitude:

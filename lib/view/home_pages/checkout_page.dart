@@ -15,11 +15,13 @@ class _CheckoutPageState extends State<CheckoutPage>
     with TickerProviderStateMixin {
   final ScreenUtil _screenUtil = ScreenUtil();
 
-  final int tabsNumber = 3;
+  final int tabsNumber = 2;
 
   final int shippingAddressIndex = 0;
-  final int paymentMethodIndex = 1;
-  final int confirmOrderIndex = 2;
+
+  // final int paymentMethodIndex = 1;
+  // final int confirmOrderIndex = 2;
+  final int confirmOrderIndex = 1;
 
   TabController _tabController;
 
@@ -120,26 +122,44 @@ class _CheckoutPageState extends State<CheckoutPage>
               ShippingAddressPage(
                 onConfirmAddress: () {
                   setState(() {
-                    _currentTabIndex = paymentMethodIndex;
-                  });
-                  _tabController.animateTo(_currentTabIndex);
-                },
-              ),
-              PaymentMethodPage(
-                onConfirmPaymentMethod: () {
-                  setState(() {
+                    // _currentTabIndex = paymentMethodIndex;
                     _currentTabIndex = confirmOrderIndex;
                   });
                   _tabController.animateTo(_currentTabIndex);
                 },
-                onBackToShippingAddressPage: () {
+              ),
+              // PaymentMethodPage(
+              //   onConfirmPaymentMethod: () {
+              //     setState(() {
+              //       _currentTabIndex = confirmOrderIndex;
+              //     });
+              //     _tabController.animateTo(_currentTabIndex);
+              //   },
+              //   onBackToShippingAddressPage: () {
+              //     setState(() {
+              //       _currentTabIndex = shippingAddressIndex;
+              //     });
+              //     _tabController.animateTo(_currentTabIndex);
+              //   },
+              // ),
+              ConfirmOrderPage(
+                onChangeAddress: () {
                   setState(() {
                     _currentTabIndex = shippingAddressIndex;
                   });
                   _tabController.animateTo(_currentTabIndex);
                 },
+                // onChangePaymentMethod: () {
+                //   setState(() {
+                //     _currentTabIndex = paymentMethodIndex;
+                //   });
+                //   _tabController.animateTo(_currentTabIndex);
+                // },
+
+                onConfirmOrder: () {
+                  Navigator.of(context).pop();
+                },
               ),
-              ConfirmOrderPage(),
             ],
           ),
         ),
