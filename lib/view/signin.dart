@@ -23,6 +23,7 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
       body: ListView(
         children: [
+          // Title
           Padding(
             padding: EdgeInsets.all(_screenUtil.setWidth(80)),
             child: Container(
@@ -35,6 +36,8 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           ),
+
+          // username / mobile number field
           Padding(
             padding: EdgeInsets.all(_screenUtil.setWidth(50)),
             child: TextFormField(
@@ -58,6 +61,8 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           ),
+
+          // Password field
           Padding(
             padding: EdgeInsets.all(_screenUtil.setWidth(50)),
             child: TextFormField(
@@ -81,6 +86,8 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           ),
+
+          // Forgot your password link
           Padding(
             padding: EdgeInsets.all(_screenUtil.setWidth(50)),
             child: GestureDetector(
@@ -101,23 +108,33 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            // width: _screenUtil.setWidth(500),
-            height: _screenUtil.setHeight(150),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(_screenUtil.setWidth(50)),
-              color: Colors.red,
+
+          // login button
+          Padding(
+            padding: EdgeInsets.only(
+              left: _screenUtil.setWidth(50),
+              right: _screenUtil.setWidth(50),
             ),
-            child: Text(
-              'تسجيل الدخول',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: _screenUtil.setSp(50),
-                color: Colors.white,
+            child: Container(
+              alignment: Alignment.center,
+              // width: _screenUtil.setWidth(500),
+              height: _screenUtil.setHeight(150),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(_screenUtil.setWidth(50)),
+                color: Colors.red,
+              ),
+              child: Text(
+                'تسجيل الدخول',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: _screenUtil.setSp(50),
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
+
+          // Sign up
           Padding(
             padding: EdgeInsets.all(_screenUtil.setWidth(30)),
             child: GestureDetector(
@@ -138,6 +155,8 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           ),
+
+          // login via
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -168,6 +187,8 @@ class _SignInState extends State<SignIn> {
               ),
             ],
           ),
+
+          // Facebook and gmail
           Padding(
             padding: EdgeInsets.all(_screenUtil.setWidth(30)),
             child: Row(
@@ -190,6 +211,8 @@ class _SignInState extends State<SignIn> {
           ),
         ],
       ),
+
+      // login as a guest
       bottomNavigationBar: GestureDetector(
         onTap: () {
           Navigator.of(context)
