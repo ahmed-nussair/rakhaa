@@ -67,7 +67,7 @@ class AddressItem extends StatelessWidget {
                 style: TextStyle(fontSize: _screenUtil.setSp(40)),
               ),
               Text(
-                '$state, ',
+                '$state',
                 style: TextStyle(fontSize: _screenUtil.setSp(40)),
               ),
               // Text(

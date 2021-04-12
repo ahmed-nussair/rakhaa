@@ -58,11 +58,15 @@ class _DetailsPageState extends State<DetailsPage> {
                           controller: _firstNameController,
                           textAlign: TextAlign.end,
                           style: TextStyle(
+                            fontSize: _screenUtil.setSp(50),
                             color:
                                 _firstNameEditing ? Colors.black : Colors.grey,
                           ),
                           decoration: InputDecoration(
-                            suffixIcon: Icon(Icons.person),
+                            suffixIcon: Icon(
+                              Icons.person,
+                              size: _screenUtil.setSp(50),
+                            ),
                             enabled: _firstNameEditing,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
@@ -123,11 +127,15 @@ class _DetailsPageState extends State<DetailsPage> {
                           controller: _lastNameController,
                           textAlign: TextAlign.end,
                           style: TextStyle(
+                            fontSize: _screenUtil.setSp(50),
                             color:
                                 _lastNameEditing ? Colors.black : Colors.grey,
                           ),
                           decoration: InputDecoration(
-                            suffixIcon: Icon(Icons.person),
+                            suffixIcon: Icon(
+                              Icons.person,
+                              size: _screenUtil.setSp(50),
+                            ),
                             enabled: _lastNameEditing,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
@@ -186,10 +194,14 @@ class _DetailsPageState extends State<DetailsPage> {
                       controller: _emailNameController,
                       textAlign: TextAlign.end,
                       style: TextStyle(
+                        fontSize: _screenUtil.setSp(50),
                         color: Colors.grey,
                       ),
                       decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.email),
+                        suffixIcon: Icon(
+                          Icons.email,
+                          size: _screenUtil.setSp(50),
+                        ),
                         enabled: false,
                         border: OutlineInputBorder(
                           borderRadius:
@@ -206,10 +218,14 @@ class _DetailsPageState extends State<DetailsPage> {
                       controller: _phoneNameController,
                       textAlign: TextAlign.end,
                       style: TextStyle(
+                        fontSize: _screenUtil.setSp(50),
                         color: Colors.grey,
                       ),
                       decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.phone),
+                        suffixIcon: Icon(
+                          Icons.phone,
+                          size: _screenUtil.setSp(50),
+                        ),
                         enabled: false,
                         border: OutlineInputBorder(
                           borderRadius:
@@ -229,10 +245,14 @@ class _DetailsPageState extends State<DetailsPage> {
                           textAlign: TextAlign.end,
                           obscureText: true,
                           style: TextStyle(
+                            fontSize: _screenUtil.setSp(50),
                             color: Colors.grey,
                           ),
                           decoration: InputDecoration(
-                            suffixIcon: Icon(Icons.lock),
+                            suffixIcon: Icon(
+                              Icons.lock,
+                              size: _screenUtil.setSp(50),
+                            ),
                             enabled: false,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
@@ -264,7 +284,7 @@ class _DetailsPageState extends State<DetailsPage> {
                               child: Text(
                                 'تغيير كلمة المرور',
                                 style: TextStyle(
-                                  fontSize: _screenUtil.setSp(40),
+                                  fontSize: _screenUtil.setSp(50),
                                   color: Colors.blueAccent,
                                   decoration: TextDecoration.underline,
                                 ),
