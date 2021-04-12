@@ -155,7 +155,8 @@ class _SignUpState extends State<SignUp> {
                             _countryCode,
                             style: TextStyle(
                               fontSize: _screenUtil.setSp(40),
-                              color: Color(0xffd8cfcc),
+                              // color: Color(0xffd8cfcc),
+                              color: Color(0xffa6a6a6),
                             ),
                           ),
                         ),
@@ -279,7 +280,7 @@ class _SignUpState extends State<SignUp> {
                   top: _screenUtil.setHeight(28),
                   bottom: _screenUtil.setHeight(28)),
               hintStyle: TextStyle(
-                color: Color(0xffd8cfcc),
+                // color: Color(0xffd8cfcc),
                 fontSize: _screenUtil.setSp(40),
               ),
             ),
@@ -294,7 +295,8 @@ class _SignUpState extends State<SignUp> {
             padding: EdgeInsets.all(_screenUtil.setWidth(28)),
             child: Icon(
               icon,
-              color: Color(0xffd9d9d9),
+              // color: Color(0xffd9d9d9),
+              color: Color(0xffa6a6a6),
               size: _screenUtil.setSp(40),
             ),
           ),
