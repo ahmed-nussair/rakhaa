@@ -25,7 +25,7 @@ class _SignInState extends State<SignIn> {
         children: [
           // Title
           Padding(
-            padding: EdgeInsets.all(_screenUtil.setWidth(80)),
+            padding: EdgeInsets.all(_screenUtil.setWidth(50)),
             child: Container(
               alignment: Alignment.center,
               child: Text(
