@@ -21,14 +21,17 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     _screenUtil.init(context);
     return Scaffold(
-      body: Column(
+      body: ListView(
         children: [
           Padding(
             padding: EdgeInsets.all(_screenUtil.setWidth(80)),
-            child: Text(
-              'تسجيل الدخول',
-              style: TextStyle(
-                fontSize: _screenUtil.setSp(100),
+            child: Container(
+              alignment: Alignment.center,
+              child: Text(
+                'تسجيل الدخول',
+                style: TextStyle(
+                  fontSize: _screenUtil.setSp(100),
+                ),
               ),
             ),
           ),
@@ -44,7 +47,10 @@ class _SignInState extends State<SignIn> {
                 hintStyle: TextStyle(
                   fontSize: _screenUtil.setSp(50),
                 ),
-                suffixIcon: Icon(Icons.person),
+                suffixIcon: Icon(
+                  Icons.person,
+                  size: _screenUtil.setSp(50),
+                ),
                 border: OutlineInputBorder(
                   borderRadius:
                       BorderRadius.circular(_screenUtil.setWidth(100)),
@@ -64,7 +70,10 @@ class _SignInState extends State<SignIn> {
                 hintStyle: TextStyle(
                   fontSize: _screenUtil.setSp(50),
                 ),
-                suffixIcon: Icon(Icons.lock),
+                suffixIcon: Icon(
+                  Icons.lock,
+                  size: _screenUtil.setSp(50),
+                ),
                 border: OutlineInputBorder(
                   borderRadius:
                       BorderRadius.circular(_screenUtil.setWidth(100)),
@@ -94,7 +103,7 @@ class _SignInState extends State<SignIn> {
           ),
           Container(
             alignment: Alignment.center,
-            width: _screenUtil.setWidth(500),
+            // width: _screenUtil.setWidth(500),
             height: _screenUtil.setHeight(150),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(_screenUtil.setWidth(50)),

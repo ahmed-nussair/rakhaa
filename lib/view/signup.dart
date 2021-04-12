@@ -125,8 +125,7 @@ class _SignUpState extends State<SignUp> {
                       child: GestureDetector(
                         onTap: () {
                           showDialog(
-                            context: context,
-                            child: CustomAlertDialog(
+                            builder: (context) => CustomAlertDialog(
                               titlePadding: EdgeInsets.all(0.0),
                               contentPadding: EdgeInsets.all(0.0),
                               content: CountryCode(
@@ -137,6 +136,7 @@ class _SignUpState extends State<SignUp> {
                                 },
                               ),
                             ),
+                            context: context,
                           );
                         },
                         child: Container(

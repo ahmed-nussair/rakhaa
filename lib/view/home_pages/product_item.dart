@@ -1,13 +1,13 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../screen_util.dart';
+import 'offer_ribbon.dart';
 
 class ProductItem extends StatefulWidget {
   final String imageUrl;
   final String title;
   final double price;
   final double afterDiscount;
-  final double rating;
+  final double percentage;
 
   // final Function onMerchantNameTapped;
 
@@ -16,7 +16,7 @@ class ProductItem extends StatefulWidget {
     @required this.title,
     @required this.price,
     @required this.afterDiscount,
-    @required this.rating,
+    @required this.percentage,
     // @required this.onMerchantNameTapped,
   });
 
@@ -119,6 +119,19 @@ class _ProductItemState extends State<ProductItem> {
                 ],
               ),
             ),
+            widget.percentage > 0
+                ? Positioned(
+                    top: 0.0,
+                    right: 0.0,
+                    child: Container(
+                      height: _screenUtil.setWidth(200),
+                      width: _screenUtil.setWidth(200),
+                      child: OfferRibbon(
+                        percentage: widget.percentage,
+                      ),
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),

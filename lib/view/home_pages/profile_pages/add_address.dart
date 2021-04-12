@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'country_list.dart';
-import 'location_map.dart';
 import '../../screen_util.dart';
-import 'package:toast/toast.dart';
 
 import '../../custom_show_dialog.dart';
 
@@ -114,8 +111,7 @@ class _AddAddressState extends State<AddAddress> {
                   child: GestureDetector(
                     onTap: () {
                       showDialog(
-                        context: context,
-                        child: CustomAlertDialog(
+                        builder: (context) => CustomAlertDialog(
                           titlePadding: EdgeInsets.all(0.0),
                           contentPadding: EdgeInsets.all(0.0),
                           content: CountryList(
@@ -126,6 +122,7 @@ class _AddAddressState extends State<AddAddress> {
                             },
                           ),
                         ),
+                        context: context,
                       );
                     },
                     child: Container(
@@ -159,33 +156,6 @@ class _AddAddressState extends State<AddAddress> {
                   padding: EdgeInsets.all(_screenUtil.setWidth(30)),
                   child: GestureDetector(
                     onTap: () async {
-                      if (_line1Controller.text.isEmpty) {
-                        Toast.show(
-                            "Specify the address first (Fill at least the line 1 of the address",
-                            context,
-                            duration: Toast.LENGTH_LONG,
-                            gravity: Toast.BOTTOM);
-                        return;
-                      }
-
-                      Position position = await getCurrentPosition(
-                          desiredAccuracy: LocationAccuracy.high);
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => LocationMap(
-                                address:
-                                    '${_line1Controller.text}\n${_line2Controller.text}',
-                                latitude: position.latitude,
-                                longitude: position.longitude,
-                                onLocationSpecifiedOnMap: (lat, lon) {
-                                  setState(() {
-                                    _latitude = lat;
-                                    _longitude = lon;
-                                  });
-                                  print('Latitude: $_latitude');
-                                  print('Longitude: $_longitude');
-                                },
-                                editing: true,
-                              )));
                     },
                     child: Container(
                       height: _screenUtil.setHeight(100),
@@ -217,8 +187,8 @@ class _AddAddressState extends State<AddAddress> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Flexible(
-                        child: RaisedButton(
-                          color: Color(0xff9b7448),
+                        child: ElevatedButton(
+                          // color: Color(0xff9b7448),
                           onPressed: () {
                             Map<String, String> data = {
                               'firstLine': _line1Controller.text,
@@ -247,8 +217,8 @@ class _AddAddressState extends State<AddAddress> {
                         width: _screenUtil.setWidth(30),
                       ),
                       Flexible(
-                        child: RaisedButton(
-                          color: Color(0xff9b7448),
+                        child: ElevatedButton(
+                          // color: Color(0xff9b7448),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },

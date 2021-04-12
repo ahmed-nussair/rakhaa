@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../screen_util.dart';
-
-import 'package:toast/toast.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'location_map.dart';

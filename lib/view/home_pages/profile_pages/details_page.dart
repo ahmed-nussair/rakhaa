@@ -247,8 +247,7 @@ class _DetailsPageState extends State<DetailsPage> {
                           child: GestureDetector(
                             onTap: () {
                               showDialog(
-                                context: context,
-                                child: CustomAlertDialog(
+                                builder: (context) => CustomAlertDialog(
                                   titlePadding: EdgeInsets.all(0.0),
                                   contentPadding: EdgeInsets.all(0.0),
                                   content: Container(
@@ -257,6 +256,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                     child: NewPasswordDialog(),
                                   ),
                                 ),
+                                context: context,
                               );
                             },
                             child: Container(
@@ -284,7 +284,7 @@ class _DetailsPageState extends State<DetailsPage> {
           padding: EdgeInsets.all(_screenUtil.setWidth(30)),
           child: Container(
             width: MediaQuery.of(context).size.width,
-            child: RaisedButton(
+            child: ElevatedButton(
               onPressed: () {},
               child: Text(
                 'تحديث البيانات',
@@ -391,7 +391,7 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -402,7 +402,7 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
                   ),
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
                   'إلغاء',

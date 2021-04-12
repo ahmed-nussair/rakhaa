@@ -85,8 +85,7 @@ class _AddressesPageState extends State<AddressesPage> {
               backgroundColor: Color(0xff9b7448),
               onPressed: () {
                 showDialog(
-                  context: context,
-                  child: CustomAlertDialog(
+                  builder: (context) => CustomAlertDialog(
                     titlePadding: EdgeInsets.all(0.0),
                     contentPadding: EdgeInsets.all(0.0),
                     content: AddAddress(
@@ -99,6 +98,7 @@ class _AddressesPageState extends State<AddressesPage> {
                       },
                     ),
                   ),
+                  context: context,
                 );
               },
               child: Icon(
