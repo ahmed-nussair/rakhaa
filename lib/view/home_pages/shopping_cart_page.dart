@@ -72,7 +72,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                 ),
               ),
               Container(
-                height: _screenUtil.setHeight(350),
+                height: _screenUtil.setHeight(400),
                 color: Color(0xff3573ac),
                 child: Padding(
                   padding: EdgeInsets.all(_screenUtil.setWidth(20)),
@@ -134,7 +134,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                           children: [
                             Container(
                               width: MediaQuery.of(context).size.width,
-                              child: RaisedButton(
+                              child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => CheckoutPage()));
@@ -154,6 +154,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                               right: 0.0,
                               child: Icon(
                                 Icons.arrow_forward,
+                                color: Colors.white,
                                 size: _screenUtil.setSp(70),
                               ),
                             ),

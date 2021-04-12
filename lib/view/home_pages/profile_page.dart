@@ -54,6 +54,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
+    _screenUtil.init(context);
     return Scaffold(
       appBar: TabBar(
         isScrollable: false,
@@ -69,8 +70,8 @@ class _ProfilePageState extends State<ProfilePage>
               '${_tabs[index]}',
               style: TextStyle(
                 color: Colors.black,
-                fontSize: _screenUtil.setSp(50),
-                fontWeight: FontWeight.bold,
+                fontSize: _screenUtil.setSp(40),
+                // fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),

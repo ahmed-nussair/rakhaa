@@ -156,59 +156,59 @@ class _SignInState extends State<SignIn> {
             ),
           ),
 
-          // login via
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Flexible(
-                flex: 1,
-                child: Container(
-                  height: _screenUtil.setHeight(3),
-                  color: Color(0xff745d2a),
-                ),
-              ),
-              Flexible(
-                flex: 1,
-                child: Text(
-                  'تسجيل الدخول عن طريق',
-                  style: TextStyle(
-                      color: Color(0xff9b7448),
-                      fontSize: _screenUtil.setSp(40)),
-                  softWrap: false,
-                ),
-              ),
-              Flexible(
-                flex: 1,
-                child: Container(
-                  height: _screenUtil.setHeight(3),
-                  color: Color(0xff745d2a),
-                ),
-              ),
-            ],
-          ),
-
-          // Facebook and gmail
-          Padding(
-            padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  radius: _screenUtil.setWidth(90),
-                  backgroundImage: AssetImage('assets/facebook_login.png'),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(_screenUtil.setWidth(10)),
-                ),
-                CircleAvatar(
-                  radius: _screenUtil.setWidth(90),
-                  backgroundImage: AssetImage('assets/google_login.png'),
-                ),
-              ],
-            ),
-          ),
+          // // login via
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   children: [
+          //     Flexible(
+          //       flex: 1,
+          //       child: Container(
+          //         height: _screenUtil.setHeight(3),
+          //         color: Color(0xff745d2a),
+          //       ),
+          //     ),
+          //     Flexible(
+          //       flex: 1,
+          //       child: Text(
+          //         'تسجيل الدخول عن طريق',
+          //         style: TextStyle(
+          //             color: Color(0xff9b7448),
+          //             fontSize: _screenUtil.setSp(40)),
+          //         softWrap: false,
+          //       ),
+          //     ),
+          //     Flexible(
+          //       flex: 1,
+          //       child: Container(
+          //         height: _screenUtil.setHeight(3),
+          //         color: Color(0xff745d2a),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          //
+          // // Facebook and gmail
+          // Padding(
+          //   padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+          //   child: Row(
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       CircleAvatar(
+          //         radius: _screenUtil.setWidth(90),
+          //         backgroundImage: AssetImage('assets/facebook_login.png'),
+          //       ),
+          //       Padding(
+          //         padding: EdgeInsets.all(_screenUtil.setWidth(10)),
+          //       ),
+          //       CircleAvatar(
+          //         radius: _screenUtil.setWidth(90),
+          //         backgroundImage: AssetImage('assets/google_login.png'),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
 
