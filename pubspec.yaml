@@ -18,16 +18,17 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.9.0-10.0.dev <3.0.0"
 
 dependencies:
+  equatable: ^2.0.0
   bloc: ^6.0.2
   flutter_bloc: ^6.0.1
   http: ^0.12.2
   geolocator: ^7.0.1
   toast: ^0.1.5
   fluttertoast: ^8.0.3
-  json_annotation:
+  json_annotation: ^4.0.1
   google_maps_flutter: ^2.0.3
   device_info: ^2.0.0
   flutter:
@@ -40,7 +41,7 @@ dependencies:
 
 dev_dependencies:
 
-  build_runner: ^1.10.9
+  build_runner:
   chopper_generator:
   json_serializable:
 
