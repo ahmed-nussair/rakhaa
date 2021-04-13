@@ -127,47 +127,48 @@ class _NewAddressState extends State<NewAddress> {
         //       inputType: TextInputType.numberWithOptions(
         //           decimal: false, signed: false)),
         // ),
-        Padding(
-          padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-          child: GestureDetector(
-            onTap: () async {
-              Position position = await Geolocator.getCurrentPosition(
-                  desiredAccuracy: LocationAccuracy.high);
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => LocationMap(
-                        address:
-                            '${_line1Controller.text}\n${_line2Controller.text}',
-                        latitude: position.latitude,
-                        longitude: position.longitude,
-                        onLocationSpecifiedOnMap: (lat, lon) {
-                          setState(() {
-                            _latitude = lat;
-                            _longitude = lon;
-                          });
-                          print('Latitude: $_latitude');
-                          print('Longitude: $_longitude');
-                        },
-                        editing: true,
-                      )));
-            },
-            child: Container(
-              height: _screenUtil.setHeight(100),
-              decoration: BoxDecoration(
-                color: Color(0xfff4f4f8),
-                borderRadius: BorderRadius.circular(_screenUtil.setWidth(30)),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                _latitude > 0 && _longitude > 0
-                    ? '$_latitude, $_longitude'
-                    : 'حدد موقعك على غوغل ماب (اختياري)',
-                style: TextStyle(
-                  fontSize: _screenUtil.setSp(40),
-                ),
-              ),
-            ),
-          ),
-        ),
+
+        // Padding(
+        //   padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+        //   child: GestureDetector(
+        //     onTap: () async {
+        //       Position position = await Geolocator.getCurrentPosition(
+        //           desiredAccuracy: LocationAccuracy.high);
+        //       Navigator.of(context).push(MaterialPageRoute(
+        //           builder: (context) => LocationMap(
+        //                 address:
+        //                     '${_line1Controller.text}\n${_line2Controller.text}',
+        //                 latitude: position.latitude,
+        //                 longitude: position.longitude,
+        //                 onLocationSpecifiedOnMap: (lat, lon) {
+        //                   setState(() {
+        //                     _latitude = lat;
+        //                     _longitude = lon;
+        //                   });
+        //                   print('Latitude: $_latitude');
+        //                   print('Longitude: $_longitude');
+        //                 },
+        //                 editing: true,
+        //               )));
+        //     },
+        //     child: Container(
+        //       height: _screenUtil.setHeight(100),
+        //       decoration: BoxDecoration(
+        //         color: Color(0xfff4f4f8),
+        //         borderRadius: BorderRadius.circular(_screenUtil.setWidth(30)),
+        //       ),
+        //       alignment: Alignment.center,
+        //       child: Text(
+        //         _latitude > 0 && _longitude > 0
+        //             ? '$_latitude, $_longitude'
+        //             : 'حدد موقعك على غوغل ماب (اختياري)',
+        //         style: TextStyle(
+        //           fontSize: _screenUtil.setSp(40),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
