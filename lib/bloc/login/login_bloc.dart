@@ -30,10 +30,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (loginResponse.result) {
           yield SuccessState();
         } else {
-          yield FailedState('Username or password is invalid.');
+          yield FailedState(
+              'اسم المستخدم ليس بصحيح أو كلمة المرور ليست بصحيحة');
         }
       } else {
-        yield ErrorState('Error logging in. Try again later.');
+        yield ErrorState('حدث خطأ .. يمكنك المحاولة لاحقًا');
       }
     } else {
       yield LoginInitial();

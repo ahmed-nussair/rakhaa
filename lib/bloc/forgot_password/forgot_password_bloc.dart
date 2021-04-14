@@ -29,12 +29,12 @@ class ForgotPasswordBloc
         final verificationResponse = response.body;
 
         if (verificationResponse.result) {
-          yield SuccessSate();
+          yield VerifiedSate(verificationResponse.userId);
         } else {
-          yield FailureSate("The user is not registered");
+          yield NotVerifiedState("عفوًا .. هذا المستخدم ليس مسجلًا.");
         }
       } else {
-        yield ErrorSate("Error .. Please try later.");
+        yield ErrorState("حدث خطأ .. يمكنك المحاولة في وقت آخر.");
       }
     } else {
       yield ForgotPasswordInitial();

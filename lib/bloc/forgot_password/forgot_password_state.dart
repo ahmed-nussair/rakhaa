@@ -14,24 +14,28 @@ class SendingState extends ForgotPasswordState {
   List<Object> get props => [];
 }
 
-class SuccessSate extends ForgotPasswordState {
+class VerifiedSate extends ForgotPasswordState {
+  final int userId;
+
+  VerifiedSate(this.userId);
+
   @override
   List<Object> get props => [];
 }
 
-class FailureSate extends ForgotPasswordState {
+class NotVerifiedState extends ForgotPasswordState {
   final String message;
 
-  FailureSate(this.message);
+  NotVerifiedState(this.message);
 
   @override
   List<Object> get props => [message];
 }
 
-class ErrorSate extends ForgotPasswordState {
+class ErrorState extends ForgotPasswordState {
   final String message;
 
-  ErrorSate(this.message);
+  ErrorState(this.message);
 
   @override
   List<Object> get props => [message];

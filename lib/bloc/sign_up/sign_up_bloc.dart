@@ -29,10 +29,10 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         if (signUpResponse.result) {
           yield SuccessState(signUpResponse.message);
         } else {
-          yield FailedState('Registration failed.');
+          yield FailedState('تم التسجيل بنجاح');
         }
       } else {
-        yield ErrorState('Error Signing Up. Try again later.');
+        yield ErrorState('حدث خطأ .. يمكنك محاولة التسجيل في وقت آخر.');
       }
     } else {
       yield SignUpInitial();
