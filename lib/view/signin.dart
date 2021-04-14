@@ -157,8 +157,9 @@ class _SignInState extends State<SignIn> {
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            BlocProvider.of<LoginBloc>(context)
-                                .add(LoggingIn("ahmed_nussair", "123"));
+                            BlocProvider.of<LoginBloc>(context).add(LoggingIn(
+                                _usernameController.text,
+                                _passwordController.text));
                           },
                           child: Container(
                             alignment: Alignment.center,
