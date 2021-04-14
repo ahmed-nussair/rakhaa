@@ -5,7 +5,7 @@ import 'country_code.dart';
 import 'custom_show_dialog.dart';
 import 'screen_util.dart';
 
-import '../bloc/sign_up_bloc.dart';
+import '../bloc/sign_up/sign_up_bloc.dart';
 
 class SignUp extends StatefulWidget {
   @override

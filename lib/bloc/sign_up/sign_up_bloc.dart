@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:rakhaa/model/chopper/signup_service.dart';
 
 part 'sign_up_event.dart';
-
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {

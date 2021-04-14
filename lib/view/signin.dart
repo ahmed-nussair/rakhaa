@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:rakhaa/bloc/login_bloc.dart';
+import 'file:///D:/projects/flutter/rakhaa/lib/bloc/login/login_bloc.dart';
 import 'package:rakhaa/view/password_recovery.dart';
 import 'package:rakhaa/view/screen_util.dart';
 import 'package:rakhaa/view/signup.dart';
