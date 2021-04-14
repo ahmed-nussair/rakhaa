@@ -36,9 +36,13 @@ List _subCategories = [
 ];
 
 class CategoryPage extends StatefulWidget {
+  final int categoryId;
   final Function onBackTapped;
 
-  CategoryPage({@required this.onBackTapped});
+  CategoryPage({
+    @required this.onBackTapped,
+    @required this.categoryId,
+  });
 
   @override
   _CategoryPageState createState() => _CategoryPageState();
