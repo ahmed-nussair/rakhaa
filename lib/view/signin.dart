@@ -157,6 +157,33 @@ class _SignInState extends State<SignIn> {
                         ),
                         child: GestureDetector(
                           onTap: () {
+                            if (_usernameController.text.isEmpty) {
+                              Fluttertoast.showToast(
+                                msg:
+                                    'من فضلك أدخل اسم المستخدم أو رقم الموبايل الخاص بك.',
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.black54,
+                                textColor: Colors.white,
+                                fontSize: _screenUtil.setSp(50),
+                              );
+                              return;
+                            }
+
+                            if (_passwordController.text.isEmpty) {
+                              Fluttertoast.showToast(
+                                msg: 'من فضلك أدخل كلمة المرور',
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.black54,
+                                textColor: Colors.white,
+                                fontSize: _screenUtil.setSp(50),
+                              );
+                              return;
+                            }
+
                             BlocProvider.of<LoginBloc>(context).add(LoggingIn(
                                 _usernameController.text,
                                 _passwordController.text));
