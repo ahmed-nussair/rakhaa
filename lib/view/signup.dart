@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'country_code.dart';
-import 'custom_show_dialog.dart';
+// import 'country_code.dart';
+// import 'custom_show_dialog.dart';
 import 'screen_util.dart';
 
 import '../bloc/sign_up/sign_up_bloc.dart';
@@ -15,22 +15,22 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final ScreenUtil _screenUtil = ScreenUtil();
 
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
+  // final _firstNameController = TextEditingController();
+  // final _lastNameController = TextEditingController();
   final _userNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordConfirmController = TextEditingController();
 
-  String _countryCode;
-
-  Gender _gender;
+  // String _countryCode;
+  //
+  // Gender _gender;
 
   @override
   void initState() {
-    _countryCode = '+20';
-    _gender = Gender.Male;
+    // _countryCode = '+20';
+    // _gender = Gender.Male;
     super.initState();
   }
 
