@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info/package_info.dart';
 
 import 'view/splash.dart';
 
@@ -36,6 +37,18 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _getDeviceInfo();
+
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      String appName = packageInfo.appName;
+      String packageName = packageInfo.packageName;
+      String version = packageInfo.version;
+      String buildNumber = packageInfo.buildNumber;
+
+      print('App Name: $appName');
+      print('Package Name: $packageName');
+      print('Version: $version');
+      print('Build Number: $buildNumber');
+    });
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Splash(),
