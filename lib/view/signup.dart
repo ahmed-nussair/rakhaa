@@ -67,32 +67,45 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
 
-                      // Username
+                      // Padding(
+                      //   padding: EdgeInsets.only(
+                      //       right: _screenUtil.setWidth(30),
+                      //       left: _screenUtil.setWidth(30),
+                      //       top: _screenUtil.setWidth(20),
+                      //       bottom: _screenUtil.setWidth(20)),
+                      //   child: Row(
+                      //     children: <Widget>[
+                      //       Flexible(
+                      //         child: _formField(
+                      //           'اسم العائلة (إجباري)',
+                      //           Icons.person,
+                      //           controller: _lastNameController,
+                      //         ),
+                      //       ),
+                      //       Padding(
+                      //         padding: EdgeInsets.all(_screenUtil.setWidth(20)),
+                      //       ),
+                      //       Flexible(
+                      //           child: _formField(
+                      //         'الاسم الأول (إجباري)',
+                      //         Icons.person,
+                      //         controller: _firstNameController,
+                      //       )),
+                      //     ],
+                      //   ),
+                      // ),
+
+                      // the name
                       Padding(
                         padding: EdgeInsets.only(
                             right: _screenUtil.setWidth(30),
                             left: _screenUtil.setWidth(30),
                             top: _screenUtil.setWidth(20),
                             bottom: _screenUtil.setWidth(20)),
-                        child: Row(
-                          children: <Widget>[
-                            Flexible(
-                              child: _formField(
-                                'اسم العائلة (إجباري)',
-                                Icons.person,
-                                controller: _lastNameController,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(_screenUtil.setWidth(20)),
-                            ),
-                            Flexible(
-                                child: _formField(
-                              'الاسم الأول (إجباري)',
-                              Icons.person,
-                              controller: _firstNameController,
-                            )),
-                          ],
+                        child: _formField(
+                          'الاسم بالكامل (إجباري)',
+                          Icons.person,
+                          controller: _userNameController,
                         ),
                       ),
 
@@ -110,77 +123,77 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
 
-                      //Gender
-                      Padding(
-                        padding: EdgeInsets.only(
-                            right: _screenUtil.setWidth(30),
-                            left: _screenUtil.setWidth(30),
-                            top: _screenUtil.setWidth(20),
-                            bottom: _screenUtil.setWidth(20)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'أنثى',
-                                  style: TextStyle(
-                                    fontSize: _screenUtil.setSp(40),
-                                  ),
-                                ),
-                                Radio(
-                                    value: Gender.Female,
-                                    groupValue: _gender,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _gender = value;
-                                      });
-                                    }),
-                              ],
-                            ),
-                            SizedBox(
-                              width: _screenUtil.setWidth(50),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'ذكر',
-                                  style: TextStyle(
-                                    fontSize: _screenUtil.setSp(40),
-                                  ),
-                                ),
-                                Radio(
-                                    value: Gender.Male,
-                                    groupValue: _gender,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _gender = value;
-                                      });
-                                    }),
-                              ],
-                            ),
-                            SizedBox(
-                              width: _screenUtil.setWidth(50),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  ':',
-                                  style: TextStyle(
-                                    fontSize: _screenUtil.setSp(40),
-                                  ),
-                                ),
-                                Text(
-                                  'النوع',
-                                  style: TextStyle(
-                                    fontSize: _screenUtil.setSp(40),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                      // //Gender
+                      // Padding(
+                      //   padding: EdgeInsets.only(
+                      //       right: _screenUtil.setWidth(30),
+                      //       left: _screenUtil.setWidth(30),
+                      //       top: _screenUtil.setWidth(20),
+                      //       bottom: _screenUtil.setWidth(20)),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.end,
+                      //     children: [
+                      //       Row(
+                      //         children: [
+                      //           Text(
+                      //             'أنثى',
+                      //             style: TextStyle(
+                      //               fontSize: _screenUtil.setSp(40),
+                      //             ),
+                      //           ),
+                      //           Radio(
+                      //               value: Gender.Female,
+                      //               groupValue: _gender,
+                      //               onChanged: (value) {
+                      //                 setState(() {
+                      //                   _gender = value;
+                      //                 });
+                      //               }),
+                      //         ],
+                      //       ),
+                      //       SizedBox(
+                      //         width: _screenUtil.setWidth(50),
+                      //       ),
+                      //       Row(
+                      //         children: [
+                      //           Text(
+                      //             'ذكر',
+                      //             style: TextStyle(
+                      //               fontSize: _screenUtil.setSp(40),
+                      //             ),
+                      //           ),
+                      //           Radio(
+                      //               value: Gender.Male,
+                      //               groupValue: _gender,
+                      //               onChanged: (value) {
+                      //                 setState(() {
+                      //                   _gender = value;
+                      //                 });
+                      //               }),
+                      //         ],
+                      //       ),
+                      //       SizedBox(
+                      //         width: _screenUtil.setWidth(50),
+                      //       ),
+                      //       Row(
+                      //         children: [
+                      //           Text(
+                      //             ':',
+                      //             style: TextStyle(
+                      //               fontSize: _screenUtil.setSp(40),
+                      //             ),
+                      //           ),
+                      //           Text(
+                      //             'النوع',
+                      //             style: TextStyle(
+                      //               fontSize: _screenUtil.setSp(40),
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
 
                       // email
                       Padding(
@@ -206,56 +219,56 @@ class _SignUpState extends State<SignUp> {
                             bottom: _screenUtil.setWidth(20)),
                         child: Row(
                           children: [
-                            // country code
-                            Flexible(
-                              flex: 1,
-                              child: GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    builder: (context) => CustomAlertDialog(
-                                      titlePadding: EdgeInsets.all(0.0),
-                                      contentPadding: EdgeInsets.all(0.0),
-                                      content: CountryCode(
-                                        onCountryCodeSelected: (countryCode) {
-                                          setState(() {
-                                            _countryCode = countryCode;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    context: context,
-                                  );
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: _screenUtil.setWidth(800),
-                                  height: _screenUtil.setHeight(120),
-                                  padding:
-                                      EdgeInsets.all(_screenUtil.setHeight(25)),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                              _screenUtil.setWidth(30))),
-                                      border: Border.all(
-                                        color: Color(0xffa6a6a6),
-                                        width: 1,
-                                      )),
-                                  child: Text(
-                                    _countryCode,
-                                    style: TextStyle(
-                                      fontSize: _screenUtil.setSp(40),
-                                      // color: Color(0xffd8cfcc),
-                                      color: Color(0xffa6a6a6),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            // spacing
-                            Padding(
-                              padding: EdgeInsets.all(_screenUtil.setWidth(10)),
-                            ),
+                            // // country code
+                            // Flexible(
+                            //   flex: 1,
+                            //   child: GestureDetector(
+                            //     onTap: () {
+                            //       showDialog(
+                            //         builder: (context) => CustomAlertDialog(
+                            //           titlePadding: EdgeInsets.all(0.0),
+                            //           contentPadding: EdgeInsets.all(0.0),
+                            //           content: CountryCode(
+                            //             onCountryCodeSelected: (countryCode) {
+                            //               setState(() {
+                            //                 _countryCode = countryCode;
+                            //               });
+                            //             },
+                            //           ),
+                            //         ),
+                            //         context: context,
+                            //       );
+                            //     },
+                            //     child: Container(
+                            //       alignment: Alignment.center,
+                            //       width: _screenUtil.setWidth(800),
+                            //       height: _screenUtil.setHeight(120),
+                            //       padding:
+                            //           EdgeInsets.all(_screenUtil.setHeight(25)),
+                            //       decoration: BoxDecoration(
+                            //           borderRadius: BorderRadius.all(
+                            //               Radius.circular(
+                            //                   _screenUtil.setWidth(30))),
+                            //           border: Border.all(
+                            //             color: Color(0xffa6a6a6),
+                            //             width: 1,
+                            //           )),
+                            //       child: Text(
+                            //         _countryCode,
+                            //         style: TextStyle(
+                            //           fontSize: _screenUtil.setSp(40),
+                            //           // color: Color(0xffd8cfcc),
+                            //           color: Color(0xffa6a6a6),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            //
+                            // // spacing
+                            // Padding(
+                            //   padding: EdgeInsets.all(_screenUtil.setWidth(10)),
+                            // ),
                             Flexible(
                               flex: 3,
                               child: _formField(
