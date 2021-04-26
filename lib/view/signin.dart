@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../bloc/login/login_bloc.dart';
 
+import 'app_icons.dart';
 import 'screen_util.dart';
 
 import 'signup.dart';
@@ -21,6 +22,14 @@ class _SignInState extends State<SignIn> {
   // final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  bool _passwordShown;
+
+  @override
+  void initState() {
+    _passwordShown = false;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,26 +113,54 @@ class _SignInState extends State<SignIn> {
                       // Password field
                       Padding(
                         padding: EdgeInsets.all(_screenUtil.setWidth(50)),
-                        child: TextFormField(
-                          controller: _passwordController,
-                          obscureText: true,
-                          textAlign: TextAlign.end,
-                          decoration: InputDecoration(
-                            contentPadding:
-                                EdgeInsets.all(_screenUtil.setWidth(30)),
-                            hintText: 'كلمة المرور',
-                            hintStyle: TextStyle(
-                              fontSize: _screenUtil.setSp(50),
+                        child: Stack(
+                          children: [
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: _passwordShown ? false : true,
+                              textAlign: TextAlign.end,
+                              decoration: InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.all(_screenUtil.setWidth(30)),
+                                hintText: 'كلمة المرور',
+                                hintStyle: TextStyle(
+                                  fontSize: _screenUtil.setSp(50),
+                                ),
+                                suffixIcon: Icon(
+                                  Icons.lock,
+                                  size: _screenUtil.setSp(50),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      _screenUtil.setWidth(100)),
+                                ),
+                              ),
                             ),
-                            suffixIcon: Icon(
-                              Icons.lock,
-                              size: _screenUtil.setSp(50),
+                            Positioned(
+                              top: 0.0,
+                              bottom: 0.0,
+                              left: _screenUtil.setWidth(50),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _passwordShown =
+                                        _passwordShown ? false : true;
+                                  });
+                                },
+                                child: Container(
+                                  height: _screenUtil.setHeight(120),
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    _passwordShown
+                                        ? AppIcons.eye_slash
+                                        : AppIcons.eye,
+                                    size: _screenUtil.setSp(50),
+                                    color: Color(0xff707070),
+                                  ),
+                                ),
+                              ),
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  _screenUtil.setWidth(100)),
-                            ),
-                          ),
+                          ],
                         ),
                       ),
 
