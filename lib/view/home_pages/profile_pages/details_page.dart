@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../custom_show_dialog.dart';
 import '../../screen_util.dart';
+import 'new_password_dialog.dart';
 
 class DetailsPage extends StatefulWidget {
   @override
@@ -8,24 +9,20 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailNameController = TextEditingController();
   final TextEditingController _phoneNameController = TextEditingController();
   final TextEditingController _passwordNameController = TextEditingController();
 
   final _screenUtil = ScreenUtil();
 
-  bool _firstNameEditing;
-  bool _lastNameEditing;
+  bool _nameEditing;
   String _oldValue;
 
   @override
   void initState() {
-    _firstNameEditing = false;
-    _lastNameEditing = false;
-    _firstNameController.text = 'أحمد';
-    _lastNameController.text = 'نصير';
+    _nameEditing = false;
+    _nameController.text = 'أحمد';
     _emailNameController.text = 'anussair@gamil.com';
     _phoneNameController.text = '+20 111 830 1953';
     _passwordNameController.text = '123';
@@ -54,20 +51,19 @@ class _DetailsPageState extends State<DetailsPage> {
                     child: Stack(
                       children: [
                         TextFormField(
-                          autofocus: _firstNameEditing,
-                          controller: _firstNameController,
+                          autofocus: _nameEditing,
+                          controller: _nameController,
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             fontSize: _screenUtil.setSp(50),
-                            color:
-                                _firstNameEditing ? Colors.black : Colors.grey,
+                            color: _nameEditing ? Colors.black : Colors.grey,
                           ),
                           decoration: InputDecoration(
                             suffixIcon: Icon(
                               Icons.person,
                               size: _screenUtil.setSp(50),
                             ),
-                            enabled: _firstNameEditing,
+                            enabled: _nameEditing,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
                                   _screenUtil.setWidth(50)),
@@ -82,97 +78,27 @@ class _DetailsPageState extends State<DetailsPage> {
                             padding: EdgeInsets.all(_screenUtil.setWidth(30)),
                             child: GestureDetector(
                               onTap: () {
-                                _oldValue = _firstNameController.text;
+                                _oldValue = _nameController.text;
                                 setState(() {
-                                  _firstNameEditing = true;
+                                  _nameEditing = true;
                                 });
                               },
-                              child: _firstNameEditing
+                              child: _nameEditing
                                   ? Row(
                                       children: [
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                              _firstNameEditing = false;
+                                              _nameEditing = false;
                                             });
-                                            _firstNameController.text =
-                                                _oldValue;
+                                            _nameController.text = _oldValue;
                                           },
                                           child: Icon(Icons.cancel),
                                         ),
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                              _firstNameEditing = false;
-                                            });
-                                          },
-                                          child: Icon(Icons.check),
-                                        ),
-                                      ],
-                                    )
-                                  : Icon(Icons.edit),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // last name
-                  Padding(
-                    padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                    child: Stack(
-                      children: [
-                        TextFormField(
-                          controller: _lastNameController,
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            fontSize: _screenUtil.setSp(50),
-                            color:
-                                _lastNameEditing ? Colors.black : Colors.grey,
-                          ),
-                          decoration: InputDecoration(
-                            suffixIcon: Icon(
-                              Icons.person,
-                              size: _screenUtil.setSp(50),
-                            ),
-                            enabled: _lastNameEditing,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  _screenUtil.setWidth(50)),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 0.0,
-                          bottom: 0.0,
-                          left: 0.0,
-                          child: Padding(
-                            padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                            child: GestureDetector(
-                              onTap: () {
-                                _oldValue = _lastNameController.text;
-                                setState(() {
-                                  _lastNameEditing = true;
-                                });
-                              },
-                              child: _lastNameEditing
-                                  ? Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              _lastNameEditing = false;
-                                            });
-                                            _lastNameController.text =
-                                                _oldValue;
-                                          },
-                                          child: Icon(Icons.cancel),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              _lastNameEditing = false;
+                                              _nameEditing = false;
                                             });
                                           },
                                           child: Icon(Icons.check),
@@ -320,121 +246,3 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 }
 
-class NewPasswordDialog extends StatefulWidget {
-  @override
-  _NewPasswordDialogState createState() => _NewPasswordDialogState();
-}
-
-class _NewPasswordDialogState extends State<NewPasswordDialog> {
-  final ScreenUtil _screenUtil = ScreenUtil();
-  final TextEditingController _oldPasswordController = TextEditingController();
-  final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _newPasswordConfirmController =
-      TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    _screenUtil.init(context);
-    return Column(
-      children: [
-        Expanded(
-          child: ListView(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                child: TextFormField(
-                  obscureText: true,
-                  textAlign: TextAlign.end,
-                  controller: _oldPasswordController,
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'اكتب كلمة المرور الحالية',
-                    hintStyle: TextStyle(
-                      fontSize: _screenUtil.setSp(40),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(_screenUtil.setWidth(50)),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                child: TextFormField(
-                  obscureText: true,
-                  textAlign: TextAlign.end,
-                  controller: _newPasswordController,
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'اكتب كلمة المرور الجديدة',
-                    hintStyle: TextStyle(
-                      fontSize: _screenUtil.setSp(40),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(_screenUtil.setWidth(50)),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                child: TextFormField(
-                  obscureText: true,
-                  textAlign: TextAlign.end,
-                  controller: _newPasswordConfirmController,
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'أعد كتابة كلمة المرور الجديدة',
-                    hintStyle: TextStyle(
-                      fontSize: _screenUtil.setSp(40),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(_screenUtil.setWidth(50)),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(_screenUtil.setWidth(50)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  'حدّث كلمة المرور',
-                  style: TextStyle(
-                    fontSize: _screenUtil.setSp(50),
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  'إلغاء',
-                  style: TextStyle(
-                    fontSize: _screenUtil.setSp(50),
-                  ),
-                ),
-              )
-            ],
-          ),
-        )
-      ],
-    );
-  }
-}
