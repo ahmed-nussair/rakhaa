@@ -477,7 +477,9 @@ class _SignUpState extends State<SignUp> {
                               );
                               return;
                             }
-                          } else if (_phoneController.text.isEmpty) {
+                          }
+
+                          if (_phoneController.text.isEmpty) {
                             Fluttertoast.showToast(
                               msg: 'من فضلك أدخل رقم الموبايل',
                               toastLength: Toast.LENGTH_LONG,
