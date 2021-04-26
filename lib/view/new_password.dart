@@ -4,7 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/new_password/new_password_bloc.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
+import 'app_icons.dart';
 import 'screen_util.dart';
+
+import 'password_generator.dart' as passwordGenerator;
 
 class NewPassword extends StatefulWidget {
   final int userId;
@@ -23,6 +26,16 @@ class _NewPasswordState extends State<NewPassword> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+
+  bool _passwordShown;
+  bool _passwordConfirmShown;
+
+  @override
+  void initState() {
+    _passwordShown = false;
+    _passwordConfirmShown = false;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,46 +99,133 @@ class _NewPasswordState extends State<NewPassword> {
                           ),
                         ),
                       ),
+
+                      // new password field
                       Padding(
                         padding: EdgeInsets.all(_screenUtil.setWidth(50)),
-                        child: TextFormField(
-                          controller: _newPasswordController,
-                          obscureText: true,
-                          textAlign: TextAlign.end,
-                          decoration: InputDecoration(
-                            hintText: 'كلمة مرور جديدة',
-                            suffixIcon: Icon(Icons.lock),
-                            contentPadding:
-                                EdgeInsets.all(_screenUtil.setWidth(30)),
-                            hintStyle: TextStyle(
-                              fontSize: _screenUtil.setSp(50),
+                        child: Stack(
+                          children: [
+                            TextFormField(
+                              controller: _newPasswordController,
+                              obscureText: _passwordShown ? false : true,
+                              textAlign: TextAlign.end,
+                              decoration: InputDecoration(
+                                hintText: 'كلمة مرور جديدة',
+                                suffixIcon: Icon(Icons.lock),
+                                contentPadding:
+                                    EdgeInsets.all(_screenUtil.setWidth(30)),
+                                hintStyle: TextStyle(
+                                  fontSize: _screenUtil.setSp(50),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      _screenUtil.setWidth(100)),
+                                ),
+                              ),
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  _screenUtil.setWidth(100)),
+                            Positioned(
+                              top: 0.0,
+                              bottom: 0.0,
+                              left: _screenUtil.setWidth(50),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _passwordShown =
+                                        _passwordShown ? false : true;
+                                  });
+                                },
+                                child: Container(
+                                  height: _screenUtil.setHeight(120),
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    _passwordShown
+                                        ? AppIcons.eye_slash
+                                        : AppIcons.eye,
+                                    size: _screenUtil.setSp(50),
+                                    color: Color(0xff707070),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: _screenUtil.setWidth(30),
+                            left: _screenUtil.setWidth(30),
+                            bottom: _screenUtil.setWidth(20)),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _passwordShown = true;
+                            });
+                            _newPasswordController.text =
+                                passwordGenerator.getRandomString(8);
+                          },
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              'إنشاء كلمة مرور',
+                              style: TextStyle(
+                                color: Colors.blueAccent,
+                                fontSize: _screenUtil.setSp(45),
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                         ),
                       ),
+
+                      // confirm new password field
                       Padding(
                         padding: EdgeInsets.all(_screenUtil.setWidth(50)),
-                        child: TextFormField(
-                          controller: _confirmPasswordController,
-                          obscureText: true,
-                          textAlign: TextAlign.end,
-                          decoration: InputDecoration(
-                            hintText: 'تأكيد كلمة المرور الجديدة',
-                            suffixIcon: Icon(Icons.lock),
-                            contentPadding:
-                                EdgeInsets.all(_screenUtil.setWidth(30)),
-                            hintStyle: TextStyle(
-                              fontSize: _screenUtil.setSp(50),
+                        child: Stack(
+                          children: [
+                            TextFormField(
+                              controller: _confirmPasswordController,
+                              obscureText: _passwordConfirmShown ? false : true,
+                              textAlign: TextAlign.end,
+                              decoration: InputDecoration(
+                                hintText: 'تأكيد كلمة المرور الجديدة',
+                                suffixIcon: Icon(Icons.lock),
+                                contentPadding:
+                                    EdgeInsets.all(_screenUtil.setWidth(30)),
+                                hintStyle: TextStyle(
+                                  fontSize: _screenUtil.setSp(50),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      _screenUtil.setWidth(100)),
+                                ),
+                              ),
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  _screenUtil.setWidth(100)),
+                            Positioned(
+                              top: 0.0,
+                              bottom: 0.0,
+                              left: _screenUtil.setWidth(50),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _passwordConfirmShown =
+                                        _passwordConfirmShown ? false : true;
+                                  });
+                                },
+                                child: Container(
+                                  height: _screenUtil.setHeight(120),
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    _passwordConfirmShown
+                                        ? AppIcons.eye_slash
+                                        : AppIcons.eye,
+                                    size: _screenUtil.setSp(50),
+                                    color: Color(0xff707070),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                       GestureDetector(

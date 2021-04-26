@@ -10,7 +10,7 @@ String getRandomString(int length) {
     3: '!@#\$%^&*_-',
   };
   return String.fromCharCodes(Iterable.generate(length, (_) {
-    String s = characters[_rnd.nextInt(3)];
+    String s = characters[_rnd.nextInt(4)];
 
     return s.codeUnitAt(_rnd.nextInt(s.length));
   }));
