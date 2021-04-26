@@ -438,7 +438,7 @@ class _SignUpState extends State<SignUp> {
   }
 }
 
-enum Gender {
-  Male,
-  Female,
-}
+// enum Gender {
+//   Male,
+//   Female,
+// }
