@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'password_generator.dart' as passwordGenerator;
 
 // import 'country_code.dart';
 // import 'custom_show_dialog.dart';
+import 'app_icons.dart';
 import 'screen_util.dart';
 
 import '../bloc/sign_up/sign_up_bloc.dart';
@@ -17,9 +21,10 @@ class _SignUpState extends State<SignUp> {
 
   // final _firstNameController = TextEditingController();
   // final _lastNameController = TextEditingController();
+  final _nameController = TextEditingController();
   final _userNameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _phoneController = MaskedTextController(mask: '0000 000 0000');
   final _passwordController = TextEditingController();
   final _passwordConfirmController = TextEditingController();
 
@@ -27,10 +32,15 @@ class _SignUpState extends State<SignUp> {
   //
   // Gender _gender;
 
+  bool _passwordShown;
+  bool _passwordConfirmShown;
+
   @override
   void initState() {
     // _countryCode = '+20';
     // _gender = Gender.Male;
+    _passwordShown = false;
+    _passwordConfirmShown = false;
     super.initState();
   }
 
@@ -105,7 +115,7 @@ class _SignUpState extends State<SignUp> {
                         child: _formField(
                           'الاسم بالكامل (إجباري)',
                           Icons.person,
-                          controller: _userNameController,
+                          controller: _nameController,
                         ),
                       ),
 
@@ -271,13 +281,33 @@ class _SignUpState extends State<SignUp> {
                             // ),
                             Flexible(
                               flex: 3,
-                              child: _formField(
-                                'الموبايل (إجباري)',
-                                Icons.phone,
-                                controller: _phoneController,
-                                inputType: TextInputType.phone,
+                              child: Stack(
+                                children: [
+                                  _formField(
+                                    'الموبايل (إجباري)',
+                                    Icons.phone,
+                                    maskedTextController: _phoneController,
+                                    inputType: TextInputType.phone,
+                                  ),
+                                  Positioned(
+                                    top: 0.0,
+                                    bottom: 0.0,
+                                    left: _screenUtil.setWidth(50),
+                                    child: Container(
+                                      height: _screenUtil.setHeight(120),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '+20',
+                                        style: TextStyle(
+                                          color: Color(0xffd8cfcc),
+                                          fontSize: _screenUtil.setSp(40),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -289,11 +319,66 @@ class _SignUpState extends State<SignUp> {
                             left: _screenUtil.setWidth(30),
                             top: _screenUtil.setWidth(20),
                             bottom: _screenUtil.setWidth(20)),
-                        child: _formField(
-                          'كلمة المرور',
-                          Icons.lock,
-                          controller: _passwordController,
-                          obscureText: true,
+                        child: Stack(
+                          children: [
+                            _formField(
+                              'كلمة المرور',
+                              Icons.lock,
+                              controller: _passwordController,
+                              obscureText: _passwordShown ? false : true,
+                            ),
+                            Positioned(
+                              top: 0.0,
+                              bottom: 0.0,
+                              left: _screenUtil.setWidth(50),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _passwordShown =
+                                        _passwordShown ? false : true;
+                                  });
+                                },
+                                child: Container(
+                                  height: _screenUtil.setHeight(120),
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    _passwordShown
+                                        ? AppIcons.eye_slash
+                                        : AppIcons.eye,
+                                    size: _screenUtil.setSp(50),
+                                    color: Color(0xff707070),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: _screenUtil.setWidth(30),
+                            left: _screenUtil.setWidth(30),
+                            bottom: _screenUtil.setWidth(20)),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _passwordShown = true;
+                            });
+                            _passwordController.text =
+                                passwordGenerator.getRandomString(8);
+                          },
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              'إنشاء كلمة مرور',
+                              style: TextStyle(
+                                color: Colors.blueAccent,
+                                fontSize: _screenUtil.setSp(45),
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
 
@@ -304,16 +389,143 @@ class _SignUpState extends State<SignUp> {
                             left: _screenUtil.setWidth(30),
                             top: _screenUtil.setWidth(20),
                             bottom: _screenUtil.setWidth(20)),
-                        child: _formField(
-                          'تأكيد كلمة المرور',
-                          Icons.lock,
-                          controller: _passwordConfirmController,
-                          obscureText: true,
+                        child: Stack(
+                          children: [
+                            _formField(
+                              'تأكيد كلمة المرور',
+                              Icons.lock,
+                              controller: _passwordConfirmController,
+                              obscureText: _passwordConfirmShown ? false : true,
+                            ),
+                            Positioned(
+                              top: 0.0,
+                              bottom: 0.0,
+                              left: _screenUtil.setWidth(50),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _passwordConfirmShown =
+                                        _passwordConfirmShown ? false : true;
+                                  });
+                                },
+                                child: Container(
+                                  height: _screenUtil.setHeight(120),
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    _passwordConfirmShown
+                                        ? AppIcons.eye_slash
+                                        : AppIcons.eye,
+                                    size: _screenUtil.setSp(50),
+                                    color: Color(0xff707070),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
 
                       ListTile(
                         onTap: () {
+                          if (_nameController.text.isEmpty) {
+                            Fluttertoast.showToast(
+                              msg: 'من فضلك أدخل الاسم بالكامل',
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.black54,
+                              textColor: Colors.white,
+                              fontSize: _screenUtil.setSp(50),
+                            );
+                            return;
+                          } else if (_userNameController.text.isEmpty) {
+                            Fluttertoast.showToast(
+                              msg: 'من فضلك أدخل اسم المستخدم',
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.black54,
+                              textColor: Colors.white,
+                              fontSize: _screenUtil.setSp(50),
+                            );
+                            return;
+                          } else if (_userNameController.text.contains(' ')) {
+                            Fluttertoast.showToast(
+                              msg: 'اسم المستخدم لا يمكن أن يحتوي على مسافة',
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.black54,
+                              textColor: Colors.white,
+                              fontSize: _screenUtil.setSp(50),
+                            );
+                            return;
+                          } else if (_emailController.text.isNotEmpty) {
+                            String pattern =
+                                r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                            RegExp regExp = new RegExp(pattern);
+
+                            if (!regExp.hasMatch(_emailController.text)) {
+                              Fluttertoast.showToast(
+                                msg: 'البريد الإلكتروني غير صالح',
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.black54,
+                                textColor: Colors.white,
+                                fontSize: _screenUtil.setSp(50),
+                              );
+                              return;
+                            }
+                          } else if (_phoneController.text.isEmpty) {
+                            Fluttertoast.showToast(
+                              msg: 'من فضلك أدخل رقم الموبايل',
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.black54,
+                              textColor: Colors.white,
+                              fontSize: _screenUtil.setSp(50),
+                            );
+                            return;
+                          } else if (_passwordController.text.isEmpty) {
+                            Fluttertoast.showToast(
+                              msg: 'من فضلك أدخل كلمة المرور',
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.black54,
+                              textColor: Colors.white,
+                              fontSize: _screenUtil.setSp(50),
+                            );
+                            return;
+                          } else if (_passwordConfirmController.text.isEmpty) {
+                            Fluttertoast.showToast(
+                              msg: 'من فضلك قم بتأكيد كلمة المرور',
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.black54,
+                              textColor: Colors.white,
+                              fontSize: _screenUtil.setSp(50),
+                            );
+                            return;
+                          } else if (_passwordConfirmController.text
+                                  .compareTo(_passwordController.text) !=
+                              0) {
+                            Fluttertoast.showToast(
+                              msg:
+                                  'لقد قمت بإدخال كلمة مرور غير مطابقة لكلمة المرور التي أدخلتها.',
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.black54,
+                              textColor: Colors.white,
+                              fontSize: _screenUtil.setSp(50),
+                            );
+                            return;
+                          }
+
                           BlocProvider.of<SignUpBloc>(context).add(SigningUp({
                             "first_name": "Ahmed",
                             "last_name": "Nussair",
@@ -390,7 +602,8 @@ class _SignUpState extends State<SignUp> {
   }
 
   Widget _formField(String hintTitle, IconData icon,
-      {@required final TextEditingController controller,
+      {TextEditingController controller,
+      MaskedTextController maskedTextController,
       final bool obscureText = false,
       final TextInputType inputType = TextInputType.text}) {
     return Stack(
@@ -398,7 +611,7 @@ class _SignUpState extends State<SignUp> {
         Container(
           height: _screenUtil.setHeight(120),
           child: TextFormField(
-            controller: controller,
+            controller: controller != null ? controller : maskedTextController,
             obscureText: obscureText,
             textAlign: TextAlign.end,
             decoration: InputDecoration(
