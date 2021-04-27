@@ -2,9 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class ForgotPasswordResponse {
-  @JsonKey(
-    name: 'user_id',
-  )
   int userId;
   bool result;
   String message;
@@ -13,14 +10,14 @@ class ForgotPasswordResponse {
 
   factory ForgotPasswordResponse.fromJson(Map<String, dynamic> json) =>
       ForgotPasswordResponse(
-        json['user_id'] as int,
+        json['userId'] as int,
         json['result'] as bool,
         json['message'] as String,
       );
 
   Map<String, dynamic> toJson() =>
       <String, dynamic>{
-        'user_id': userId,
+        'userId': userId,
         'result': result,
         'message': message,
       };

@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class CodeVerificationResponse {
-  @JsonKey(name: 'user_id')
   int userId;
   bool result;
   String message;
@@ -11,13 +10,14 @@ class CodeVerificationResponse {
 
   factory CodeVerificationResponse.fromJson(Map<String, dynamic> json) =>
       CodeVerificationResponse(
-        json['user_id'] as int,
+        json['userId'] as int,
         json['result'] as bool,
         json['message'] as String,
       );
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'user_id': userId,
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{
+        'userId': userId,
         'result': result,
         'message': message,
       };

@@ -529,13 +529,11 @@ class _SignUpState extends State<SignUp> {
                           }
 
                           BlocProvider.of<SignUpBloc>(context).add(SigningUp({
-                            "first_name": "Ahmed",
-                            "last_name": "Nussair",
-                            "username": "ahmed_nussair",
-                            "email": "anussair@gmail.com",
-                            "phone": "00201118301953",
-                            "gender": "Male",
-                            "password": "123",
+                            "name": _nameController.text,
+                            "username": _userNameController.text,
+                            "email": _emailController.text,
+                            "phone": "0020" + _phoneController.text,
+                            "password": _passwordController.text,
                           }));
                         },
                         title: Padding(

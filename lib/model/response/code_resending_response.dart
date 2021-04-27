@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class CodeResendingResponse {
-  @JsonKey(name: 'user_id')
   int userId;
   bool result;
   String code;
@@ -11,13 +10,14 @@ class CodeResendingResponse {
 
   factory CodeResendingResponse.fromJson(Map<String, dynamic> json) =>
       CodeResendingResponse(
-        json['user_id'] as int,
+        json['userId'] as int,
         json['result'] as bool,
         json['code'] as String,
       );
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'user_id': userId,
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{
+        'userId': userId,
         'result': true,
         'code': code,
       };
