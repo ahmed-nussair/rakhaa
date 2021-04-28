@@ -24,9 +24,29 @@ class _$ProductsService extends ProductsService {
   }
 
   @override
+  Future<Response<List<SubCategory>>> getSubCategories(int categoryId) {
+    final $url = '/api/SubCategories';
+    final $params = <String, dynamic>{'categoryId': categoryId};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<List<SubCategory>, SubCategory>($request);
+  }
+
+  @override
   Future<Response<List<Category>>> getCategoryById(int id) {
     final $url = '/api/Categories';
     final $params = <String, dynamic>{'id': id};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<List<Category>, Category>($request);
+  }
+
+  @override
+  Future<Response<List<Category>>> getSubCategoryById(
+      int categoryId, int subCategoryId) {
+    final $url = '/api/SubCategories';
+    final $params = <String, dynamic>{
+      'categoryId': categoryId,
+      'subCategoryId': subCategoryId
+    };
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<List<Category>, Category>($request);
   }
@@ -36,5 +56,24 @@ class _$ProductsService extends ProductsService {
     final $url = '/api/Categories/$id';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<Category, Category>($request);
+  }
+
+  @override
+  Future<Response<Category>> getSubCategory(int categoryId, int subCategoryId) {
+    final $url = '/api/SubCategories/$categoryId/$subCategoryId';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<Category, Category>($request);
+  }
+
+  @override
+  Future<Response<List<Product>>> getProducts(int categoryId,
+      {int subCategoryId = -1}) {
+    final $url = '/api/Products';
+    final $params = <String, dynamic>{
+      'categoryId': categoryId,
+      'subCategoryId': subCategoryId
+    };
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<List<Product>, Product>($request);
   }
 }

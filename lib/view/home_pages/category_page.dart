@@ -37,10 +37,12 @@ List _subCategories = [
 
 class CategoryPage extends StatefulWidget {
   final int categoryId;
+  final String categoryName;
   final Function onBackTapped;
 
   CategoryPage({
     @required this.onBackTapped,
+    @required this.categoryName,
     @required this.categoryId,
   });
 
@@ -60,7 +62,7 @@ class _CategoryPageState extends State<CategoryPage> {
           slivers: [
             SliverAppBar(
               title: Text(
-                'مياه',
+                widget.categoryName,
                 style: TextStyle(
                   fontSize: _screenUtil.setSp(50),
                   color: Colors.white,

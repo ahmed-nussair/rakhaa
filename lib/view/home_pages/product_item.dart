@@ -124,8 +124,8 @@ class _ProductItemState extends State<ProductItem> {
                     top: 0.0,
                     right: 0.0,
                     child: Container(
-                      height: _screenUtil.setWidth(200),
-                      width: _screenUtil.setWidth(200),
+                      height: _screenUtil.setWidth(180),
+                      width: _screenUtil.setWidth(180),
                       child: OfferRibbon(
                         percentage: widget.percentage,
                       ),

@@ -16,11 +16,12 @@ class MainPageState extends HomePageState {
 
 class CategoryPageState extends HomePageState {
   final int categoryId;
+  final String categoryName;
 
-  CategoryPageState(this.categoryId);
+  CategoryPageState(this.categoryId, this.categoryName);
 
   @override
-  List<Object> get props => [categoryId];
+  List<Object> get props => [categoryId, categoryName];
 }
 
 class ProfilePageState extends HomePageState {

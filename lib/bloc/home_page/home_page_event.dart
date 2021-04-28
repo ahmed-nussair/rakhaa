@@ -11,8 +11,9 @@ class NavigateToMainPage extends HomePageEvent {
 
 class NavigateToCategoryPage extends HomePageEvent {
   final int categoryId;
+  final String categoryName;
 
-  NavigateToCategoryPage(this.categoryId);
+  NavigateToCategoryPage(this.categoryId, this.categoryName);
 
   @override
   List<Object> get props => [categoryId];

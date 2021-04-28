@@ -19,7 +19,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     if (event is NavigateToMainPage) {
       yield MainPageState();
     } else if (event is NavigateToCategoryPage) {
-      yield CategoryPageState(event.categoryId);
+      yield CategoryPageState(event.categoryId, event.categoryName);
     } else if (event is NavigateToProfilePage) {
       yield ProfilePageState();
     } else if (event is NavigateToOrdersHistoryPage) {

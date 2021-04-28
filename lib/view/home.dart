@@ -202,14 +202,16 @@ class _HomeState extends State<Home> {
                 ),
                 body: state is MainPageState
                     ? MainPage(
-                        onCategoryTapped: (int categoryId) {
-                          BlocProvider.of<HomePageBloc>(context)
-                              .add(NavigateToCategoryPage(categoryId));
+                        onCategoryTapped:
+                            (int categoryId, String categoryName) {
+                          BlocProvider.of<HomePageBloc>(context).add(
+                              NavigateToCategoryPage(categoryId, categoryName));
                         },
                       )
                     : state is CategoryPageState
                         ? CategoryPage(
-                            categoryId: state.categoryId,
+                  categoryId: state.categoryId,
+                            categoryName: state.categoryName,
                             onBackTapped: () {
                               BlocProvider.of<HomePageBloc>(context)
                                   .add(NavigateToMainPage());

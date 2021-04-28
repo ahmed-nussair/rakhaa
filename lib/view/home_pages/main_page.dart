@@ -4,7 +4,7 @@ import '../screen_util.dart';
 import '../../bloc/categories/categories_bloc.dart';
 
 class MainPage extends StatefulWidget {
-  final Function(int) onCategoryTapped;
+  final Function(int, String) onCategoryTapped;
 
   MainPage({
     @required this.onCategoryTapped,
@@ -25,7 +25,7 @@ class _MainPageState extends State<MainPage> {
       child: BlocListener<CategoriesBloc, CategoriesState>(
           listener: (context, state) {
         if (state is CategoryLoadedState) {
-          widget.onCategoryTapped(state.category.id);
+          widget.onCategoryTapped(state.category.id, state.category.name);
         }
       }, child: BlocBuilder<CategoriesBloc, CategoriesState>(
         builder: (context, state) {
