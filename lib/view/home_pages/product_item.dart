@@ -48,7 +48,7 @@ class _ProductItemState extends State<ProductItem> {
                 Padding(
                   padding: EdgeInsets.all(_screenUtil.setHeight(10)),
                   child: Container(
-                    height: _screenUtil.setHeight(100),
+                    height: _screenUtil.setHeight(150),
                     child: Text(
                       widget.title,
                       textAlign: TextAlign.center,

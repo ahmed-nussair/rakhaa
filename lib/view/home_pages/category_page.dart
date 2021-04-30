@@ -1,39 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../screen_util.dart';
 
-import 'product_item.dart';
+import '../../bloc/sub_categories/sub_categories_bloc.dart';
+import '../../bloc/products/products_bloc.dart';
 
-List _subCategories = [
-  {
-    'imageUrl': 'https://i.ibb.co/BPqCChL/nestle.png',
-    'title': 'نستله',
-    'onTapped': () {
-      print('tapped');
-    },
-  },
-  {
-    'imageUrl': 'https://i.ibb.co/C5zBYtJ/baraka.jpg',
-    'title': 'بركة',
-    'onTapped': () {
-      print('tapped');
-    },
-  },
-  {
-    'imageUrl': 'https://i.ibb.co/zfF6Zdg/aquafina.png',
-    'title': 'أكوافينا',
-    'onTapped': () {
-      print('tapped');
-    },
-  },
-  {
-    'imageUrl': 'assets/all_sub_categories.png',
-    'title': 'الكل',
-    'onTapped': () {
-      print('tapped');
-    },
-  },
-];
+import 'products_page.dart';
+
+final int subCategoriesSate = 0;
+final int productsState = 1;
 
 class CategoryPage extends StatefulWidget {
   final int categoryId;
@@ -53,146 +29,254 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   final ScreenUtil _screenUtil = ScreenUtil();
 
+  int _subCategoryId;
+  int _pageState;
+
+  String _subCategoryName;
+
+  @override
+  void initState() {
+    _subCategoryId = -1;
+    _pageState = subCategoriesSate;
+    _subCategoryName = 'كل المنتجات';
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     _screenUtil.init(context);
-    return SafeArea(
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              title: Text(
-                widget.categoryName,
-                style: TextStyle(
-                  fontSize: _screenUtil.setSp(50),
-                  color: Colors.white,
-                ),
-              ),
-              leading: GestureDetector(
-                onTap: () {
-                  widget.onBackTapped();
-                },
-                child: Icon(Icons.arrow_back_ios),
-              ),
-              centerTitle: true,
-              backgroundColor: Color(0xff4599d7),
-            ),
-            SliverGrid.count(
-              crossAxisCount: 4,
-              children: List.generate(_subCategories.length, (index) {
-                return Padding(
-                  padding: EdgeInsets.all(_screenUtil.setWidth(10)),
-                  child: Column(
-                    children: [
-                      Flexible(
-                        flex: 5,
-                        child: Container(
-                          height: _screenUtil.setWidth(150),
-                          width: _screenUtil.setWidth(150),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: _screenUtil.setHeight(1),
-                              color: Colors.black,
-                            ),
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(_screenUtil.setHeight(100))),
-                            image: index < _subCategories.length - 1
-                                ? DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: NetworkImage(
-                                      _subCategories[index]['imageUrl'],
-                                    ),
-                                  )
-                                : DecorationImage(
-                                    scale: _screenUtil.setWidth(10),
-                                    image: AssetImage(
-                                      _subCategories[index]['imageUrl'],
-                                    ),
-                                  ),
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        flex: 2,
-                        child: Text(
-                          _subCategories[index]['title'],
-                          style: TextStyle(
-                              fontSize: _screenUtil.setSp(35),
-                              color: Colors.black),
-                        ),
-                      ),
-                    ],
+    return BlocProvider(
+      create: (_) =>
+          SubCategoriesBloc()..add(LoadingSubCategories(widget.categoryId)),
+      child: BlocBuilder<SubCategoriesBloc, SubCategoriesState>(
+        builder: (context, state) {
+          return SafeArea(
+            child: Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    widget.categoryName,
+                    style: TextStyle(
+                      fontSize: _screenUtil.setSp(50),
+                      color: Colors.white,
+                    ),
                   ),
-                );
-              }),
-            ),
-            SliverPadding(
-              padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-              sliver: SliverGrid.count(
-                crossAxisCount: 2,
-                childAspectRatio: 1,
-                crossAxisSpacing: _screenUtil.setWidth(30),
-                mainAxisSpacing: _screenUtil.setWidth(30),
-                children: List.generate(_products.length, (index) {
-                  return ProductItem(
-                    title: _products[index]['title'],
-                    imageUrl: _products[index]['imageUrl'],
-                    price: _products[index]['price'],
-                    afterDiscount: _products[index]['afterDiscount'],
-                    percentage: _products[index]['percentage'],
-                    // onMerchantNameTapped: widget.onMerchantNameTapped,
-                  );
-                }),
-              ),
-            ),
-          ],
-        ),
+                  leading: GestureDetector(
+                    onTap: () {
+                      widget.onBackTapped();
+                    },
+                    child: Icon(Icons.arrow_back_ios),
+                  ),
+                  centerTitle: true,
+                  backgroundColor: Color(0xff4599d7),
+                ),
+                body: _pageState == subCategoriesSate
+                    ? state is LoadingSubCategoriesState
+                        ? Container()
+                        : state is SubCategoriesLoadedState
+                            ? Builder(
+                                builder: (context) {
+                                  if (state.subCategories.length > 0) {
+                                    return Builder(
+                                      builder: (context) {
+                                        List _subCategories = [];
+
+                                        for (var item in state.subCategories) {
+                                          Map map = {
+                                            'imageUrl': item.imageUrl,
+                                            'title': item.name,
+                                            'onTapped': () {
+                                              setState(() {
+                                                _subCategoryId = item.id;
+                                                _pageState = productsState;
+                                                _subCategoryName = item.name;
+                                              });
+                                            },
+                                            'categoryId': item.categoryId,
+                                            'id': item.id
+                                          };
+
+                                          _subCategories.add(map);
+                                        }
+
+                                        if (_subCategories.length > 0) {
+                                          _subCategories.add({
+                                            'imageUrl':
+                                                'assets/all_sub_categories.png',
+                                            'title': 'الكل',
+                                            'onTapped': () {
+                                              setState(() {
+                                                _subCategoryId = -1;
+                                                _pageState = productsState;
+                                                _subCategoryName =
+                                                    'كل المنتجات';
+                                              });
+                                            },
+                                            'categoryId': widget.categoryId,
+                                            'id': -1,
+                                          });
+                                        }
+
+                                        return GridView.count(
+                                          crossAxisCount: 3,
+                                          children: List.generate(
+                                              _subCategories.length, (index) {
+                                            return Padding(
+                                              padding: EdgeInsets.all(
+                                                  _screenUtil.setWidth(10)),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  _subCategories[index]
+                                                      ['onTapped']();
+                                                },
+                                                child: Column(
+                                                  children: [
+                                                    Flexible(
+                                                      flex: 5,
+                                                      child: Container(
+                                                        height: _screenUtil
+                                                            .setWidth(150),
+                                                        width: _screenUtil
+                                                            .setWidth(150),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                            width: _screenUtil
+                                                                .setHeight(1),
+                                                            color: Colors.black,
+                                                          ),
+                                                          borderRadius: BorderRadius
+                                                              .all(Radius.circular(
+                                                                  _screenUtil
+                                                                      .setHeight(
+                                                                          100))),
+                                                          image: index <
+                                                                  _subCategories
+                                                                          .length -
+                                                                      1
+                                                              ? DecorationImage(
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                  image:
+                                                                      NetworkImage(
+                                                                    _subCategories[
+                                                                            index]
+                                                                        [
+                                                                        'imageUrl'],
+                                                                  ),
+                                                                )
+                                                              : DecorationImage(
+                                                                  scale: _screenUtil
+                                                                      .setWidth(
+                                                                          10),
+                                                                  image:
+                                                                      AssetImage(
+                                                                    _subCategories[
+                                                                            index]
+                                                                        [
+                                                                        'imageUrl'],
+                                                                  ),
+                                                                ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Flexible(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        _subCategories[index]
+                                                            ['title'],
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                _screenUtil
+                                                                    .setSp(35),
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                        );
+                                      },
+                                    );
+                                  }
+                                  return ProductsView(
+                                    categoryId: widget.categoryId,
+                                    subCategoryId: _subCategoryId,
+                                    subCategoryName: _subCategoryName,
+                                    onBackTapped: () {
+                                      setState(() {
+                                        _pageState = subCategoriesSate;
+                                      });
+                                    },
+                                  );
+                                },
+                              )
+                            : Container()
+                    : _pageState == productsState
+                        ? ProductsView(
+                            categoryId: widget.categoryId,
+                            subCategoryId: _subCategoryId,
+                            subCategoryName: _subCategoryName,
+                            onBackTapped: () {
+                              setState(() {
+                                _pageState = subCategoriesSate;
+                              });
+                            },
+                          )
+                        : Container()),
+          );
+        },
       ),
     );
   }
 }
 
-List _products = [
-  {
-    'imageUrl': 'https://i.ibb.co/M9f86L6/aquafina-0-5.jpg',
-    'title': 'أكوافينا 0.5 لتر',
-    'price': 3.0,
-    'afterDiscount': 3.0,
-    'percentage': 20.0,
-  },
-  {
-    'imageUrl': 'https://i.ibb.co/80CFJtt/aquafina-19.jpg',
-    'title': 'أكوافينا 19 جالون',
-    'price': 100.0,
-    'afterDiscount': 100.0,
-    'percentage': 15.0,
-  },
-  {
-    'imageUrl': 'https://i.ibb.co/LSpKByw/baraka-1-5.jpg',
-    'title': 'بركة 1.5 لتر',
-    'price': 5.0,
-    'afterDiscount': 5.0,
-    'percentage': 10.0,
-  },
-  {
-    'imageUrl': 'https://i.ibb.co/wQsPDVD/nestle-0-5.jpg',
-    'title': 'نستله 0.5 لتر',
-    'price': 3.0,
-    'afterDiscount': 3.0,
-    'percentage': 0.0,
-  },
-  {
-    'imageUrl': 'https://i.ibb.co/HTt6JyG/nestle-1-5.jpg',
-    'title': 'نستله 1.5 لتر',
-    'price': 5.0,
-    'afterDiscount': 5.0,
-    'percentage': 0.0,
-  },
-  {
-    'imageUrl': 'https://i.ibb.co/wQsPDVD/nestle-0-5.jpg',
-    'title': 'نستله 0.5 لتر',
-    'price': 3.0,
-    'afterDiscount': 3.0,
-    'percentage': 0.0,
-  },
-];
+class ProductsView extends StatelessWidget {
+  final int categoryId;
+  final int subCategoryId;
+  final String subCategoryName;
+  final Function onBackTapped;
+
+  final ScreenUtil _screenUtil = ScreenUtil();
+
+  ProductsView({
+    @required this.categoryId,
+    @required this.subCategoryId,
+    @required this.subCategoryName,
+    @required this.onBackTapped,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    _screenUtil.init(context);
+    return BlocProvider(
+      create: (_) => ProductsBloc()
+        ..add(LoadingProducts(categoryId, subCategoryId: subCategoryId)),
+      child: BlocBuilder<ProductsBloc, ProductsState>(
+        builder: (context, state) {
+          if (state is ProductsLoadedState) {
+            return state.products.length > 0
+                ? ProductsPage(
+                    subCategoryName: subCategoryName,
+                    onBackTapped: () {
+                      onBackTapped();
+                    },
+                    productsList: state.products,
+                  )
+                : Center(
+                    child: Text(
+                      'لا يوجد أي منتجات تحت هذه الفئة',
+                      style: TextStyle(
+                        fontSize: _screenUtil.setSp(50),
+                      ),
+                    ),
+                  );
+          }
+          return Container();
+        },
+      ),
+    );
+  }
+}
