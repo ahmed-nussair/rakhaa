@@ -43,3 +43,22 @@ class ShoppingCartPageState extends HomePageState {
   @override
   List<Object> get props => [];
 }
+
+class SigningOutState extends HomePageState {
+  @override
+  List<Object> get props => [];
+}
+
+class SignedOutState extends HomePageState {
+  @override
+  List<Object> get props => [];
+}
+
+class ErrorSigningOutState extends HomePageState {
+  final String message;
+
+  ErrorSigningOutState(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

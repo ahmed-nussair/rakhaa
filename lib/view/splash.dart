@@ -2,7 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:rakhaa/view/screen_util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../globals.dart' as Globals;
+
+import 'home.dart';
 import 'signin.dart';
 
 class Splash extends StatefulWidget {
@@ -18,9 +22,15 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   Animation _animation;
 
   startApp() async {
-    return Timer(Duration(seconds: 2), () {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => SignIn()));
+    return Timer(Duration(seconds: 2), () async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      String token = prefs.getString(Globals.token) ?? '';
+
+      print('Token: $token');
+
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => token.isEmpty ? SignIn() : Home()));
     });
   }
 

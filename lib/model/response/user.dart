@@ -21,7 +21,7 @@ class User {
         json['username'] as String,
         json['email'] as String,
         json['phone'] as String,
-        json['image_url'] as String,
+        json['image_Url'] as String,
       );
 
   Map<String, dynamic> toJson() =>
@@ -31,6 +31,6 @@ class User {
         'username': username,
         'email': email,
         'phone': phone,
-        'image_url': imageUrl,
+        'image_Url': imageUrl,
       };
 }

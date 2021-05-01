@@ -38,3 +38,12 @@ class NavigateToShoppingCartPage extends HomePageEvent {
   @override
   List<Object> get props => [];
 }
+
+class SignOut extends HomePageEvent {
+  final String token;
+
+  SignOut(this.token);
+
+  @override
+  List<Object> get props => [token];
+}
