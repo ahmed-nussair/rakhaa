@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screen_util.dart';
 import 'profile_pages/addresses_page.dart';
 import 'profile_pages/details_page.dart';
+
+import '../../globals.dart' as Globals;
 
 final List addresses = [
   {
@@ -83,7 +86,22 @@ class _ProfilePageState extends State<ProfilePage>
         physics: NeverScrollableScrollPhysics(),
         children: [
           AddressesPage(addresses: addresses),
-          DetailsPage(),
+          FutureBuilder<SharedPreferences>(
+            future: SharedPreferences.getInstance(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return DetailsPage(
+                  name: snapshot.data.getString(Globals.name),
+                  imageUrl: snapshot.data.getString(Globals.imageUrl),
+                  email: snapshot.data.getString(Globals.email),
+                  password: snapshot.data.getString(Globals.password),
+                  phone: snapshot.data.getString(Globals.phone),
+                  token: snapshot.data.getString(Globals.token),
+                );
+              }
+              return Container();
+            },
+          ),
         ],
       ),
     );

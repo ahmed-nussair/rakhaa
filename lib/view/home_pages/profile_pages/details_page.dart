@@ -4,6 +4,22 @@ import '../../screen_util.dart';
 import 'new_password_dialog.dart';
 
 class DetailsPage extends StatefulWidget {
+  final String name;
+  final String imageUrl;
+  final String email;
+  final String phone;
+  final String password;
+  final String token;
+
+  DetailsPage({
+    @required this.name,
+    @required this.imageUrl,
+    @required this.email,
+    @required this.phone,
+    @required this.password,
+    @required this.token,
+  });
+
   @override
   _DetailsPageState createState() => _DetailsPageState();
 }
@@ -22,10 +38,10 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   void initState() {
     _nameEditing = false;
-    _nameController.text = 'أحمد';
-    _emailNameController.text = 'anussair@gamil.com';
-    _phoneNameController.text = '+20 111 830 1953';
-    _passwordNameController.text = '123';
+    _nameController.text = widget.name;
+    _emailNameController.text = widget.email;
+    _phoneNameController.text = widget.phone;
+    _passwordNameController.text = widget.password;
     _oldValue = '';
     super.initState();
   }
@@ -44,7 +60,9 @@ class _DetailsPageState extends State<DetailsPage> {
                   CircleAvatar(
                     backgroundColor: Color(0x55000000),
                     radius: _screenUtil.setWidth(100),
-                    backgroundImage: AssetImage('assets/person.png'),
+                    backgroundImage: widget.imageUrl.isEmpty
+                        ? AssetImage('assets/person.png')
+                        : NetworkImage(widget.imageUrl),
                   ),
                   Padding(
                     padding: EdgeInsets.all(_screenUtil.setWidth(30)),
