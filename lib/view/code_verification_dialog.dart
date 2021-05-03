@@ -81,6 +81,7 @@ class _CodeVerificationDialogDialogState extends State<CodeVerificationDialog> {
                 Expanded(
                   child: ListView(
                     children: [
+                      // instruction
                       Padding(
                         padding: EdgeInsets.all(_screenUtil.setWidth(30)),
                         child: Container(
@@ -94,6 +95,8 @@ class _CodeVerificationDialogDialogState extends State<CodeVerificationDialog> {
                           ),
                         ),
                       ),
+
+                      // Resending code link
                       Padding(
                         padding: EdgeInsets.all(_screenUtil.setWidth(10)),
                         child: GestureDetector(
@@ -115,6 +118,8 @@ class _CodeVerificationDialogDialogState extends State<CodeVerificationDialog> {
                           ),
                         ),
                       ),
+
+                      // code field
                       Padding(
                         padding: EdgeInsets.all(_screenUtil.setWidth(30)),
                         child: TextFormField(
@@ -148,6 +153,8 @@ class _CodeVerificationDialogDialogState extends State<CodeVerificationDialog> {
                           ),
                         ),
                       ),
+
+                      // status text
                       Padding(
                         padding: EdgeInsets.all(_screenUtil.setWidth(10)),
                         child: Container(
@@ -165,29 +172,18 @@ class _CodeVerificationDialogDialogState extends State<CodeVerificationDialog> {
                     ],
                   ),
                 ),
+
+                // Buttons
                 Padding(
                   padding: EdgeInsets.all(_screenUtil.setWidth(50)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      // Code Verification Button
                       ElevatedButton(
                         onPressed: () {
                           BlocProvider.of<CodeVerificationBloc>(context).add(
                               Verifying(widget.userId, _otpController.text));
-                          // if (_otpController.text.isEmpty) {
-                          //   setState(() {
-                          //     _status = 'من فضلك أدخل الكود المرسل إليك عبر رسالة نصية';
-                          //   });
-                          //   return;
-                          // } else if (_otpController.text != '1234') {
-                          //   setState(() {
-                          //     _status = 'عفوًا الكود غير صحيح';
-                          //   });
-                          //   return;
-                          // } else {
-                          //   Navigator.of(context).pop();
-                          //   widget.onAuthenticated();
-                          // }
                         },
                         child: Text(
                           'تحقق من الكود',
@@ -196,6 +192,8 @@ class _CodeVerificationDialogDialogState extends State<CodeVerificationDialog> {
                           ),
                         ),
                       ),
+
+                      // Cancel Button
                       ElevatedButton(
                         onPressed: () => Navigator.of(context).pop(),
                         child: Text(
