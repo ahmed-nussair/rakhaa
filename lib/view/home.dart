@@ -71,15 +71,50 @@ class _HomeState extends State<Home> {
                                         ConnectionState.done) {
                                       String userImageUrl =
                                           snapshot.data.get(Globals.imageUrl);
-                                      return CircleAvatar(
-                                        radius: _screenUtil.setWidth(70),
-                                        backgroundColor: Colors.transparent,
-                                        backgroundImage: userImageUrl != null &&
-                                                userImageUrl.isNotEmpty
-                                            ? NetworkImage(snapshot.data
-                                                .get(Globals.imageUrl))
-                                            : AssetImage('assets/person.png'),
-                                      );
+                                      return userImageUrl != null &&
+                                              userImageUrl.isNotEmpty
+                                          ? FutureBuilder<bool>(
+                                              future: Globals.getImage(
+                                                  userImageUrl),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.done) {
+                                                  return CircleAvatar(
+                                                    radius: _screenUtil
+                                                        .setWidth(70),
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    backgroundImage: snapshot
+                                                            .data
+                                                        ? NetworkImage(
+                                                            userImageUrl)
+                                                        : AssetImage(
+                                                            'assets/person.png'),
+                                                  );
+                                                }
+                                                return Container(
+                                                  alignment: Alignment.center,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      CircularProgressIndicator(),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            )
+                                          : CircleAvatar(
+                                              radius: _screenUtil.setWidth(70),
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              backgroundImage: AssetImage(
+                                                  'assets/person.png'),
+                                            );
                                     }
                                     return Container(
                                       alignment: Alignment.center,
