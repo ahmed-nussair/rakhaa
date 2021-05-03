@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../../custom_show_dialog.dart';
 import '../../screen_util.dart';
 import 'new_password_dialog.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../../globals.dart' as Globals;
 
 class DetailsPage extends StatefulWidget {
   final String name;
@@ -35,6 +40,19 @@ class _DetailsPageState extends State<DetailsPage> {
   bool _nameEditing;
   String _oldValue;
 
+  File _image;
+  final picker = ImagePicker();
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      }
+    });
+  }
+
   @override
   void initState() {
     _nameEditing = false;
@@ -57,12 +75,61 @@ class _DetailsPageState extends State<DetailsPage> {
             children: [
               Column(
                 children: [
-                  CircleAvatar(
-                    backgroundColor: Color(0x55000000),
-                    radius: _screenUtil.setWidth(100),
-                    backgroundImage: widget.imageUrl.isEmpty
-                        ? AssetImage('assets/person.png')
-                        : NetworkImage(widget.imageUrl),
+                  Column(
+                    children: [
+                      _image == null
+                          ? FutureBuilder<bool>(
+                              future: Globals.getImage(widget.imageUrl),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  return CircleAvatar(
+                                    backgroundColor: Color(0x55000000),
+                                    radius: _screenUtil.setWidth(100),
+                                    backgroundImage: snapshot.data
+                                        ? NetworkImage(widget.imageUrl)
+                                        : AssetImage('assets/person.png'),
+                                  );
+                                }
+                                return Container(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator(),
+                                    ],
+                                  ),
+                                );
+                              },
+                            )
+                          : CircleAvatar(
+                              backgroundColor: Color(0x55000000),
+                              radius: _screenUtil.setWidth(100),
+                              backgroundImage: FileImage(_image),
+                            ),
+                      GestureDetector(
+                        onTap: () async {
+                          final pickedFile = await picker.getImage(
+                              source: ImageSource.gallery);
+
+                          setState(() {
+                            if (pickedFile != null) {
+                              _image = File(pickedFile.path);
+                            }
+                          });
+                        },
+                        child: Text(
+                          'تغيير الصورة',
+                          style: TextStyle(
+                            fontSize: _screenUtil.setSp(50),
+                            color: Colors.blueAccent,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.all(_screenUtil.setWidth(30)),
@@ -103,26 +170,26 @@ class _DetailsPageState extends State<DetailsPage> {
                               },
                               child: _nameEditing
                                   ? Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              _nameEditing = false;
-                                            });
-                                            _nameController.text = _oldValue;
-                                          },
-                                          child: Icon(Icons.cancel),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              _nameEditing = false;
-                                            });
-                                          },
-                                          child: Icon(Icons.check),
-                                        ),
-                                      ],
-                                    )
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _nameEditing = false;
+                                      });
+                                      _nameController.text = _oldValue;
+                                    },
+                                    child: Icon(Icons.cancel),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _nameEditing = false;
+                                      });
+                                    },
+                                    child: Icon(Icons.check),
+                                  ),
+                                ],
+                              )
                                   : Icon(Icons.edit),
                             ),
                           ),
@@ -149,7 +216,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         enabled: false,
                         border: OutlineInputBorder(
                           borderRadius:
-                              BorderRadius.circular(_screenUtil.setWidth(50)),
+                          BorderRadius.circular(_screenUtil.setWidth(50)),
                         ),
                       ),
                     ),
@@ -173,7 +240,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         enabled: false,
                         border: OutlineInputBorder(
                           borderRadius:
-                              BorderRadius.circular(_screenUtil.setWidth(50)),
+                          BorderRadius.circular(_screenUtil.setWidth(50)),
                         ),
                       ),
                     ),
