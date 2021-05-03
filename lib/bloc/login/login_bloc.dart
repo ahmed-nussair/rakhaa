@@ -25,7 +25,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final loginService = LoginService.create();
 
       final response = await loginService.login(event.username, event.password);
-
+      print(response.bodyString);
       if (response.isSuccessful) {
         final loginResponse = response.body;
 
