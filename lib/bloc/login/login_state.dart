@@ -15,8 +15,27 @@ class LoggingInState extends LoginState {
 }
 
 class SuccessState extends LoginState {
+  final String token;
+  final String name;
+  final String username;
+  final String email;
+  final String phone;
+  final String password;
+  final String imageUrl;
+
+  SuccessState({
+    this.name,
+    this.imageUrl,
+    this.token,
+    this.phone,
+    this.password,
+    this.email,
+    this.username,
+  });
+
   @override
-  List<Object> get props => [];
+  List<Object> get props =>
+      [token, name, username, email, phone, password, imageUrl];
 }
 
 class FailedState extends LoginState {

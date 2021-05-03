@@ -46,7 +46,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           await prefs.setString(Globals.email, loginResponse.data.email);
           await prefs.setString(Globals.phone, loginResponse.data.phone);
           await prefs.setString(Globals.password, event.password);
-          yield SuccessState();
+          yield SuccessState(
+            name: loginResponse.token,
+            email: loginResponse.data.email,
+            imageUrl: loginResponse.data.imageUrl,
+            password: event.password,
+            phone: loginResponse.data.phone,
+            token: loginResponse.token,
+            username: loginResponse.data.username,
+          );
         } else {
           yield FailedState(
               'اسم المستخدم ليس بصحيح أو كلمة المرور ليست بصحيحة');
