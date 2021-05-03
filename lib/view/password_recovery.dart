@@ -113,12 +113,35 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              BlocProvider.of<ForgotPasswordBloc>(context).add(
-                                  Sending({
-                                "username": "ahmed_nussair",
-                                "phone": "",
-                                "email": ""
-                              }));
+                              Map<String, dynamic> input;
+                              String pattern =
+                                  r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                              RegExp regExp = new RegExp(pattern);
+
+                              if (regExp.hasMatch(_usernameController.text)) {
+                                input = {
+                                  "username": "",
+                                  "phone": "",
+                                  "email": "${_usernameController.text}"
+                                };
+                              }
+                              if (int.tryParse(_usernameController.text) !=
+                                  null) {
+                                input = {
+                                  "username": "",
+                                  "phone": "${_usernameController.text}",
+                                  "email": ""
+                                };
+                              } else {
+                                input = {
+                                  "username": "${_usernameController.text}",
+                                  "phone": "",
+                                  "email": ""
+                                };
+                              }
+
+                              BlocProvider.of<ForgotPasswordBloc>(context)
+                                  .add(Sending(input));
                             },
                             child: Container(
                               alignment: Alignment.center,
