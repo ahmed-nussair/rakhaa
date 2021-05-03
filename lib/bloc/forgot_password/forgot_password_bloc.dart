@@ -24,7 +24,7 @@ class ForgotPasswordBloc
       final service = ForgotPasswordService.create();
 
       final response = await service.send(event.input);
-
+      //print(response.bodyString);
       if (response.isSuccessful) {
         final verificationResponse = response.body;
 
