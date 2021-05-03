@@ -47,7 +47,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           await prefs.setString(Globals.phone, loginResponse.data.phone);
           await prefs.setString(Globals.password, event.password);
           yield SuccessState(
-            name: loginResponse.token,
+            name: loginResponse.data.name,
             email: loginResponse.data.email,
             imageUrl: loginResponse.data.imageUrl,
             password: event.password,

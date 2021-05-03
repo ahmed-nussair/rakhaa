@@ -18,6 +18,12 @@ import '../globals.dart' as Globals;
 import 'signin.dart';
 
 class Home extends StatefulWidget {
+  final String name;
+
+  Home({
+    @required this.name,
+  });
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -53,152 +59,260 @@ class _HomeState extends State<Home> {
                       key: _key,
                       appBar: PreferredSize(
                         preferredSize:
-                            Size.fromHeight(_screenUtil.setHeight(300)),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: _screenUtil.setHeight(200),
-                          color: Color(0xff4599d7),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              // profile image
-                              Flexible(
-                                flex: 1,
-                                child: FutureBuilder<SharedPreferences>(
-                                  future: SharedPreferences.getInstance(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.done) {
-                                      String userImageUrl =
-                                          snapshot.data.get(Globals.imageUrl);
-                                      return userImageUrl != null &&
-                                              userImageUrl.isNotEmpty
-                                          ? FutureBuilder<bool>(
-                                              future: Globals.getImage(
-                                                  userImageUrl),
+                            Size.fromHeight(_screenUtil.setHeight(450)),
+                        child: Column(
+                          children: [
+                            Container(),
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              width: MediaQuery.of(context).size.width,
+                              height: _screenUtil.setHeight(450),
+                              color: Color(0xff4599d7),
+                              child: Stack(
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          // profile image
+                                          Flexible(
+                                            flex: 1,
+                                            child: FutureBuilder<
+                                                SharedPreferences>(
+                                              future: SharedPreferences
+                                                  .getInstance(),
                                               builder: (context, snapshot) {
                                                 if (snapshot.connectionState ==
                                                     ConnectionState.done) {
-                                                  return CircleAvatar(
-                                                    radius: _screenUtil
-                                                        .setWidth(70),
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                    backgroundImage: snapshot
-                                                            .data
-                                                        ? NetworkImage(
-                                                            userImageUrl)
-                                                        : AssetImage(
-                                                            'assets/person.png'),
-                                                  );
+                                                  String userImageUrl = snapshot
+                                                      .data
+                                                      .get(Globals.imageUrl);
+                                                  return userImageUrl != null &&
+                                                          userImageUrl
+                                                              .isNotEmpty
+                                                      ? FutureBuilder<bool>(
+                                                          future:
+                                                              Globals.getImage(
+                                                                  userImageUrl),
+                                                          builder: (context,
+                                                              snapshot) {
+                                                            if (snapshot
+                                                                    .connectionState ==
+                                                                ConnectionState
+                                                                    .done) {
+                                                              return CircleAvatar(
+                                                                radius:
+                                                                    _screenUtil
+                                                                        .setWidth(
+                                                                            70),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                backgroundImage: snapshot
+                                                                        .data
+                                                                    ? NetworkImage(
+                                                                        userImageUrl)
+                                                                    : AssetImage(
+                                                                        'assets/person.png'),
+                                                              );
+                                                            }
+                                                            return Container(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  CircularProgressIndicator(),
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
+                                                        )
+                                                      : CircleAvatar(
+                                                          radius: _screenUtil
+                                                              .setWidth(70),
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .transparent,
+                                                          backgroundImage:
+                                                              AssetImage(
+                                                                  'assets/person.png'),
+                                                        );
                                                 }
                                                 return Container(
                                                   alignment: Alignment.center,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      CircularProgressIndicator(),
-                                                    ],
+                                                  child: Container(
+                                                    height: _screenUtil
+                                                        .setWidth(70),
+                                                    width: _screenUtil
+                                                        .setWidth(70),
+                                                    child:
+                                                        CircularProgressIndicator(),
                                                   ),
                                                 );
                                               },
-                                            )
-                                          : CircleAvatar(
-                                              radius: _screenUtil.setWidth(70),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              backgroundImage: AssetImage(
-                                                  'assets/person.png'),
-                                            );
-                                    }
-                                    return Container(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        height: _screenUtil.setWidth(70),
-                                        width: _screenUtil.setWidth(70),
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
+                                            ),
+                                          ),
 
-                              // Search bar
-                              Flexible(
-                                flex: 5,
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      height: _screenUtil.setHeight(150),
-                                      child: TextFormField(
-                                        textAlign: TextAlign.right,
-                                        textAlignVertical:
-                                            TextAlignVertical.center,
-                                        textDirection: TextDirection.rtl,
-                                        decoration: InputDecoration(
-                                          hintText: 'اكتب هنا ما تريد',
-                                          hintStyle: TextStyle(
-                                              fontSize: _screenUtil.setSp(50)),
-                                          filled: true,
-                                          fillColor: Colors.white,
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                _screenUtil.setWidth(100)),
+                                          // Search bar
+                                          Flexible(
+                                            flex: 5,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  height: _screenUtil
+                                                      .setHeight(150),
+                                                  child: TextFormField(
+                                                    textAlign: TextAlign.right,
+                                                    textAlignVertical:
+                                                        TextAlignVertical
+                                                            .center,
+                                                    textDirection:
+                                                        TextDirection.rtl,
+                                                    decoration: InputDecoration(
+                                                      hintText:
+                                                          'اكتب هنا ما تريد',
+                                                      hintStyle: TextStyle(
+                                                          fontSize: _screenUtil
+                                                              .setSp(50)),
+                                                      filled: true,
+                                                      fillColor: Colors.white,
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                _screenUtil
+                                                                    .setWidth(
+                                                                        100)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  top: 0.0,
+                                                  bottom: 0.0,
+                                                  left: 0.0,
+                                                  child: Container(
+                                                    width: _screenUtil
+                                                        .setWidth(130),
+                                                    decoration: BoxDecoration(
+                                                      color: Color(0xff3573ac),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(
+                                                                _screenUtil
+                                                                    .setWidth(
+                                                                        100)),
+                                                        bottomLeft:
+                                                            Radius.circular(
+                                                                _screenUtil
+                                                                    .setWidth(
+                                                                        100)),
+                                                      ),
+                                                    ),
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        print('Tapped');
+                                                      },
+                                                      child: Icon(
+                                                        Icons.search,
+                                                        color: Colors.white,
+                                                        size: _screenUtil
+                                                            .setSp(70),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 0.0,
-                                      bottom: 0.0,
-                                      left: 0.0,
-                                      child: Container(
-                                        width: _screenUtil.setWidth(130),
-                                        decoration: BoxDecoration(
-                                          color: Color(0xff3573ac),
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(
-                                                _screenUtil.setWidth(100)),
-                                            bottomLeft: Radius.circular(
-                                                _screenUtil.setWidth(100)),
-                                          ),
-                                        ),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            print('Tapped');
-                                          },
-                                          child: Icon(
-                                            Icons.search,
-                                            color: Colors.white,
-                                            size: _screenUtil.setSp(70),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
 
-                              // Drawer opener
-                              Flexible(
-                                flex: 1,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _key.currentState.openEndDrawer();
-                                  },
-                                  child: Image.asset(
-                                    'assets/more.png',
-                                    width: _screenUtil.setWidth(100),
+                                          // Drawer opener
+                                          Flexible(
+                                            flex: 1,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                _key.currentState
+                                                    .openEndDrawer();
+                                              },
+                                              child: Image.asset(
+                                                'assets/more.png',
+                                                width:
+                                                    _screenUtil.setWidth(100),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: _screenUtil.setHeight(50),
+                                      ),
+                                    ],
                                   ),
-                                ),
+
+                                  // Welcoming the user
+                                  Positioned(
+                                    top: 0.0,
+                                    right: 0.0,
+                                    child: Container(
+                                      alignment: Alignment.centerRight,
+                                      height: _screenUtil.setHeight(200),
+                                      width: _screenUtil.setWidth(700),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xff3573ac),
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(
+                                                _screenUtil.setWidth(200))),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(
+                                            _screenUtil.setWidth(30)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              widget.name.isEmpty
+                                                  ? 'عزيزي الزائر'
+                                                  : 'يا ${widget.name}',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: _screenUtil.setSp(50),
+                                              ),
+                                            ),
+                                            Text(
+                                              ' ،',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: _screenUtil.setSp(50),
+                                              ),
+                                            ),
+                                            Text(
+                                              'أهلًا ومرحبًا بك',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: _screenUtil.setSp(50),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                       endDrawer: FutureBuilder<SharedPreferences>(

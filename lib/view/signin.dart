@@ -39,8 +39,10 @@ class _SignInState extends State<SignIn> {
       child: BlocListener<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is SuccessState) {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => Home()));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => Home(
+                      name: state.name,
+                    )));
           } else if (state is FailedState) {
             Fluttertoast.showToast(
               msg: state.message,
@@ -327,8 +329,10 @@ class _SignInState extends State<SignIn> {
                   // login as a guest
                   bottomNavigationBar: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => Home()));
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => Home(
+                                name: '',
+                              )));
                     },
                     child: Container(
                       padding: EdgeInsets.all(_screenUtil.setWidth(50)),
