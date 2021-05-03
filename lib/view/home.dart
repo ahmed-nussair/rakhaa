@@ -62,7 +62,6 @@ class _HomeState extends State<Home> {
                             Size.fromHeight(_screenUtil.setHeight(450)),
                         child: Column(
                           children: [
-                            Container(),
                             Container(
                               alignment: Alignment.bottomCenter,
                               width: MediaQuery.of(context).size.width,
@@ -131,7 +130,11 @@ class _HomeState extends State<Home> {
                                                                     CrossAxisAlignment
                                                                         .center,
                                                                 children: [
-                                                                  CircularProgressIndicator(),
+                                                                  CircularProgressIndicator(
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
                                                                 ],
                                                               ),
                                                             );
