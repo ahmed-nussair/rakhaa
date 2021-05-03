@@ -27,7 +27,7 @@ class CodeVerificationBloc
         final service = CodeVerificationService.create();
 
         final response = await service.verify({
-          'user_id': event.userId,
+          'userId': event.userId,
           'code': event.code,
         });
 
