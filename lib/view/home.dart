@@ -59,13 +59,13 @@ class _HomeState extends State<Home> {
                       key: _key,
                       appBar: PreferredSize(
                         preferredSize:
-                            Size.fromHeight(_screenUtil.setHeight(450)),
+                            Size.fromHeight(_screenUtil.setHeight(400)),
                         child: Column(
                           children: [
                             Container(
                               alignment: Alignment.bottomCenter,
                               width: MediaQuery.of(context).size.width,
-                              height: _screenUtil.setHeight(450),
+                              height: _screenUtil.setHeight(400),
                               color: Color(0xff4599d7),
                               child: Stack(
                                 children: [
@@ -269,7 +269,7 @@ class _HomeState extends State<Home> {
                                     right: 0.0,
                                     child: Container(
                                       alignment: Alignment.centerRight,
-                                      height: _screenUtil.setHeight(200),
+                                      height: _screenUtil.setHeight(150),
                                       width: _screenUtil.setWidth(700),
                                       decoration: BoxDecoration(
                                         color: Color(0xff3573ac),
@@ -287,7 +287,7 @@ class _HomeState extends State<Home> {
                                             Text(
                                               widget.name.isEmpty
                                                   ? 'عزيزي الزائر'
-                                                  : 'يا ${widget.name}',
+                                                  : '${widget.name}',
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: _screenUtil.setSp(50),

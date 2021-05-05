@@ -59,6 +59,7 @@ class _ProductsPageState extends State<ProductsPage> {
           mainAxisSpacing: _screenUtil.setWidth(40),
           children: List.generate(widget.productsList.length, (index) {
             return ProductItem(
+              id: widget.productsList[index].id,
               title: widget.productsList[index].name,
               imageUrl: widget.productsList[index].imageUrl,
               price: widget.productsList[index].price,

@@ -26,11 +26,18 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       String token = prefs.getString(Globals.token) ?? '';
+      String username = prefs.getString(Globals.username) ?? '';
 
       print('Token: $token');
 
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => token.isEmpty ? SignIn() : Home()));
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+            builder: (context) => token.isEmpty
+                ? SignIn()
+                : Home(
+                    name: username,
+                  )),
+      );
     });
   }
 

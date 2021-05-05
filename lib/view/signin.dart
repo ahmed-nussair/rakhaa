@@ -41,7 +41,7 @@ class _SignInState extends State<SignIn> {
           if (state is SuccessState) {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (context) => Home(
-                      name: state.name,
+                      name: state.username,
                     )));
           } else if (state is FailedState) {
             Fluttertoast.showToast(
