@@ -1,12 +1,13 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../custom_show_dialog.dart';
 import '../../screen_util.dart';
 import 'new_password_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../globals.dart' as Globals;
+// import '../../../globals.dart' as Globals;
 
 class DetailsPage extends StatefulWidget {
   final String name;
@@ -78,31 +79,24 @@ class _DetailsPageState extends State<DetailsPage> {
                   Column(
                     children: [
                       _image == null
-                          ? FutureBuilder<bool>(
-                              future: Globals.getImage(widget.imageUrl),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  return CircleAvatar(
-                                    backgroundColor: Color(0x55000000),
-                                    radius: _screenUtil.setWidth(100),
-                                    backgroundImage: snapshot.data
-                                        ? NetworkImage(widget.imageUrl)
-                                        : AssetImage('assets/person.png'),
-                                  );
-                                }
-                                return Container(
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      CircularProgressIndicator(),
-                                    ],
-                                  ),
-                                );
-                              },
+                          ? CachedNetworkImage(
+                              imageUrl: widget.imageUrl,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                width: _screenUtil.setWidth(200),
+                                height: _screenUtil.setWidth(200),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover),
+                                ),
+                              ),
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) =>
+                                      CircularProgressIndicator(
+                                          value: downloadProgress.progress),
+                              errorWidget: (context, url, error) =>
+                                  Image.asset('assets/person.png'),
                             )
                           : CircleAvatar(
                               backgroundColor: Color(0x55000000),

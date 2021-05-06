@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../model/chopper/signout_service.dart';
-import '../../model/response/signout_response.dart';
+// import '../../model/response/signout_response.dart';
 
 part 'home_page_event.dart';
 
@@ -31,6 +31,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       yield WishListPageState();
     } else if (event is NavigateToShoppingCartPage) {
       yield ShoppingCartPageState();
+    } else if (event is NavigateToSearchResult) {
+      yield SearchResultState();
     } else if (event is SignOut) {
       yield SigningOutState();
 

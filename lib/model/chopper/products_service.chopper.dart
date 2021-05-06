@@ -76,4 +76,12 @@ class _$ProductsService extends ProductsService {
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<List<Product>, Product>($request);
   }
+
+  @override
+  Future<Response<List<Product>>> search(String keyword) {
+    final $url = '/api/Search';
+    final $params = <String, dynamic>{'keyword': keyword};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<List<Product>, Product>($request);
+  }
 }

@@ -62,3 +62,8 @@ class ErrorSigningOutState extends HomePageState {
   @override
   List<Object> get props => [message];
 }
+
+class SearchResultState extends HomePageState {
+  @override
+  List<Object> get props => [];
+}

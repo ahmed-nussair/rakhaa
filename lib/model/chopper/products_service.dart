@@ -38,6 +38,9 @@ abstract class ProductsService extends ChopperService {
       @Query('categoryId') int categoryId,
       {@Query('subCategoryId') int subCategoryId = -1});
 
+  @Get(path: '/Search')
+  Future<Response<List<Product>>> search(@Query('keyword') String keyword);
+
   static ProductsService create() {
     var client = ChopperClient(
       baseUrl: baseUrl,

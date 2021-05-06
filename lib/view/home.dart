@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rakhaa/view/home_pages/category_page.dart';
@@ -17,25 +18,13 @@ import '../globals.dart' as Globals;
 
 import 'signin.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   final String name;
 
-  Home({
-    @required this.name,
-  });
-
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
   final ScreenUtil _screenUtil = ScreenUtil();
   final _key = GlobalKey<ScaffoldState>();
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  Home({@required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -60,262 +49,269 @@ class _HomeState extends State<Home> {
                       appBar: PreferredSize(
                         preferredSize:
                             Size.fromHeight(_screenUtil.setHeight(400)),
-                        child: Column(
-                          children: [
-                            Container(
-                              alignment: Alignment.bottomCenter,
-                              width: MediaQuery.of(context).size.width,
-                              height: _screenUtil.setHeight(400),
-                              color: Color(0xff4599d7),
-                              child: Stack(
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          // profile image
-                                          Flexible(
-                                            flex: 1,
-                                            child: FutureBuilder<
-                                                SharedPreferences>(
-                                              future: SharedPreferences
-                                                  .getInstance(),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.done) {
-                                                  String userImageUrl = snapshot
-                                                      .data
-                                                      .get(Globals.imageUrl);
-                                                  return userImageUrl != null &&
-                                                          userImageUrl
-                                                              .isNotEmpty
-                                                      ? FutureBuilder<bool>(
-                                                          future:
-                                                              Globals.getImage(
-                                                                  userImageUrl),
-                                                          builder: (context,
-                                                              snapshot) {
-                                                            if (snapshot
-                                                                    .connectionState ==
-                                                                ConnectionState
-                                                                    .done) {
-                                                              return CircleAvatar(
-                                                                radius:
-                                                                    _screenUtil
-                                                                        .setWidth(
-                                                                            70),
-                                                                backgroundColor:
-                                                                    Colors
-                                                                        .transparent,
-                                                                backgroundImage: snapshot
-                                                                        .data
-                                                                    ? NetworkImage(
-                                                                        userImageUrl)
-                                                                    : AssetImage(
-                                                                        'assets/person.png'),
-                                                              );
-                                                            }
-                                                            return Container(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              child: Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  CircularProgressIndicator(
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .white,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            );
-                                                          },
-                                                        )
-                                                      : CircleAvatar(
-                                                          radius: _screenUtil
-                                                              .setWidth(70),
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                          backgroundImage:
-                                                              AssetImage(
-                                                                  'assets/person.png'),
-                                                        );
-                                                }
-                                                return Container(
-                                                  alignment: Alignment.center,
-                                                  child: Container(
-                                                    height: _screenUtil
-                                                        .setWidth(70),
-                                                    width: _screenUtil
-                                                        .setWidth(70),
-                                                    child:
-                                                        CircularProgressIndicator(),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-
-                                          // Search bar
-                                          Flexible(
-                                            flex: 5,
-                                            child: Stack(
-                                              children: [
-                                                Container(
-                                                  height: _screenUtil
-                                                      .setHeight(150),
-                                                  child: TextFormField(
-                                                    textAlign: TextAlign.right,
-                                                    textAlignVertical:
-                                                        TextAlignVertical
-                                                            .center,
-                                                    textDirection:
-                                                        TextDirection.rtl,
-                                                    decoration: InputDecoration(
-                                                      hintText:
-                                                          'اكتب هنا ما تريد',
-                                                      hintStyle: TextStyle(
-                                                          fontSize: _screenUtil
-                                                              .setSp(50)),
-                                                      filled: true,
-                                                      fillColor: Colors.white,
-                                                      border:
-                                                          OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                _screenUtil
-                                                                    .setWidth(
-                                                                        100)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  top: 0.0,
-                                                  bottom: 0.0,
-                                                  left: 0.0,
-                                                  child: Container(
-                                                    width: _screenUtil
-                                                        .setWidth(130),
-                                                    decoration: BoxDecoration(
-                                                      color: Color(0xff3573ac),
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                        topLeft:
-                                                            Radius.circular(
-                                                                _screenUtil
-                                                                    .setWidth(
-                                                                        100)),
-                                                        bottomLeft:
-                                                            Radius.circular(
-                                                                _screenUtil
-                                                                    .setWidth(
-                                                                        100)),
-                                                      ),
-                                                    ),
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        print('Tapped');
-                                                      },
-                                                      child: Icon(
-                                                        Icons.search,
-                                                        color: Colors.white,
-                                                        size: _screenUtil
-                                                            .setSp(70),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-
-                                          // Drawer opener
-                                          Flexible(
-                                            flex: 1,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                _key.currentState
-                                                    .openEndDrawer();
-                                              },
-                                              child: Image.asset(
-                                                'assets/more.png',
-                                                width:
-                                                    _screenUtil.setWidth(100),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: _screenUtil.setHeight(50),
-                                      ),
-                                    ],
-                                  ),
-
-                                  // Welcoming the user
-                                  Positioned(
-                                    top: 0.0,
-                                    right: 0.0,
-                                    child: Container(
-                                      alignment: Alignment.centerRight,
-                                      height: _screenUtil.setHeight(150),
-                                      width: _screenUtil.setWidth(700),
-                                      decoration: BoxDecoration(
-                                        color: Color(0xff3573ac),
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(
-                                                _screenUtil.setWidth(200))),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(
-                                            _screenUtil.setWidth(30)),
-                                        child: Row(
+                        child: GestureDetector(
+                          onTap: () {
+                            FocusScopeNode currentFocus =
+                                FocusScope.of(context);
+                            if (!currentFocus.hasPrimaryFocus &&
+                                currentFocus.focusedChild != null) {
+                              currentFocus.focusedChild.unfocus();
+                            }
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.bottomCenter,
+                                width: MediaQuery.of(context).size.width,
+                                height: _screenUtil.setHeight(400),
+                                color: Color(0xff4599d7),
+                                child: Stack(
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.end,
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            Text(
-                                              widget.name.isEmpty
-                                                  ? 'عزيزي الزائر'
-                                                  : '${widget.name}',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: _screenUtil.setSp(50),
+                                            // profile image
+                                            Flexible(
+                                              flex: 1,
+                                              child: FutureBuilder<
+                                                  SharedPreferences>(
+                                                future: SharedPreferences
+                                                    .getInstance(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.done) {
+                                                    String userImageUrl =
+                                                        snapshot.data.get(
+                                                            Globals.imageUrl);
+                                                    return userImageUrl !=
+                                                                null &&
+                                                            userImageUrl
+                                                                .isNotEmpty
+                                                        ? CachedNetworkImage(
+                                                            imageUrl:
+                                                                userImageUrl,
+                                                            imageBuilder: (context,
+                                                                    imageProvider) =>
+                                                                Container(
+                                                              width: _screenUtil
+                                                                  .setWidth(
+                                                                      150),
+                                                              height:
+                                                                  _screenUtil
+                                                                      .setWidth(
+                                                                          150),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                image: DecorationImage(
+                                                                    image:
+                                                                        imageProvider,
+                                                                    fit: BoxFit
+                                                                        .cover),
+                                                              ),
+                                                            ),
+                                                            progressIndicatorBuilder: (context,
+                                                                    url,
+                                                                    downloadProgress) =>
+                                                                CircularProgressIndicator(
+                                                                    value: downloadProgress
+                                                                        .progress),
+                                                            errorWidget: (context,
+                                                                    url,
+                                                                    error) =>
+                                                                Image.asset(
+                                                                    'assets/person.png'),
+                                                          )
+                                                        : CircleAvatar(
+                                                            radius: _screenUtil
+                                                                .setWidth(70),
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            backgroundImage:
+                                                                AssetImage(
+                                                                    'assets/person.png'),
+                                                          );
+                                                  }
+                                                  return Container(
+                                                    alignment: Alignment.center,
+                                                    child: Container(
+                                                      height: _screenUtil
+                                                          .setWidth(70),
+                                                      width: _screenUtil
+                                                          .setWidth(70),
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    ),
+                                                  );
+                                                },
                                               ),
                                             ),
-                                            Text(
-                                              ' ،',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: _screenUtil.setSp(50),
+
+                                            // Search bar
+                                            Flexible(
+                                              flex: 5,
+                                              child: Stack(
+                                                children: [
+                                                  Container(
+                                                    height: _screenUtil
+                                                        .setHeight(150),
+                                                    child: TextFormField(
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                      textAlignVertical:
+                                                          TextAlignVertical
+                                                              .center,
+                                                      textDirection:
+                                                          TextDirection.rtl,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        hintText:
+                                                            'اكتب هنا ما تريد',
+                                                        hintStyle: TextStyle(
+                                                            fontSize:
+                                                                _screenUtil
+                                                                    .setSp(50)),
+                                                        filled: true,
+                                                        fillColor: Colors.white,
+                                                        border:
+                                                            OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                  _screenUtil
+                                                                      .setWidth(
+                                                                          100)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                    top: 0.0,
+                                                    bottom: 0.0,
+                                                    left: 0.0,
+                                                    child: Container(
+                                                      width: _screenUtil
+                                                          .setWidth(130),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xff3573ac),
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  _screenUtil
+                                                                      .setWidth(
+                                                                          100)),
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  _screenUtil
+                                                                      .setWidth(
+                                                                          100)),
+                                                        ),
+                                                      ),
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          print('Tapped');
+                                                        },
+                                                        child: Icon(
+                                                          Icons.search,
+                                                          color: Colors.white,
+                                                          size: _screenUtil
+                                                              .setSp(70),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            Text(
-                                              'أهلًا ومرحبًا بك',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: _screenUtil.setSp(50),
+
+                                            // Drawer opener
+                                            Flexible(
+                                              flex: 1,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  _key.currentState
+                                                      .openEndDrawer();
+                                                },
+                                                child: Image.asset(
+                                                  'assets/more.png',
+                                                  width:
+                                                      _screenUtil.setWidth(100),
+                                                ),
                                               ),
                                             ),
                                           ],
                                         ),
+                                        SizedBox(
+                                          height: _screenUtil.setHeight(50),
+                                        ),
+                                      ],
+                                    ),
+
+                                    // Welcoming the user
+                                    Positioned(
+                                      top: 0.0,
+                                      right: 0.0,
+                                      child: Container(
+                                        alignment: Alignment.centerRight,
+                                        height: _screenUtil.setHeight(150),
+                                        width: _screenUtil.setWidth(700),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xff3573ac),
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(
+                                                  _screenUtil.setWidth(200))),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(
+                                              _screenUtil.setWidth(30)),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                name.isEmpty
+                                                    ? 'عزيزي الزائر'
+                                                    : '$name',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                      _screenUtil.setSp(50),
+                                                ),
+                                              ),
+                                              Text(
+                                                ' ،',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                      _screenUtil.setSp(50),
+                                                ),
+                                              ),
+                                              Text(
+                                                'أهلًا ومرحبًا بك',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                      _screenUtil.setSp(50),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       endDrawer: FutureBuilder<SharedPreferences>(
@@ -342,6 +338,9 @@ class _HomeState extends State<Home> {
                                             children: <Widget>[
                                               ListTile(
                                                 onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          new FocusNode());
                                                   BlocProvider.of<HomePageBloc>(
                                                           context)
                                                       .add(
@@ -355,6 +354,9 @@ class _HomeState extends State<Home> {
                                               ),
                                               ListTile(
                                                 onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          new FocusNode());
                                                   BlocProvider.of<HomePageBloc>(
                                                           context)
                                                       .add(
@@ -368,6 +370,9 @@ class _HomeState extends State<Home> {
                                               ),
                                               ListTile(
                                                 onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          new FocusNode());
                                                   BlocProvider.of<HomePageBloc>(
                                                           context)
                                                       .add(
@@ -379,6 +384,9 @@ class _HomeState extends State<Home> {
                                               ),
                                               ListTile(
                                                 onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          new FocusNode());
                                                   BlocProvider.of<HomePageBloc>(
                                                           context)
                                                       .add(
@@ -390,6 +398,9 @@ class _HomeState extends State<Home> {
                                               ),
                                               ListTile(
                                                 onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          new FocusNode());
                                                   BlocProvider.of<HomePageBloc>(
                                                           context)
                                                       .add(
@@ -403,6 +414,9 @@ class _HomeState extends State<Home> {
                                               ),
                                               ListTile(
                                                 onTap: () async {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          new FocusNode());
                                                   SharedPreferences prefs =
                                                       await SharedPreferences
                                                           .getInstance();
@@ -443,6 +457,9 @@ class _HomeState extends State<Home> {
                                             children: <Widget>[
                                               ListTile(
                                                 onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          new FocusNode());
                                                   BlocProvider.of<HomePageBloc>(
                                                           context)
                                                       .add(
@@ -456,6 +473,9 @@ class _HomeState extends State<Home> {
                                               ),
                                               ListTile(
                                                 onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          new FocusNode());
                                                   Navigator.of(context).pop();
                                                   Navigator.of(context)
                                                       .pushReplacement(

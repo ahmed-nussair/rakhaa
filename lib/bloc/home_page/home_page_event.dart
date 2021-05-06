@@ -47,3 +47,8 @@ class SignOut extends HomePageEvent {
   @override
   List<Object> get props => [token];
 }
+
+class NavigateToSearchResult extends HomePageEvent {
+  @override
+  List<Object> get props => [];
+}

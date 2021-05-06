@@ -25,134 +25,145 @@ class _WishListPageState extends State<WishListPage> {
   @override
   Widget build(BuildContext context) {
     _screenUtil.init(context);
-    return FutureBuilder<SharedPreferences>(
-      future: SharedPreferences.getInstance(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return BlocProvider(
-            create: (_) => WishListBloc()
-              ..add(LoadingWishList(snapshot.data.getString(Globals.token))),
-            child: BlocListener<WishListBloc, WishListState>(
-              listener: (context, state) {
-                if (state is WishListLoadedState) {
-                  setState(() {
-                    _list = state.products;
-                  });
-                }
-                if (state is DeletedFromWishListState) {
-                  List list = _list;
-
-                  for (int i = 0; i < list.length; i++) {
-                    if (list[i].id == state.productId) {
-                      list.remove(list[i]);
-                      break;
-                    }
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          currentFocus.focusedChild.unfocus();
+        }
+      },
+      child: FutureBuilder<SharedPreferences>(
+        future: SharedPreferences.getInstance(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return BlocProvider(
+              create: (_) => WishListBloc()
+                ..add(LoadingWishList(snapshot.data.getString(Globals.token))),
+              child: BlocListener<WishListBloc, WishListState>(
+                listener: (context, state) {
+                  if (state is WishListLoadedState) {
+                    setState(() {
+                      _list = state.products;
+                    });
                   }
+                  if (state is DeletedFromWishListState) {
+                    List list = _list;
 
-                  setState(() {
-                    _list = list;
-                  });
-                }
-              },
-              child: BlocBuilder<WishListBloc, WishListState>(
-                builder: (context, state) {
-                  if (state is LoadingWishListState) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(),
-                        ],
-                      ),
-                    );
-                  } else {
-                    return _list.length > 0
-                        ? SafeArea(
-                            child: Stack(
-                              children: [
-                                Scaffold(
-                                  body: CustomScrollView(
-                                    slivers: [
-                                      SliverPadding(
-                                        padding: EdgeInsets.all(
-                                            _screenUtil.setWidth(30)),
-                                        sliver: SliverGrid.count(
-                                          crossAxisCount: 2,
-                                          childAspectRatio: 1,
-                                          crossAxisSpacing:
-                                              _screenUtil.setWidth(30),
-                                          mainAxisSpacing:
-                                              _screenUtil.setWidth(30),
-                                          children: List.generate(_list.length,
-                                              (index) {
-                                            return WishListItem(
-                                              id: _list[index].id,
-                                              title: _list[index].name,
-                                              imageUrl: _list[index].imageUrl,
-                                              price: _list[index].price,
-                                              afterDiscount: _list[index]
-                                                      .price -
-                                                  (_list[index].price *
-                                                      _list[index].discount /
-                                                      100),
-                                              onItemBeingDeleted: () {
-                                                BlocProvider.of<WishListBloc>(
-                                                        context)
-                                                    .add(DeletingFromWishList(
-                                                        snapshot.data.getString(
-                                                            Globals.token),
-                                                        _list[index].id));
-                                              },
-                                              // onMerchantNameTapped: widget.onMerchantNameTapped,
-                                            );
-                                          }),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                state is DeletingFromWishListState
-                                    ? Positioned(
-                                        top: 0.0,
-                                        bottom: 0.0,
-                                        left: 0.0,
-                                        right: 0.0,
-                                        child: Container(
-                                          color: Colors.black.withOpacity(0.5),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                  width: 100,
-                                                  height: 100,
-                                                  child:
-                                                      CircularProgressIndicator()),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    : Container(),
-                              ],
-                            ),
-                          )
-                        : Center(
-                            child: Text(
-                              'ليس لديك أي صنف في المفضلة',
-                              style: TextStyle(
-                                fontSize: _screenUtil.setSp(50),
-                              ),
-                            ),
-                          );
+                    for (int i = 0; i < list.length; i++) {
+                      if (list[i].id == state.productId) {
+                        list.remove(list[i]);
+                        break;
+                      }
+                    }
+
+                    setState(() {
+                      _list = list;
+                    });
                   }
                 },
+                child: BlocBuilder<WishListBloc, WishListState>(
+                  builder: (context, state) {
+                    if (state is LoadingWishListState) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return _list.length > 0
+                          ? SafeArea(
+                              child: Stack(
+                                children: [
+                                  Scaffold(
+                                    body: CustomScrollView(
+                                      slivers: [
+                                        SliverPadding(
+                                          padding: EdgeInsets.all(
+                                              _screenUtil.setWidth(30)),
+                                          sliver: SliverGrid.count(
+                                            crossAxisCount: 2,
+                                            childAspectRatio: 1,
+                                            crossAxisSpacing:
+                                                _screenUtil.setWidth(30),
+                                            mainAxisSpacing:
+                                                _screenUtil.setWidth(30),
+                                            children: List.generate(
+                                                _list.length, (index) {
+                                              return WishListItem(
+                                                id: _list[index].id,
+                                                title: _list[index].name,
+                                                imageUrl: _list[index].imageUrl,
+                                                price: _list[index].price,
+                                                afterDiscount: _list[index]
+                                                        .price -
+                                                    (_list[index].price *
+                                                        _list[index].discount /
+                                                        100),
+                                                onItemBeingDeleted: () {
+                                                  BlocProvider.of<WishListBloc>(
+                                                          context)
+                                                      .add(DeletingFromWishList(
+                                                          snapshot.data
+                                                              .getString(Globals
+                                                                  .token),
+                                                          _list[index].id));
+                                                },
+                                                // onMerchantNameTapped: widget.onMerchantNameTapped,
+                                              );
+                                            }),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  state is DeletingFromWishListState
+                                      ? Positioned(
+                                          top: 0.0,
+                                          bottom: 0.0,
+                                          left: 0.0,
+                                          right: 0.0,
+                                          child: Container(
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                    width: 100,
+                                                    height: 100,
+                                                    child:
+                                                        CircularProgressIndicator()),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                ],
+                              ),
+                            )
+                          : Center(
+                              child: Text(
+                                'ليس لديك أي صنف في المفضلة',
+                                style: TextStyle(
+                                  fontSize: _screenUtil.setSp(50),
+                                ),
+                              ),
+                            );
+                    }
+                  },
+                ),
               ),
-            ),
-          );
-        }
-        return Container();
-      },
+            );
+          }
+          return Container();
+        },
+      ),
     );
   }
 }

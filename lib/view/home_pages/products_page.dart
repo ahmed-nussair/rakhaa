@@ -3,23 +3,18 @@ import '../screen_util.dart';
 
 import 'product_item.dart';
 
-class ProductsPage extends StatefulWidget {
+class ProductsPage extends StatelessWidget {
   final String subCategoryName;
   final List productsList;
   final Function onBackTapped;
+
+  final ScreenUtil _screenUtil = ScreenUtil();
 
   ProductsPage({
     @required this.subCategoryName,
     @required this.productsList,
     @required this.onBackTapped,
   });
-
-  @override
-  _ProductsPageState createState() => _ProductsPageState();
-}
-
-class _ProductsPageState extends State<ProductsPage> {
-  final ScreenUtil _screenUtil = ScreenUtil();
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +28,7 @@ class _ProductsPageState extends State<ProductsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.subCategoryName,
+          subCategoryName,
           style: TextStyle(
             fontSize: _screenUtil.setSp(50),
             color: Colors.white,
@@ -41,7 +36,8 @@ class _ProductsPageState extends State<ProductsPage> {
         ),
         leading: GestureDetector(
           onTap: () {
-            widget.onBackTapped();
+            FocusScope.of(context).requestFocus(FocusNode());
+            onBackTapped();
           },
           child: Icon(Icons.arrow_back_ios),
         ),
@@ -57,17 +53,17 @@ class _ProductsPageState extends State<ProductsPage> {
           childAspectRatio: (itemWidth / itemHeight),
           crossAxisSpacing: _screenUtil.setWidth(40),
           mainAxisSpacing: _screenUtil.setWidth(40),
-          children: List.generate(widget.productsList.length, (index) {
+          children: List.generate(productsList.length, (index) {
             return ProductItem(
-              id: widget.productsList[index].id,
-              title: widget.productsList[index].name,
-              imageUrl: widget.productsList[index].imageUrl,
-              price: widget.productsList[index].price,
-              afterDiscount: widget.productsList[index].price -
-                  (widget.productsList[index].price *
-                      widget.productsList[index].discount /
+              id: productsList[index].id,
+              title: productsList[index].name,
+              imageUrl: productsList[index].imageUrl,
+              price: productsList[index].price,
+              afterDiscount: productsList[index].price -
+                  (productsList[index].price *
+                      productsList[index].discount /
                       100),
-              percentage: widget.productsList[index].discount,
+              percentage: productsList[index].discount,
               // onMerchantNameTapped: widget.onMerchantNameTapped,
             );
           }),

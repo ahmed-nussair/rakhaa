@@ -58,51 +58,60 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     _screenUtil.init(context);
-    return Scaffold(
-      appBar: TabBar(
-        isScrollable: false,
-        controller: _tabController,
-        onTap: (index) {
-          setState(() {
-            _currentTabIndex = index;
-          });
-        },
-        tabs: List.generate(_tabs.length, (index) {
-          return Tab(
-            child: Text(
-              '${_tabs[index]}',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: _screenUtil.setSp(40),
-                // fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          currentFocus.focusedChild.unfocus();
+        }
+      },
+      child: Scaffold(
+        appBar: TabBar(
+          isScrollable: false,
+          controller: _tabController,
+          onTap: (index) {
+            setState(() {
+              _currentTabIndex = index;
+            });
+          },
+          tabs: List.generate(_tabs.length, (index) {
+            return Tab(
+              child: Text(
+                '${_tabs[index]}',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: _screenUtil.setSp(40),
+                  // fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
+            );
+          }),
+        ),
+        body: TabBarView(
+          controller: _tabController,
+          physics: NeverScrollableScrollPhysics(),
+          children: [
+            AddressesPage(addresses: addresses),
+            FutureBuilder<SharedPreferences>(
+              future: SharedPreferences.getInstance(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return DetailsPage(
+                    name: snapshot.data.getString(Globals.name),
+                    imageUrl: snapshot.data.getString(Globals.imageUrl),
+                    email: snapshot.data.getString(Globals.email),
+                    password: snapshot.data.getString(Globals.password),
+                    phone: snapshot.data.getString(Globals.phone),
+                    token: snapshot.data.getString(Globals.token),
+                  );
+                }
+                return Container();
+              },
             ),
-          );
-        }),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        physics: NeverScrollableScrollPhysics(),
-        children: [
-          AddressesPage(addresses: addresses),
-          FutureBuilder<SharedPreferences>(
-            future: SharedPreferences.getInstance(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return DetailsPage(
-                  name: snapshot.data.getString(Globals.name),
-                  imageUrl: snapshot.data.getString(Globals.imageUrl),
-                  email: snapshot.data.getString(Globals.email),
-                  password: snapshot.data.getString(Globals.password),
-                  phone: snapshot.data.getString(Globals.phone),
-                  token: snapshot.data.getString(Globals.token),
-                );
-              }
-              return Container();
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

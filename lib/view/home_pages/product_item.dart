@@ -6,13 +6,15 @@ import '../../globals.dart' as Globals;
 import '../screen_util.dart';
 import 'offer_ribbon.dart';
 
-class ProductItem extends StatefulWidget {
+class ProductItem extends StatelessWidget {
   final int id;
   final String imageUrl;
   final String title;
   final double price;
   final double afterDiscount;
   final double percentage;
+
+  final ScreenUtil _screenUtil = ScreenUtil();
 
   ProductItem({
     @required this.id,
@@ -22,13 +24,6 @@ class ProductItem extends StatefulWidget {
     @required this.afterDiscount,
     @required this.percentage,
   });
-
-  @override
-  _ProductItemState createState() => _ProductItemState();
-}
-
-class _ProductItemState extends State<ProductItem> {
-  final ScreenUtil _screenUtil = ScreenUtil();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +39,7 @@ class _ProductItemState extends State<ProductItem> {
               children: <Widget>[
                 Expanded(
                   child: Image.network(
-                    widget.imageUrl,
+                    imageUrl,
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -53,7 +48,7 @@ class _ProductItemState extends State<ProductItem> {
                   child: Container(
                     height: _screenUtil.setHeight(150),
                     child: Text(
-                      widget.title,
+                      title,
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       style: TextStyle(
@@ -67,11 +62,11 @@ class _ProductItemState extends State<ProductItem> {
                 Divider(),
                 Container(
                   height: _screenUtil.setHeight(80),
-                  child: widget.price == widget.afterDiscount
+                  child: price == afterDiscount
                       ? Padding(
                           padding: EdgeInsets.all(_screenUtil.setHeight(10)),
                           child: Text(
-                            ' جنيه ${widget.price.toStringAsFixed(2)}',
+                            ' جنيه ${price.toStringAsFixed(2)}',
                             style: TextStyle(
                               fontSize: _screenUtil.setSp(40),
                             ),
@@ -84,7 +79,7 @@ class _ProductItemState extends State<ProductItem> {
                               padding:
                                   EdgeInsets.all(_screenUtil.setHeight(10)),
                               child: Text(
-                                ' جنيه${widget.afterDiscount.toStringAsFixed(2)}',
+                                ' جنيه${afterDiscount.toStringAsFixed(2)}',
                                 style: TextStyle(
                                   fontSize: _screenUtil.setSp(40),
                                 ),
@@ -94,7 +89,7 @@ class _ProductItemState extends State<ProductItem> {
                               padding:
                                   EdgeInsets.all(_screenUtil.setHeight(10)),
                               child: Text(
-                                ' جنيه${widget.price.toStringAsFixed(2)}',
+                                ' جنيه${price.toStringAsFixed(2)}',
                                 style: TextStyle(
                                   decoration: TextDecoration.lineThrough,
                                   fontSize: _screenUtil.setSp(40),
@@ -112,7 +107,7 @@ class _ProductItemState extends State<ProductItem> {
               child: Column(
                 children: [
                   WishListIcon(
-                    id: widget.id,
+                    id: id,
                   ),
                   SizedBox(
                     height: _screenUtil.setHeight(30),
@@ -124,7 +119,7 @@ class _ProductItemState extends State<ProductItem> {
                 ],
               ),
             ),
-            widget.percentage > 0
+            percentage > 0
                 ? Positioned(
                     top: 0.0,
                     right: 0.0,
@@ -132,7 +127,7 @@ class _ProductItemState extends State<ProductItem> {
                       height: _screenUtil.setWidth(180),
                       width: _screenUtil.setWidth(180),
                       child: OfferRibbon(
-                        percentage: widget.percentage,
+                        percentage: percentage,
                       ),
                     ),
                   )
