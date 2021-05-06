@@ -32,7 +32,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     } else if (event is NavigateToShoppingCartPage) {
       yield ShoppingCartPageState();
     } else if (event is NavigateToSearchResult) {
-      yield SearchResultState();
+      yield SearchResultState(event.keyword);
     } else if (event is SignOut) {
       yield SigningOutState();
 

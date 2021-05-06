@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rakhaa/view/home_pages/category_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,6 +9,7 @@ import 'home_pages/profile_page.dart';
 import 'home_pages/orders_history.dart';
 import 'home_pages/wishlist_page.dart';
 import 'home_pages/shopping_cart_page.dart';
+import 'home_pages/search_result.dart';
 import 'screen_util.dart';
 
 import '../bloc/home_page/home_page_bloc.dart';
@@ -22,6 +24,8 @@ class Home extends StatelessWidget {
   final String name;
 
   final ScreenUtil _screenUtil = ScreenUtil();
+
+  final TextEditingController _keywordController = TextEditingController();
   final _key = GlobalKey<ScaffoldState>();
 
   Home({@required this.name});
@@ -163,6 +167,8 @@ class Home extends StatelessWidget {
                                                     height: _screenUtil
                                                         .setHeight(150),
                                                     child: TextFormField(
+                                                      controller:
+                                                          _keywordController,
                                                       textAlign:
                                                           TextAlign.right,
                                                       textAlignVertical:
@@ -176,17 +182,17 @@ class Home extends StatelessWidget {
                                                             'اكتب هنا ما تريد',
                                                         hintStyle: TextStyle(
                                                             fontSize:
-                                                                _screenUtil
-                                                                    .setSp(50)),
+                                                            _screenUtil
+                                                                .setSp(50)),
                                                         filled: true,
                                                         fillColor: Colors.white,
                                                         border:
-                                                            OutlineInputBorder(
+                                                        OutlineInputBorder(
                                                           borderRadius:
-                                                              BorderRadius.circular(
-                                                                  _screenUtil
-                                                                      .setWidth(
-                                                                          100)),
+                                                          BorderRadius.circular(
+                                                              _screenUtil
+                                                                  .setWidth(
+                                                                  100)),
                                                         ),
                                                       ),
                                                     ),
@@ -217,7 +223,40 @@ class Home extends StatelessWidget {
                                                       ),
                                                       child: GestureDetector(
                                                         onTap: () {
-                                                          print('Tapped');
+                                                          FocusScope.of(context)
+                                                              .requestFocus(
+                                                                  new FocusNode());
+                                                          if (_keywordController
+                                                              .text.isEmpty) {
+                                                            Fluttertoast
+                                                                .showToast(
+                                                              msg:
+                                                                  'اكتب ما تريد البحث عنه أولًا',
+                                                              toastLength: Toast
+                                                                  .LENGTH_LONG,
+                                                              gravity:
+                                                                  ToastGravity
+                                                                      .BOTTOM,
+                                                              timeInSecForIosWeb:
+                                                                  1,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .black54,
+                                                              textColor:
+                                                                  Colors.white,
+                                                              fontSize:
+                                                                  _screenUtil
+                                                                      .setSp(
+                                                                          50),
+                                                            );
+                                                            return;
+                                                          }
+                                                          BlocProvider.of<
+                                                                      HomePageBloc>(
+                                                                  context)
+                                                              .add(NavigateToSearchResult(
+                                                                  _keywordController
+                                                                      .text));
                                                         },
                                                         child: Icon(
                                                           Icons.search,
@@ -525,7 +564,13 @@ class Home extends StatelessWidget {
                                           ? WishListPage()
                                           : state is ShoppingCartPageState
                                               ? ShoppingCartPage()
-                                              : Container()),
+                                              : state is SearchResultState
+                                                  ? SearchResult(
+                                                      keyword:
+                                                          _keywordController
+                                                              .text,
+                                                    )
+                                                  : Container()),
                   state is SigningOutState
                       ? Positioned(
                           top: 0.0,

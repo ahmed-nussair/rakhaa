@@ -49,6 +49,10 @@ class SignOut extends HomePageEvent {
 }
 
 class NavigateToSearchResult extends HomePageEvent {
+  final String keyword;
+
+  NavigateToSearchResult(this.keyword);
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [keyword];
 }

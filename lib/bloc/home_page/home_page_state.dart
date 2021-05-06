@@ -64,6 +64,10 @@ class ErrorSigningOutState extends HomePageState {
 }
 
 class SearchResultState extends HomePageState {
+  final String keyword;
+
+  SearchResultState(this.keyword);
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [keyword];
 }
