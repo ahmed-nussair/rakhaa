@@ -157,7 +157,7 @@ class _QuantityWidgetState extends State<QuantityWidget> {
             setState(() {
               _quantity++;
             });
-            widget.onQuantityChanged(_quantity);
+            widget.onQuantityChanged(1);
           },
           child: Material(
             elevation: 0.7,
@@ -192,10 +192,12 @@ class _QuantityWidgetState extends State<QuantityWidget> {
         ),
         GestureDetector(
           onTap: () {
-            setState(() {
-              if (_quantity > 1) _quantity--;
-            });
-            widget.onQuantityChanged(_quantity);
+            if (_quantity > 1) {
+              setState(() {
+                _quantity--;
+              });
+              widget.onQuantityChanged(-1);
+            }
           },
           child: Material(
             elevation: 0.7,

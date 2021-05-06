@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screen_util.dart';
+
+import '../../bloc/shopping_cart/shopping_cart_bloc.dart';
+import '../../globals.dart' as Globals;
 
 import 'cart_item.dart';
 import 'checkout_page.dart';
@@ -14,208 +19,264 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
 
   double _total;
 
+  List _list;
+
+  @override
+  void initState() {
+    _list = [];
+    _total = 0.00;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     _screenUtil.init(context);
-    _total = _calculateTotal(_cartItems);
-    return _cartItems.length > 0
-        ? Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  children: List.generate(
-                      _cartItems.length,
-                      (index) => Padding(
-                            padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                            child: Stack(
-                              children: [
-                                CartItem(
-                                  title: _cartItems[index]['item']['title'],
-                                  imageUrl: _cartItems[index]['item']
-                                      ['imageUrl'],
-                                  price: _cartItems[index]['price'],
-                                  quantity: _cartItems[index]['quantity'],
-                                  onQuantityChanged: (int newQuantity) {
-                                    setState(() {
-                                      _cartItems[index]['quantity'] =
-                                          newQuantity;
-                                      _total = _calculateTotal(_cartItems);
-                                    });
-                                  },
-                                ),
-                                Positioned(
-                                  top: _screenUtil.setWidth(30),
-                                  left: _screenUtil.setWidth(30),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      _cartItems.remove(_cartItems[index]);
-                                      setState(() {
-                                        _total = _calculateTotal(_cartItems);
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(
-                                            _screenUtil.setWidth(50)),
-                                      ),
-                                      child: Icon(
-                                        Icons.close,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )),
-                ),
-              ),
-              Container(
-                height: _screenUtil.setHeight(400),
-                color: Color(0xff3573ac),
-                child: Padding(
-                  padding: EdgeInsets.all(_screenUtil.setWidth(20)),
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'ج.م',
-                                  style: TextStyle(
-                                    fontSize: _screenUtil.setSp(70),
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: _screenUtil.setWidth(20),
-                                ),
-                                Text(
-                                  '${_total.toStringAsFixed(2)}',
-                                  style: TextStyle(
-                                    fontSize: _screenUtil.setSp(70),
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: _screenUtil.setWidth(20),
-                          ),
-                          Text(
-                            ':',
-                            style: TextStyle(
-                              fontSize: _screenUtil.setSp(70),
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            'الإجمالي',
-                            style: TextStyle(
-                              fontSize: _screenUtil.setSp(70),
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+    return FutureBuilder<SharedPreferences>(
+      future: SharedPreferences.getInstance(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return BlocProvider(
+            create: (_) => ShoppingCartBloc()
+              ..add(
+                  LoadingShoppingCart(snapshot.data.getString(Globals.token))),
+            child: BlocListener<ShoppingCartBloc, ShoppingCartState>(
+              listener: (context, state) {
+                if (state is ShoppingCartLoadedState) {
+                  setState(() {
+                    _list = state.response.items;
+                    _total = state.response.totalPrice;
+                  });
+                }
+
+                if (state is ShoppingCartUpdatedState) {
+                  setState(() {
+                    _total = state.response.itemsTotalPrice;
+                  });
+                }
+              },
+              child: BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
+                builder: (context, state) {
+                  if (state is LoadingShoppingCartState) {
+                    return Center(
+                      child: Container(
+                        child: CircularProgressIndicator(),
                       ),
-                      SizedBox(
-                        height: _screenUtil.setHeight(50),
-                      ),
-                      Container(
-                        child: Stack(
+                    );
+                  } else {
+                    return Stack(
+                      children: [
+                        Column(
                           children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => CheckoutPage()));
-                                },
-                                child: Text(
-                                  'متابعة الشراء',
-                                  style: TextStyle(
-                                    fontSize: _screenUtil.setSp(70),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                            Expanded(
+                              child: ListView(
+                                children: List.generate(
+                                    _list.length,
+                                    (index) => Padding(
+                                          padding: EdgeInsets.all(
+                                              _screenUtil.setWidth(30)),
+                                          child: Stack(
+                                            children: [
+                                              CartItem(
+                                                title: _list[index].name,
+                                                imageUrl: _list[index].imageUrl,
+                                                price: _list[index].price,
+                                                quantity: _list[index].quantity,
+                                                onQuantityChanged:
+                                                    (int newQuantity) {
+                                                  setState(() {
+                                                    BlocProvider.of<
+                                                                ShoppingCartBloc>(
+                                                            context)
+                                                        .add(
+                                                            UpdatingShoppingCart(
+                                                                snapshot.data
+                                                                    .getString(
+                                                                        Globals
+                                                                            .token),
+                                                                _list[index].id,
+                                                                newQuantity));
+                                                  });
+                                                },
+                                              ),
+                                              Positioned(
+                                                top: _screenUtil.setWidth(30),
+                                                left: _screenUtil.setWidth(30),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    int id = _list[index].id;
+                                                    int quantity =
+                                                        _list[index].quantity;
+                                                    List list = _list;
+                                                    list.remove(_list[index]);
+                                                    setState(() {
+                                                      _list = list;
+                                                    });
+                                                    BlocProvider.of<
+                                                                ShoppingCartBloc>(
+                                                            context)
+                                                        .add(UpdatingShoppingCart(
+                                                            snapshot.data
+                                                                .getString(
+                                                                    Globals
+                                                                        .token),
+                                                            id,
+                                                            -quantity));
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      borderRadius: BorderRadius
+                                                          .circular(_screenUtil
+                                                              .setWidth(50)),
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.close,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )),
                               ),
                             ),
-                            Positioned(
-                              top: 0.0,
-                              bottom: 0.0,
-                              right: 0.0,
-                              child: Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                                size: _screenUtil.setSp(70),
+                            Container(
+                              height: _screenUtil.setHeight(400),
+                              color: Color(0xff3573ac),
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.all(_screenUtil.setWidth(20)),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'ج.م',
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      _screenUtil.setSp(70),
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: _screenUtil.setWidth(20),
+                                              ),
+                                              Text(
+                                                '$_total',
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      _screenUtil.setSp(70),
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: _screenUtil.setWidth(20),
+                                        ),
+                                        Text(
+                                          ':',
+                                          style: TextStyle(
+                                            fontSize: _screenUtil.setSp(70),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          'الإجمالي',
+                                          style: TextStyle(
+                                            fontSize: _screenUtil.setSp(70),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: _screenUtil.setHeight(50),
+                                    ),
+                                    Container(
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            CheckoutPage()));
+                                              },
+                                              child: Text(
+                                                'متابعة الشراء',
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      _screenUtil.setSp(70),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 0.0,
+                                            bottom: 0.0,
+                                            right: 0.0,
+                                            child: Icon(
+                                              Icons.arrow_forward,
+                                              color: Colors.white,
+                                              size: _screenUtil.setSp(70),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          )
-        : Center(
-            child: Text(
-              'ليس لديك أي صنف في سلة المشتريات',
-              style: TextStyle(
-                fontSize: _screenUtil.setSp(50),
+                        state is UpdatingShoppingCartState
+                            ? Positioned(
+                                top: 0.0,
+                                bottom: 0.0,
+                                left: 0.0,
+                                right: 0.0,
+                                child: Container(
+                                  color: Colors.black.withOpacity(0.5),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          width: 100,
+                                          height: 100,
+                                          child: CircularProgressIndicator()),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : Container(),
+                      ],
+                    );
+                  }
+                },
               ),
             ),
           );
-  }
-
-  double _calculateTotal(List items) {
-    double total = 0;
-
-    for (int i = 0; i < items.length; i++) {
-      total += items[i]['price'] * double.parse('${items[i]['quantity']}');
-    }
-    return total;
+        }
+        return Container();
+      },
+    );
   }
 }
-
-List _cartItems = [
-  {
-    'quantity': 2,
-    'price': 3.0,
-    'item': {
-      'imageUrl': 'https://i.ibb.co/M9f86L6/aquafina-0-5.jpg',
-      'title': 'أكوافينا 0.5 لتر',
-      'price': 3.0,
-      'afterDiscount': 3.0,
-    },
-  },
-  {
-    'quantity': 1,
-    'price': 100.0,
-    'item': {
-      'imageUrl': 'https://i.ibb.co/80CFJtt/aquafina-19.jpg',
-      'title': 'أكوافينا 19 جالون',
-      'price': 100.0,
-      'afterDiscount': 100.0,
-    },
-  },
-  {
-    'quantity': 3,
-    'price': 5.0,
-    'item': {
-      'imageUrl': 'https://i.ibb.co/LSpKByw/baraka-1-5.jpg',
-      'title': 'بركة 1.5 لتر',
-      'price': 5.0,
-      'afterDiscount': 5.0,
-    },
-  },
-];
