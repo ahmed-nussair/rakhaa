@@ -82,6 +82,20 @@ class _WishListPageState extends State<WishListPage> {
                                   Scaffold(
                                     body: CustomScrollView(
                                       slivers: [
+                                        SliverList(
+                                          delegate: SliverChildListDelegate([
+                                            Container(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                'المفضلة',
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      _screenUtil.setSp(100),
+                                                ),
+                                              ),
+                                            ),
+                                          ]),
+                                        ),
                                         SliverPadding(
                                           padding: EdgeInsets.all(
                                               _screenUtil.setWidth(30)),
