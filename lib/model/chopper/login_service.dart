@@ -12,7 +12,8 @@ abstract class LoginService extends ChopperService {
   @Post(path: '/Login')
   @FormUrlEncodedConverter()
   Future<Response<LoginResponse>> login(
-      @Field('username') String username, @Field('password') String password);
+      @Field('username') String username, @Field('password') String password,
+      {@Field('deviceId') String deviceId});
 
   static LoginService create() {
     var client = ChopperClient(

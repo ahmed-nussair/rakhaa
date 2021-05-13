@@ -7,6 +7,7 @@ final String email = 'email';
 final String phone = 'phone';
 final String imageUrl = 'imageUrl';
 final String password = 'password';
+final String deviceId = 'deviceId';
 
 Future<bool> getImage(String url) async {
   var response = await http.get(Uri.parse(url));

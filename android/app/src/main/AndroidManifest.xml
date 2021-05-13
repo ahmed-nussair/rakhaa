@@ -14,7 +14,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
-        android:label="rakhaa"
+        android:label="الرخاء"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
 

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:device_info/device_info.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rakhaa/model/chopper/login_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,10 +24,29 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (event is LoggingIn) {
       yield LoggingInState();
 
+      String deviceId = '';
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+        deviceId = androidInfo.androidId;
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceId = iosInfo.identifierForVendor;
+        print('Running on ${iosInfo.utsname.machine}');
+        print('Version ${iosInfo.utsname.version}');
+        print('Release ${iosInfo.utsname.release}');
+        print('Sysname ${iosInfo.utsname.sysname}');
+        print('ID For Vendor ${iosInfo.identifierForVendor}');
+        print('Localied Model ${iosInfo.localizedModel}');
+      }
+
       final loginService = LoginService.create();
 
-      final response = await loginService.login(event.username, event.password);
-      print(response.bodyString);
+      final response = await loginService.login(event.username, event.password,
+          deviceId: deviceId);
+      // print(response.bodyString);
       if (response.isSuccessful) {
         final loginResponse = response.body;
 
@@ -46,6 +67,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           await prefs.setString(Globals.email, loginResponse.data.email);
           await prefs.setString(Globals.phone, loginResponse.data.phone);
           await prefs.setString(Globals.password, event.password);
+          await prefs.setString(Globals.deviceId, deviceId);
           yield SuccessState(
             name: loginResponse.data.name,
             email: loginResponse.data.email,

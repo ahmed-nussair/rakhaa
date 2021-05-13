@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/chopper/signout_service.dart';
+import '../../globals.dart' as Globals;
 // import '../../model/response/signout_response.dart';
 
 part 'home_page_event.dart';
@@ -36,9 +38,13 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     } else if (event is SignOut) {
       yield SigningOutState();
 
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      String deviceId = prefs.getString(Globals.deviceId);
       var service = SignOutService.create();
       var response = await service.signOut({
         'token': event.token,
+        'deviceId': deviceId,
       });
 
       print(response.bodyString);
