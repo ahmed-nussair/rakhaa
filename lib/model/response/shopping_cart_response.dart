@@ -23,7 +23,7 @@ class ShoppingCartResponse {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'userId': userId,
-        'items': items,
+        'items': List.generate(items.length, (index) => items[index].toJson()),
         'totalPrice': totalPrice,
       };
 }

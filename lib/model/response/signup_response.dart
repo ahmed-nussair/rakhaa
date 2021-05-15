@@ -20,7 +20,7 @@ class SignUpResponse {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'result': result,
-        'data': data,
+        'data': data.toJson(),
         'message': message,
       };
 }
