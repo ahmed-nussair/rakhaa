@@ -55,3 +55,12 @@ class ErrorState extends LoginState {
   @override
   List<Object> get props => [message];
 }
+
+class NoConnectivityState extends LoginState {
+  final String message;
+
+  NoConnectivityState(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

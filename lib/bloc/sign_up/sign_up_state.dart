@@ -40,3 +40,12 @@ class ErrorState extends SignUpState {
   @override
   List<Object> get props => [message];
 }
+
+class NoConnectivityState extends SignUpState {
+  final String message;
+
+  NoConnectivityState(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

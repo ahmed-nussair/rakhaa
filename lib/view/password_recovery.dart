@@ -67,6 +67,16 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
               textColor: Colors.white,
               fontSize: _screenUtil.setSp(50),
             );
+          } else if (state is NoConnectivityState) {
+            Fluttertoast.showToast(
+              msg: state.message,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black54,
+              textColor: Colors.white,
+              fontSize: _screenUtil.setSp(50),
+            );
           }
         },
         child: BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(

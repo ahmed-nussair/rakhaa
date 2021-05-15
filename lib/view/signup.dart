@@ -55,6 +55,16 @@ class _SignUpState extends State<SignUp> {
             print(state.message);
           } else if (state is FailedState) {
             print(state.message);
+          } else if (state is NoConnectivityState) {
+            Fluttertoast.showToast(
+              msg: state.message,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black54,
+              textColor: Colors.white,
+              fontSize: _screenUtil.setSp(50),
+            );
           }
         },
         child: BlocBuilder<SignUpBloc, SignUpState>(

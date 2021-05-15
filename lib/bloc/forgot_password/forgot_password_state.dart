@@ -40,3 +40,12 @@ class ErrorState extends ForgotPasswordState {
   @override
   List<Object> get props => [message];
 }
+
+class NoConnectivityState extends ForgotPasswordState {
+  final String message;
+
+  NoConnectivityState(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
