@@ -193,6 +193,22 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
                                           onChanged: (value) {
                                             setState(() {
                                               _address = value;
+                                              chosenAddress = {
+                                                'id': 0,
+                                                'buildingNo': '',
+                                                'street': '',
+                                                'governorate': {
+                                                  'id': 0,
+                                                  'name': '',
+                                                },
+                                                'city': {
+                                                  'id': 0,
+                                                  'name': '',
+                                                },
+                                                'floor': -1,
+                                                'department': -1,
+                                                'moreDescription': '',
+                                              };
                                             });
                                           }),
                                     ],

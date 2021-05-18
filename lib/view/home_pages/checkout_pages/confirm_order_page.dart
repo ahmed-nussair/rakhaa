@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../bloc/shopping_cart/shopping_cart_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../screen_util.dart';
 
 import 'purchased_item.dart';
 
 import '../address_item.dart';
+
+import '../../../globals.dart' as Globals;
 
 class ConfirmOrderPage extends StatefulWidget {
   final Function onChangeAddress;
@@ -31,289 +36,312 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
   Widget build(BuildContext context) {
     _screenUtil.init(context);
     // print('Received Address: ${widget.address}');
-    return ListView(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-          child: Container(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'طلبك كالآتي',
-              style: TextStyle(
-                fontSize: _screenUtil.setSp(50),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        Column(
-          children: List.generate(
-              _purchasedItems.length,
-              (index) => Padding(
-                    padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                    child: PurchasedItem(
-                      title: _purchasedItems[index]['item']['title'],
-                      imageUrl: _purchasedItems[index]['item']['imageUrl'],
-                      price: _purchasedItems[index]['price'],
-                      quantity: _purchasedItems[index]['quantity'],
+    return FutureBuilder<SharedPreferences>(
+      future: SharedPreferences.getInstance(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          String token = snapshot.data.getString(Globals.token);
+          return BlocProvider(
+            create: (_) => ShoppingCartBloc()..add(LoadingShoppingCart(token)),
+            child: BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
+              builder: (context, state) {
+                if (state is LoadingShoppingCartState) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                      ],
                     ),
-                  )),
-        ),
-        Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'ج.م',
-                      style: TextStyle(
-                        fontSize: _screenUtil.setSp(50),
+                  );
+                } else if (state is ShoppingCartLoadedState) {
+                  return ListView(
+                    children: [
+                      // (Your order as follows) title
+                      Padding(
+                        padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'طلبك كالآتي',
+                            style: TextStyle(
+                              fontSize: _screenUtil.setSp(50),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: _screenUtil.setWidth(20),
-                    ),
-                    Text(
-                      '${121.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: _screenUtil.setSp(50),
+
+                      // The items
+                      Column(
+                        children: List.generate(
+                            state.response.items.length,
+                            (index) => Padding(
+                                  padding:
+                                      EdgeInsets.all(_screenUtil.setWidth(30)),
+                                  child: PurchasedItem(
+                                    title: state.response.items[index].name,
+                                    imageUrl:
+                                        state.response.items[index].imageUrl,
+                                    price: state.response.items[index].price,
+                                    quantity:
+                                        state.response.items[index].quantity,
+                                  ),
+                                )),
                       ),
-                    ),
-                  ],
-                ),
-                Text(
-                  'الحساب الكلي',
-                  style: TextStyle(
-                    fontSize: _screenUtil.setSp(50),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'ج.م',
-                      style: TextStyle(
-                        fontSize: _screenUtil.setSp(50),
+
+                      // The total price and shipping price
+                      Column(
+                        children: [
+                          // The total price
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'ج.م',
+                                    style: TextStyle(
+                                      fontSize: _screenUtil.setSp(50),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: _screenUtil.setWidth(20),
+                                  ),
+                                  Text(
+                                    '${state.response.totalPrice.toStringAsFixed(2)}',
+                                    style: TextStyle(
+                                      fontSize: _screenUtil.setSp(50),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'الحساب الكلي',
+                                style: TextStyle(
+                                  fontSize: _screenUtil.setSp(50),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          // The shipping price
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'ج.م',
+                                    style: TextStyle(
+                                      fontSize: _screenUtil.setSp(50),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: _screenUtil.setWidth(20),
+                                  ),
+                                  Text(
+                                    '${20.toStringAsFixed(2)}',
+                                    style: TextStyle(
+                                      fontSize: _screenUtil.setSp(50),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'مصاريف الشحن',
+                                style: TextStyle(
+                                  fontSize: _screenUtil.setSp(50),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(
-                      width: _screenUtil.setWidth(20),
-                    ),
-                    Text(
-                      '${20.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: _screenUtil.setSp(50),
+
+                      // Divider
+                      Divider(),
+
+                      // Shipping Address Section
+                      //-----------------------------
+                      // title
+                      Padding(
+                        padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'عنوان الشحن',
+                            style: TextStyle(
+                              fontSize: _screenUtil.setSp(50),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Text(
-                  'مصاريف الشحن',
-                  style: TextStyle(
-                    fontSize: _screenUtil.setSp(50),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        Divider(),
 
-        // Shipping Address Section
-        Padding(
-          padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-          child: Container(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'عنوان الشحن',
-              style: TextStyle(
-                fontSize: _screenUtil.setSp(50),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        AddressItem(
-          id: widget.address['id'],
-          buildingNo: widget.address['buildingNo'],
-          city: widget.address['city'] as Map<String, dynamic>,
-          governorate: widget.address['governorate'] as Map<String, dynamic>,
-          // country: _addressesList[index]['country'],
-          // zipPostalCode: _addressesList[index]['zipPostalCode'],
-          department: widget.address['department'],
-          floor: widget.address['floor'],
-          street: widget.address['street'],
-          moreDescription: widget.address['moreDescription'],
-        ),
-        Padding(
-          padding: EdgeInsets.all(_screenUtil.setWidth(10)),
-          child: Stack(
-            children: [
-              Container(
-                color: Color(0xff3573ac),
-                child: ListTile(
-                  onTap: () {
-                    widget.onChangeAddress();
-                  },
-                  title: Text(
-                    'هل تريد تغيير عنوان الشحن؟',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: _screenUtil.setSp(50),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 0.0,
-                bottom: 0.0,
-                left: _screenUtil.setWidth(30),
-                child: Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                  size: _screenUtil.setSp(50),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(),
+                      // the address
+                      AddressItem(
+                        id: widget.address['id'],
+                        buildingNo: widget.address['buildingNo'],
+                        city: widget.address['city'] as Map<String, dynamic>,
+                        governorate: widget.address['governorate']
+                            as Map<String, dynamic>,
+                        // country: _addressesList[index]['country'],
+                        // zipPostalCode: _addressesList[index]['zipPostalCode'],
+                        department: widget.address['department'],
+                        floor: widget.address['floor'],
+                        street: widget.address['street'],
+                        moreDescription: widget.address['moreDescription'],
+                      ),
 
-        // Payment Method Section
+                      // Change address button
+                      Padding(
+                        padding: EdgeInsets.all(_screenUtil.setWidth(10)),
+                        child: Stack(
+                          children: [
+                            Container(
+                              color: Color(0xff3573ac),
+                              child: ListTile(
+                                onTap: () {
+                                  widget.onChangeAddress();
+                                },
+                                title: Text(
+                                  'هل تريد تغيير عنوان الشحن؟',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: _screenUtil.setSp(50),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 0.0,
+                              bottom: 0.0,
+                              left: _screenUtil.setWidth(30),
+                              child: Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                                size: _screenUtil.setSp(50),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
-        Padding(
-          padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-          child: Container(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'طريقة الدفع',
-              style: TextStyle(
-                fontSize: _screenUtil.setSp(50),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                'نقدًا عند الاستلام',
-                style: TextStyle(
-                  fontSize: _screenUtil.setSp(50),
-                ),
-              ),
-              SizedBox(
-                width: _screenUtil.setWidth(20),
-              ),
-              Image.asset(
-                'assets/cash.png',
-                height: _screenUtil.setWidth(80),
-                width: _screenUtil.setWidth(80),
-              ),
-            ],
-          ),
-        ),
-        // Padding(
-        //   padding: EdgeInsets.all(_screenUtil.setWidth(10)),
-        //   child: Stack(
-        //     children: [
-        //       Container(
-        //         color: Color(0xff3573ac),
-        //         child: ListTile(
-        //           onTap: () {
-        //             widget.onChangePaymentMethod();
-        //           },
-        //           title: Text(
-        //             'هل تريد تغيير طريقة الدفع؟',
-        //             textAlign: TextAlign.center,
-        //             style: TextStyle(
-        //               color: Colors.white,
-        //               fontSize: _screenUtil.setSp(50),
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //       Positioned(
-        //         top: 0.0,
-        //         bottom: 0.0,
-        //         left: _screenUtil.setWidth(30),
-        //         child: Icon(
-        //           Icons.arrow_back,
-        //           color: Colors.white,
-        //           size: _screenUtil.setSp(50),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        Divider(),
+                      // divider
+                      Divider(),
 
-        // Confirm Order Button
-        Padding(
-          padding: EdgeInsets.all(_screenUtil.setWidth(10)),
-          child: Container(
-            color: Color(0xff3573ac),
-            child: ListTile(
-              onTap: () {
-                widget.onConfirmOrder();
+                      // Payment Method Section
+                      // -----------------------------
+                      // title
+                      Padding(
+                        padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'طريقة الدفع',
+                            style: TextStyle(
+                              fontSize: _screenUtil.setSp(50),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // payment method
+                      Padding(
+                        padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              'نقدًا عند الاستلام',
+                              style: TextStyle(
+                                fontSize: _screenUtil.setSp(50),
+                              ),
+                            ),
+                            SizedBox(
+                              width: _screenUtil.setWidth(20),
+                            ),
+                            Image.asset(
+                              'assets/cash.png',
+                              height: _screenUtil.setWidth(80),
+                              width: _screenUtil.setWidth(80),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.all(_screenUtil.setWidth(10)),
+                      //   child: Stack(
+                      //     children: [
+                      //       Container(
+                      //         color: Color(0xff3573ac),
+                      //         child: ListTile(
+                      //           onTap: () {
+                      //             widget.onChangePaymentMethod();
+                      //           },
+                      //           title: Text(
+                      //             'هل تريد تغيير طريقة الدفع؟',
+                      //             textAlign: TextAlign.center,
+                      //             style: TextStyle(
+                      //               color: Colors.white,
+                      //               fontSize: _screenUtil.setSp(50),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       Positioned(
+                      //         top: 0.0,
+                      //         bottom: 0.0,
+                      //         left: _screenUtil.setWidth(30),
+                      //         child: Icon(
+                      //           Icons.arrow_back,
+                      //           color: Colors.white,
+                      //           size: _screenUtil.setSp(50),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+
+                      // divider
+                      Divider(),
+
+                      // Confirm Order Button
+                      Padding(
+                        padding: EdgeInsets.all(_screenUtil.setWidth(10)),
+                        child: Container(
+                          color: Color(0xff3573ac),
+                          child: ListTile(
+                            onTap: () {
+                              widget.onConfirmOrder();
+                            },
+                            title: Text(
+                              'تأكيد الطلب',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: _screenUtil.setSp(50),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return Container();
               },
-              title: Text(
-                'تأكيد الطلب',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: _screenUtil.setSp(50),
-                ),
-              ),
             ),
-          ),
-        ),
-      ],
+          );
+        }
+        return Container();
+      },
     );
   }
 }
-
-List _purchasedItems = [
-  {
-    'quantity': 2,
-    'price': 3.0,
-    'item': {
-      'imageUrl': 'https://i.ibb.co/M9f86L6/aquafina-0-5.jpg',
-      'title': 'أكوافينا 0.5 لتر',
-      'price': 3.0,
-      'afterDiscount': 3.0,
-    },
-  },
-  {
-    'quantity': 1,
-    'price': 100.0,
-    'item': {
-      'imageUrl': 'https://i.ibb.co/80CFJtt/aquafina-19.jpg',
-      'title': 'أكوافينا 19 جالون',
-      'price': 100.0,
-      'afterDiscount': 100.0,
-    },
-  },
-  {
-    'quantity': 3,
-    'price': 5.0,
-    'item': {
-      'imageUrl': 'https://i.ibb.co/LSpKByw/baraka-1-5.jpg',
-      'title': 'بركة 1.5 لتر',
-      'price': 5.0,
-      'afterDiscount': 5.0,
-    },
-  },
-];
