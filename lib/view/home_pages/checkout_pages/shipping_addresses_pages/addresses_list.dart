@@ -4,10 +4,12 @@ import '../../../screen_util.dart';
 import '../../address_item.dart';
 
 class AddressesList extends StatefulWidget {
-  final List addressesList;
+  final List<Map<String, dynamic>> addressesList;
+  final Function(Map<String, dynamic>) onAddressSelected;
 
   AddressesList({
     @required this.addressesList,
+    @required this.onAddressSelected,
   });
 
   @override
@@ -34,16 +36,17 @@ class _AddressesListState extends State<AddressesList> {
                 children: [
                   Expanded(
                     child: AddressItem(
-                      firstLine: widget.addressesList[index]['firstLine'],
-                      secondLine: widget.addressesList[index]['secondLine'],
+                      id: widget.addressesList[index]['id'],
+                      buildingNo: widget.addressesList[index]['buildingNo'],
                       city: widget.addressesList[index]['city'],
-                      state: widget.addressesList[index]['state'],
-                      // country: widget.addressesList[index]['country'],
-                      // zipPostalCode: widget.addressesList[index]['zipPostalCode'],
-                      locationLatitude:
-                          double.parse(widget.addressesList[index]['latitude']),
-                      locationLongitude: double.parse(
-                          widget.addressesList[index]['longitude']),
+                      governorate: widget.addressesList[index]['governorate'],
+                      // country: _addressesList[index]['country'],
+                      // zipPostalCode: _addressesList[index]['zipPostalCode'],
+                      department: widget.addressesList[index]['department'],
+                      floor: widget.addressesList[index]['floor'],
+                      street: widget.addressesList[index]['street'],
+                      moreDescription: widget.addressesList[index]
+                          ['moreDescription'],
                     ),
                   ),
                   Radio(
@@ -53,6 +56,7 @@ class _AddressesListState extends State<AddressesList> {
                         setState(() {
                           _map = value;
                         });
+                        widget.onAddressSelected(widget.addressesList[index]);
                       }),
                 ],
               ),

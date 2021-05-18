@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'checkout_pages/shipping_address_page.dart';
-import 'checkout_pages/payment_method_page.dart';
+// import 'checkout_pages/payment_method_page.dart';
 import 'checkout_pages/confirm_order_page.dart';
 
 import '../screen_util.dart';
@@ -11,8 +11,7 @@ class CheckoutPage extends StatefulWidget {
   _CheckoutPageState createState() => _CheckoutPageState();
 }
 
-class _CheckoutPageState extends State<CheckoutPage>
-    with TickerProviderStateMixin {
+class _CheckoutPageState extends State<CheckoutPage> {
   final ScreenUtil _screenUtil = ScreenUtil();
 
   final int tabsNumber = 2;
@@ -23,19 +22,13 @@ class _CheckoutPageState extends State<CheckoutPage>
   // final int confirmOrderIndex = 2;
   final int confirmOrderIndex = 1;
 
-  TabController _tabController;
-
   int _currentTabIndex;
+
+  Map<String, dynamic> chosenAddress;
 
   @override
   void initState() {
     _currentTabIndex = 0;
-
-    _tabController = TabController(
-      length: tabsNumber,
-      vsync: this,
-      initialIndex: _currentTabIndex,
-    );
 
     super.initState();
   }
@@ -65,104 +58,39 @@ class _CheckoutPageState extends State<CheckoutPage>
             ),
           ),
         ),
-        body: Scaffold(
-          // appBar: TabBar(
-          //   controller: _tabController,
-          //   tabs: [
-          //     Tab(
-          //       child: Text(
-          //         'عنوان الشحن',
-          //         style: TextStyle(color: Colors.black,
-          //           fontSize: _screenUtil.setSp(40),
-          //         ),
-          //       ),
-          //     ),
-          //     Tab(
-          //       child: Text(
-          //         'طريقة الدفع',
-          //         style: TextStyle(color: Colors.black,
-          //           fontSize: _screenUtil.setSp(40),
-          //         ),
-          //       ),
-          //     ),
-          //     Tab(
-          //       child: Text(
-          //         'تأكيد الشراء',
-          //         style: TextStyle(color: Colors.black,
-          //           fontSize: _screenUtil.setSp(40),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          //   onTap: (index) {
-          //     // switch (index) {
-          //     //   case 0: // When tapped on first tab
-          //     //     setState(() {
-          //     //       _currentTabIndex = index;
-          //     //     });
-          //     //     break;
-          //     //   case 1: // When tapped on second tab
-          //     //     setState(() {
-          //     //       _currentTabIndex = index;
-          //     //     });
-          //     //     break;
-          //     //   case 2: // When tapped on third tab
-          //     //     _tabController.animateTo(index);
-          //     //     setState(() {
-          //     //       _currentTabIndex = index;
-          //     //     });
-          //     //     break;
-          //     // }
-          //   },
-          // ),
-          body: TabBarView(
-            physics: NeverScrollableScrollPhysics(),
-            controller: _tabController,
-            children: [
-              ShippingAddressPage(
-                onConfirmAddress: () {
+        body: _currentTabIndex == shippingAddressIndex
+            ? ShippingAddressPage(
+                onAddressSelected: (data) {
                   setState(() {
-                    // _currentTabIndex = paymentMethodIndex;
+                    chosenAddress = data;
+                  });
+                },
+                onConfirmAddress: (data) {
+                  setState(() {
                     _currentTabIndex = confirmOrderIndex;
                   });
-                  _tabController.animateTo(_currentTabIndex);
                 },
-              ),
-              // PaymentMethodPage(
-              //   onConfirmPaymentMethod: () {
-              //     setState(() {
-              //       _currentTabIndex = confirmOrderIndex;
-              //     });
-              //     _tabController.animateTo(_currentTabIndex);
-              //   },
-              //   onBackToShippingAddressPage: () {
-              //     setState(() {
-              //       _currentTabIndex = shippingAddressIndex;
-              //     });
-              //     _tabController.animateTo(_currentTabIndex);
-              //   },
-              // ),
-              ConfirmOrderPage(
-                onChangeAddress: () {
-                  setState(() {
-                    _currentTabIndex = shippingAddressIndex;
-                  });
-                  _tabController.animateTo(_currentTabIndex);
-                },
-                // onChangePaymentMethod: () {
-                //   setState(() {
-                //     _currentTabIndex = paymentMethodIndex;
-                //   });
-                //   _tabController.animateTo(_currentTabIndex);
-                // },
+              )
+            : _currentTabIndex == confirmOrderIndex
+                ? ConfirmOrderPage(
+                    address: chosenAddress,
+                    onChangeAddress: () {
+                      setState(() {
+                        _currentTabIndex = shippingAddressIndex;
+                      });
+                    },
+                    // onChangePaymentMethod: () {
+                    //   setState(() {
+                    //     _currentTabIndex = paymentMethodIndex;
+                    //   });
+                    //   _tabController.animateTo(_currentTabIndex);
+                    // },
 
-                onConfirmOrder: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        ),
+                    onConfirmOrder: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                : Container(),
       ),
     );
   }

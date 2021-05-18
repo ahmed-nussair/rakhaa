@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'country_list.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../screen_util.dart';
 
-import '../../custom_show_dialog.dart';
+import 'governorates_cities_widget.dart';
 
 class AddAddress extends StatefulWidget {
-  final Function(Map<String, String>) onAddressAdded;
+  final String token;
+  final Function(Map<String, dynamic>) onAddressAdded;
 
-  AddAddress({@required this.onAddressAdded});
+  AddAddress({@required this.token, @required this.onAddressAdded});
 
   @override
   _AddAddressState createState() => _AddAddressState();
@@ -16,22 +18,30 @@ class AddAddress extends StatefulWidget {
 class _AddAddressState extends State<AddAddress> {
   final ScreenUtil _screenUtil = ScreenUtil();
 
-  final TextEditingController _line1Controller = TextEditingController();
-  final TextEditingController _line2Controller = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _stateController = TextEditingController();
-  final TextEditingController _poController = TextEditingController();
+  final TextEditingController _buildingNoController = TextEditingController();
+  final TextEditingController _streetController = TextEditingController();
+  final TextEditingController _floorController = TextEditingController();
+  final TextEditingController _departmentController = TextEditingController();
+  final TextEditingController _moreDescriptionController =
+      TextEditingController();
 
-  String _country;
+  bool _containingFloor;
+  bool _containingDepartment;
 
-  double _latitude;
-  double _longitude;
+  int _governorateId;
+  int _cityId;
+
+  int floor;
+  int department;
 
   @override
   void initState() {
-    _country = '';
-    _latitude = 0.0;
-    _longitude = 0.0;
+    _containingFloor = false;
+    _containingDepartment = false;
+    _governorateId = 0;
+    _cityId = 0;
+    floor = -1;
+    department = -1;
     super.initState();
   }
 
@@ -45,7 +55,7 @@ class _AddAddressState extends State<AddAddress> {
           Container(
             alignment: Alignment.center,
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.all(ScreenUtil().setWidth(50)),
+            padding: EdgeInsets.all(ScreenUtil().setWidth(20)),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(ScreenUtil().setWidth(50)),
@@ -54,7 +64,7 @@ class _AddAddressState extends State<AddAddress> {
               color: Color(0xff9b7448),
             ),
             child: Text(
-              'Add New Address',
+              'إضافة عنوان جديد',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: ScreenUtil().setSp(50),
@@ -68,175 +78,392 @@ class _AddAddressState extends State<AddAddress> {
               children: [
                 Padding(
                   padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                  child: _formField('Address Line 1', null,
-                      controller: _line1Controller,
-                      inputType: TextInputType.multiline,
-                      maxLines: 5),
+                  child: _formField('رقم العمارة / المبنى / المنشأة', null,
+                      controller: _buildingNoController,
+                      inputType: TextInputType.text,
+                      maxLines: 1),
                 ),
                 Padding(
                   padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                  child: _formField('Address Line 2', null,
-                      controller: _line2Controller,
+                  child: _formField('اسم الشارع بالتفصيل', null,
+                      controller: _streetController,
                       inputType: TextInputType.multiline,
-                      maxLines: 5),
+                      maxLines: 2),
                 ),
+
+                Padding(
+                  padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+                  child: _formField(
+                      'تفاصيل أكثر للعنوان (بجانب المحل الفلاني ، أمام مطعم معين ، إلخ)',
+                      null,
+                      controller: _moreDescriptionController,
+                      inputType: TextInputType.multiline,
+                      maxLines: 3),
+                ),
+
                 Padding(
                   padding: EdgeInsets.all(_screenUtil.setWidth(30)),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Flexible(
-                        flex: 1,
                         child: _formField(
-                          'City',
+                          'أدخل رقم الدور (أدخل 0 للدور الأرضي)',
                           null,
-                          controller: _cityController,
-                        ),
-                      ),
-                      SizedBox(
-                        width: _screenUtil.setWidth(30),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: _formField(
-                          'State',
-                          null,
-                          controller: _stateController,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                  child: GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        builder: (context) => CustomAlertDialog(
-                          titlePadding: EdgeInsets.all(0.0),
-                          contentPadding: EdgeInsets.all(0.0),
-                          content: CountryList(
-                            onCountryCodeSelected: (country) {
-                              setState(() {
-                                _country = country;
-                              });
-                            },
+                          controller: _floorController,
+                          inputType: TextInputType.numberWithOptions(
+                            decimal: false,
+                            signed: false,
                           ),
+                          enabled: _containingFloor,
                         ),
-                        context: context,
-                      );
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: _screenUtil.setWidth(800),
-                      height: _screenUtil.setHeight(120),
-                      padding: EdgeInsets.all(_screenUtil.setHeight(25)),
-                      decoration: BoxDecoration(
-                        color: Color(0xfff4f4f8),
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(_screenUtil.setWidth(30))),
                       ),
-                      child: Text(
-                        _country.isNotEmpty ? _country : 'Country',
+                      Text(
+                        'رقم الدور',
                         style: TextStyle(
                           fontSize: _screenUtil.setSp(40),
-                          color: Color(0xffd8cfcc),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                  child: _formField('ZIP / Postal Code', null,
-                      controller: _poController,
-                      inputType: TextInputType.numberWithOptions(
-                          decimal: false, signed: false)),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                  child: GestureDetector(
-                    onTap: () async {
-                    },
-                    child: Container(
-                      height: _screenUtil.setHeight(100),
-                      decoration: BoxDecoration(
-                        color: Color(0xfff4f4f8),
-                        borderRadius:
-                            BorderRadius.circular(_screenUtil.setWidth(30)),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        _latitude > 0 && _longitude > 0
-                            ? '$_latitude, $_longitude'
-                            : 'Specify Address Location',
-                        style: TextStyle(
-                          fontSize: _latitude > 0 && _longitude > 0
-                              ? _screenUtil.setSp(37)
-                              : _screenUtil.setSp(50),
-                          color: _latitude > 0 && _longitude > 0
-                              ? Colors.black
-                              : Color(0xffd9d9d9),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: ElevatedButton(
-                          // color: Color(0xff9b7448),
-                          onPressed: () {
-                            Map<String, String> data = {
-                              'firstLine': _line1Controller.text,
-                              'secondLine': _line2Controller.text,
-                              'city': _cityController.text,
-                              'state': _stateController.text,
-                              'country': _country,
-                              'zipPostalCode': _poController.text,
-                              'latitude': '$_latitude',
-                              'longitude': '$_longitude',
-                            };
-                            widget.onAddressAdded(data);
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(
-                            'Submit',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: _screenUtil.setSp(50),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: _screenUtil.setWidth(30),
-                      ),
-                      Flexible(
-                        child: ElevatedButton(
-                          // color: Color(0xff9b7448),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(
-                            'Cancel',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: _screenUtil.setSp(50),
-                            ),
-                          ),
-                        ),
+                      Checkbox(
+                        value: _containingFloor,
+                        onChanged: (value) {
+                          setState(() {
+                            _containingFloor = value;
+                          });
+                        },
                       ),
                     ],
                   ),
                 ),
+
+                Padding(
+                  padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: _formField(
+                          'أدخل رقم الشقة',
+                          null,
+                          controller: _departmentController,
+                          inputType: TextInputType.numberWithOptions(
+                            signed: false,
+                            decimal: false,
+                          ),
+                          enabled: _containingDepartment,
+                        ),
+                      ),
+                      Text(
+                        'رقم الشقة',
+                        style: TextStyle(
+                          fontSize: _screenUtil.setSp(40),
+                        ),
+                      ),
+                      Checkbox(
+                        value: _containingDepartment,
+                        onChanged: (value) {
+                          setState(() {
+                            _containingDepartment = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+                  child: GovernoratesCitiesWidget(
+                    onGovernorateSelected: (governorateId) {
+                      setState(() {
+                        _governorateId = governorateId;
+                      });
+                      // print('Governorate ID set to: $_governorateId');
+                    },
+                    onCitySelected: (cityId) {
+                      setState(() {
+                        _cityId = cityId;
+                      });
+                      // print('City ID set to: $_cityId');
+                    },
+                  ),
+                ),
+
+                // Padding(
+                //   padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Flexible(
+                //         child: ElevatedButton(
+                //           // color: Color(0xff9b7448),
+                //           onPressed: () {
+                //             Navigator.of(context).pop();
+                //           },
+                //           child: Text(
+                //             'إلغاء',
+                //             textAlign: TextAlign.center,
+                //             style: TextStyle(
+                //               color: Colors.white,
+                //               fontSize: _screenUtil.setSp(50),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //       SizedBox(
+                //         width: _screenUtil.setWidth(30),
+                //       ),
+                //       Flexible(
+                //         child: ElevatedButton(
+                //           // color: Color(0xff9b7448),
+                //           onPressed: () {
+                //
+                //             if(_buildingNoController.text.isEmpty) {
+                //               Fluttertoast.showToast(
+                //                 msg: 'من فضلك أدخل رقم العمارة / المبنى / المنشأة',
+                //                 toastLength: Toast.LENGTH_LONG,
+                //                 gravity: ToastGravity.BOTTOM,
+                //                 timeInSecForIosWeb: 1,
+                //                 backgroundColor: Colors.black54,
+                //                 textColor: Colors.white,
+                //                 fontSize: _screenUtil.setSp(50),
+                //               );
+                //               return;
+                //             }
+                //
+                //             if(_streetController.text.isEmpty) {
+                //               Fluttertoast.showToast(
+                //                 msg: 'من فضلك أدخل اسم الشارع بالتفصيل',
+                //                 toastLength: Toast.LENGTH_LONG,
+                //                 gravity: ToastGravity.BOTTOM,
+                //                 timeInSecForIosWeb: 1,
+                //                 backgroundColor: Colors.black54,
+                //                 textColor: Colors.white,
+                //                 fontSize: _screenUtil.setSp(50),
+                //               );
+                //               return;
+                //             }
+                //
+                //             if(_containingFloor) {
+                //               if(_floorController.text.isEmpty) {
+                //                 Fluttertoast.showToast(
+                //                   msg: 'من فضلك أدخل الدور',
+                //                   toastLength: Toast.LENGTH_LONG,
+                //                   gravity: ToastGravity.BOTTOM,
+                //                   timeInSecForIosWeb: 1,
+                //                   backgroundColor: Colors.black54,
+                //                   textColor: Colors.white,
+                //                   fontSize: _screenUtil.setSp(50),
+                //                 );
+                //                 return;
+                //               }
+                //             }
+                //
+                //             if(_containingDepartment) {
+                //               if(_departmentController.text.isEmpty) {
+                //                 Fluttertoast.showToast(
+                //                   msg: 'من فضلك أدخل رقم الشقة',
+                //                   toastLength: Toast.LENGTH_LONG,
+                //                   gravity: ToastGravity.BOTTOM,
+                //                   timeInSecForIosWeb: 1,
+                //                   backgroundColor: Colors.black54,
+                //                   textColor: Colors.white,
+                //                   fontSize: _screenUtil.setSp(50),
+                //                 );
+                //                 return;
+                //               }
+                //             }
+                //
+                //             if(_governorateId <= 0) {
+                //               Fluttertoast.showToast(
+                //                 msg: 'من فضلك اختر المحافظة',
+                //                 toastLength: Toast.LENGTH_LONG,
+                //                 gravity: ToastGravity.BOTTOM,
+                //                 timeInSecForIosWeb: 1,
+                //                 backgroundColor: Colors.black54,
+                //                 textColor: Colors.white,
+                //                 fontSize: _screenUtil.setSp(50),
+                //               );
+                //               return;
+                //             }
+                //
+                //             if(_cityId <= 0) {
+                //               Fluttertoast.showToast(
+                //                 msg: 'من فضلك اختر الحي أو المركز التابع للمحافظة',
+                //                 toastLength: Toast.LENGTH_LONG,
+                //                 gravity: ToastGravity.BOTTOM,
+                //                 timeInSecForIosWeb: 1,
+                //                 backgroundColor: Colors.black54,
+                //                 textColor: Colors.white,
+                //                 fontSize: _screenUtil.setSp(50),
+                //               );
+                //               return;
+                //             }
+                //
+                //
+                //             Map<String, dynamic> data = {
+                //               'token': widget.token,
+                //               'buildingNo': _buildingNoController.text,
+                //               'street': _streetController.text,
+                //               'floor': floor,
+                //               'department': department,
+                //               'moreDescription': _moreDescriptionController.text,
+                //               'governorateId': _governorateId,
+                //               'cityId': _cityId,
+                //             };
+                //             widget.onAddressAdded(data);
+                //             Navigator.of(context).pop();
+                //           },
+                //           child: Text(
+                //             'أضف',
+                //             textAlign: TextAlign.center,
+                //             style: TextStyle(
+                //               color: Colors.white,
+                //               fontSize: _screenUtil.setSp(50),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: ElevatedButton(
+                  // color: Color(0xff9b7448),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'إلغاء',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: _screenUtil.setSp(50),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: _screenUtil.setWidth(30),
+              ),
+              Flexible(
+                child: ElevatedButton(
+                  // color: Color(0xff9b7448),
+                  onPressed: () {
+                    if (_buildingNoController.text.isEmpty) {
+                      Fluttertoast.showToast(
+                        msg: 'من فضلك أدخل رقم العمارة / المبنى / المنشأة',
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: _screenUtil.setSp(50),
+                      );
+                      return;
+                    }
+
+                    if (_streetController.text.isEmpty) {
+                      Fluttertoast.showToast(
+                        msg: 'من فضلك أدخل اسم الشارع بالتفصيل',
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: _screenUtil.setSp(50),
+                      );
+                      return;
+                    }
+
+                    if (_containingFloor) {
+                      if (_floorController.text.isEmpty) {
+                        Fluttertoast.showToast(
+                          msg: 'من فضلك أدخل الدور',
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.black54,
+                          textColor: Colors.white,
+                          fontSize: _screenUtil.setSp(50),
+                        );
+                        return;
+                      }
+                    }
+
+                    if (_containingDepartment) {
+                      if (_departmentController.text.isEmpty) {
+                        Fluttertoast.showToast(
+                          msg: 'من فضلك أدخل رقم الشقة',
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.black54,
+                          textColor: Colors.white,
+                          fontSize: _screenUtil.setSp(50),
+                        );
+                        return;
+                      }
+                    }
+
+                    if (_governorateId <= 0) {
+                      Fluttertoast.showToast(
+                        msg: 'من فضلك اختر المحافظة',
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: _screenUtil.setSp(50),
+                      );
+                      return;
+                    }
+
+                    if (_cityId <= 0) {
+                      Fluttertoast.showToast(
+                        msg: 'من فضلك اختر الحي أو المركز التابع للمحافظة',
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: _screenUtil.setSp(50),
+                      );
+                      return;
+                    }
+
+                    Map<String, dynamic> data = {
+                      'token': widget.token,
+                      'buildingNo': _buildingNoController.text,
+                      'street': _streetController.text,
+                      'floor': floor,
+                      'department': department,
+                      'moreDescription': _moreDescriptionController.text,
+                      'governorateId': _governorateId,
+                      'cityId': _cityId,
+                    };
+                    widget.onAddressAdded(data);
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'أضف',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: _screenUtil.setSp(50),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -250,11 +477,14 @@ class _AddAddressState extends State<AddAddress> {
     final bool obscureText = false,
     final TextInputType inputType = TextInputType.text,
     final int maxLines = 1,
+    final bool enabled = true,
   }) {
     return Stack(
       children: [
         Container(
           child: TextFormField(
+            enabled: enabled,
+            textAlign: TextAlign.end,
             controller: controller,
             obscureText: obscureText,
             maxLines: maxLines,
@@ -268,13 +498,13 @@ class _AddAddressState extends State<AddAddress> {
               ),
               hintText: hintTitle,
               contentPadding: EdgeInsets.only(
-                  left: icon == null
+                  right: icon == null
                       ? _screenUtil.setWidth(28)
                       : _screenUtil.setWidth(100),
                   top: _screenUtil.setHeight(28),
                   bottom: _screenUtil.setHeight(28)),
               hintStyle: TextStyle(
-                color: Color(0xffd8cfcc),
+                // color: Color(0xffd8cfcc),
                 fontSize: _screenUtil.setSp(40),
               ),
             ),

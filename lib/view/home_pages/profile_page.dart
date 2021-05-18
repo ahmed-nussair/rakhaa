@@ -6,29 +6,6 @@ import 'profile_pages/details_page.dart';
 
 import '../../globals.dart' as Globals;
 
-final List addresses = [
-  {
-    'firstLine': '40 ب ، السويسري ب ، الحي العاشر',
-    'secondLine': 'أمام مدرسة سعد بن أبي وقاص',
-    'city': 'مدينة نصر',
-    'state': 'القاهرة',
-    'country': 'مصر',
-    'zipPostalCode': '5435435',
-    'latitude': '30.046348',
-    'longitude': '31.366725',
-  },
-  {
-    'firstLine': '40B, El-Swissry B, The 10th District',
-    'secondLine': '',
-    'city': 'Nasr City',
-    'state': 'Cairo',
-    'country': 'Egypt',
-    'zipPostalCode': '11134',
-    'latitude': '30.047508',
-    'longitude': '31.352309',
-  },
-];
-
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -93,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage>
           controller: _tabController,
           physics: NeverScrollableScrollPhysics(),
           children: [
-            AddressesPage(addresses: addresses),
+            AddressesPage(),
             FutureBuilder<SharedPreferences>(
               future: SharedPreferences.getInstance(),
               builder: (context, snapshot) {

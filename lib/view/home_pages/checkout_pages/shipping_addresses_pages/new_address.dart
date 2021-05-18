@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../screen_util.dart';
-import 'package:geolocator/geolocator.dart';
 
-import 'location_map.dart';
+import 'governorates_cities_widget.dart';
 
 class NewAddress extends StatefulWidget {
-  final Function(Map<String, String>) onAddressAdded;
+  final String token;
+  final Function(Map<String, dynamic>) onAddressAdded;
 
-  NewAddress({@required this.onAddressAdded});
+  NewAddress({@required this.token, @required this.onAddressAdded});
 
   @override
   _NewAddressState createState() => _NewAddressState();
@@ -17,22 +18,53 @@ class NewAddress extends StatefulWidget {
 class _NewAddressState extends State<NewAddress> {
   final ScreenUtil _screenUtil = ScreenUtil();
 
-  final TextEditingController _line1Controller = TextEditingController();
-  final TextEditingController _line2Controller = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _stateController = TextEditingController();
-  final TextEditingController _poController = TextEditingController();
+  final TextEditingController _buildingNoController = TextEditingController();
+  final TextEditingController _streetController = TextEditingController();
+  final TextEditingController _floorController = TextEditingController();
+  final TextEditingController _departmentController = TextEditingController();
+  final TextEditingController _moreDescriptionController =
+      TextEditingController();
 
-  String _country;
+  bool _containingFloor;
+  bool _containingDepartment;
 
-  double _latitude;
-  double _longitude;
+  int _governorateId;
+  int _cityId;
+
+  String _governorateName;
+  String _cityName;
+
+  int floor;
+  int department;
+
+  Map<String, dynamic> _data;
 
   @override
   void initState() {
-    _country = '';
-    _latitude = 0.0;
-    _longitude = 0.0;
+    _containingFloor = false;
+    _containingDepartment = false;
+    _governorateId = 0;
+    _cityId = 0;
+    _governorateName = '';
+    _cityName = '';
+    floor = -1;
+    department = -1;
+    _data = {
+      'id': 0,
+      'buildingNo': '',
+      'street': '',
+      'governorate': {
+        'id': 0,
+        'name': '',
+      },
+      'city': {
+        'id': 0,
+        'name': '',
+      },
+      'floor': -1,
+      'department': -1,
+      'moreDescription': '',
+    };
     super.initState();
   }
 
@@ -43,132 +75,153 @@ class _NewAddressState extends State<NewAddress> {
       children: [
         Padding(
           padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-          child: _formField('السطر الأول', null,
-              controller: _line1Controller,
-              inputType: TextInputType.multiline,
-              maxLines: 3),
+          child: _formField('رقم العمارة / المبنى / المنشأة', null,
+              addressField: 'buildingNo',
+              addressFieldValue: _buildingNoController.text,
+              controller: _buildingNoController,
+              inputType: TextInputType.text,
+              maxLines: 1),
         ),
         Padding(
           padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-          child: _formField('السطر الثاني', null,
-              controller: _line2Controller,
+          child: _formField('اسم الشارع بالتفصيل', null,
+              addressField: 'street',
+              addressFieldValue: _streetController.text,
+              controller: _streetController,
+              inputType: TextInputType.multiline,
+              maxLines: 2),
+        ),
+
+        Padding(
+          padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+          child: _formField(
+              'تفاصيل أكثر للعنوان (بجانب المحل الفلاني ، أمام مطعم معين ، إلخ)',
+              null,
+              addressField: 'moreDescription',
+              addressFieldValue: _moreDescriptionController.text,
+              controller: _moreDescriptionController,
               inputType: TextInputType.multiline,
               maxLines: 3),
         ),
+
         Padding(
           padding: EdgeInsets.all(_screenUtil.setWidth(30)),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Flexible(
-                flex: 1,
                 child: _formField(
-                  'المحافظة',
+                  'أدخل رقم الدور (أدخل 0 للدور الأرضي)',
                   null,
-                  controller: _stateController,
+                  addressField: 'floor',
+                  addressFieldValue: _floorController.text.isNotEmpty
+                      ? int.parse(_floorController.text)
+                      : -1,
+                  controller: _floorController,
+                  inputType: TextInputType.numberWithOptions(
+                    decimal: false,
+                    signed: false,
+                  ),
+                  enabled: _containingFloor,
                 ),
               ),
-              SizedBox(
-                width: _screenUtil.setWidth(30),
-              ),
-              Flexible(
-                flex: 1,
-                child: _formField(
-                  'الحي أو المركز',
-                  null,
-                  controller: _cityController,
+              Text(
+                'رقم الدور',
+                style: TextStyle(
+                  fontSize: _screenUtil.setSp(40),
                 ),
+              ),
+              Checkbox(
+                value: _containingFloor,
+                onChanged: (value) {
+                  setState(() {
+                    _containingFloor = value;
+                    _data['floor'] = value
+                        ? _floorController.text.isEmpty
+                            ? -2
+                            : int.parse(_floorController.text)
+                        : -1;
+                  });
+                  widget.onAddressAdded(_data);
+                },
               ),
             ],
           ),
         ),
-        // Padding(
-        //   padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-        //   child: GestureDetector(
-        //     onTap: () {
-        //       showDialog(
-        //         context: context,
-        //         child: CustomAlertDialog(
-        //           titlePadding: EdgeInsets.all(0.0),
-        //           contentPadding: EdgeInsets.all(0.0),
-        //           content: CountryList(
-        //             onCountryCodeSelected: (country) {
-        //               setState(() {
-        //                 _country = country;
-        //               });
-        //             },
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //     child: Container(
-        //       alignment: Alignment.center,
-        //       width: _screenUtil.setWidth(800),
-        //       height: _screenUtil.setHeight(120),
-        //       padding: EdgeInsets.all(_screenUtil.setHeight(25)),
-        //       decoration: BoxDecoration(
-        //         color: Color(0xfff4f4f8),
-        //         borderRadius: BorderRadius.all(
-        //             Radius.circular(_screenUtil.setWidth(30))),
-        //       ),
-        //       child: Text(
-        //         _country.isNotEmpty ? _country : 'Country',
-        //         style: TextStyle(
-        //           fontSize: _screenUtil.setSp(40),
-        //           color: Color(0xffd8cfcc),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // Padding(
-        //   padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-        //   child: _formField('ZIP / Postal Code', null,
-        //       controller: _poController,
-        //       inputType: TextInputType.numberWithOptions(
-        //           decimal: false, signed: false)),
-        // ),
 
-        // Padding(
-        //   padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-        //   child: GestureDetector(
-        //     onTap: () async {
-        //       Position position = await Geolocator.getCurrentPosition(
-        //           desiredAccuracy: LocationAccuracy.high);
-        //       Navigator.of(context).push(MaterialPageRoute(
-        //           builder: (context) => LocationMap(
-        //                 address:
-        //                     '${_line1Controller.text}\n${_line2Controller.text}',
-        //                 latitude: position.latitude,
-        //                 longitude: position.longitude,
-        //                 onLocationSpecifiedOnMap: (lat, lon) {
-        //                   setState(() {
-        //                     _latitude = lat;
-        //                     _longitude = lon;
-        //                   });
-        //                   print('Latitude: $_latitude');
-        //                   print('Longitude: $_longitude');
-        //                 },
-        //                 editing: true,
-        //               )));
-        //     },
-        //     child: Container(
-        //       height: _screenUtil.setHeight(100),
-        //       decoration: BoxDecoration(
-        //         color: Color(0xfff4f4f8),
-        //         borderRadius: BorderRadius.circular(_screenUtil.setWidth(30)),
-        //       ),
-        //       alignment: Alignment.center,
-        //       child: Text(
-        //         _latitude > 0 && _longitude > 0
-        //             ? '$_latitude, $_longitude'
-        //             : 'حدد موقعك على غوغل ماب (اختياري)',
-        //         style: TextStyle(
-        //           fontSize: _screenUtil.setSp(40),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
+        // Department
+        Padding(
+          padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Flexible(
+                child: _formField(
+                  'أدخل رقم الشقة',
+                  null,
+                  addressField: 'department',
+                  addressFieldValue: _departmentController.text.isNotEmpty
+                      ? int.parse(_departmentController.text)
+                      : -1,
+                  controller: _departmentController,
+                  inputType: TextInputType.numberWithOptions(
+                    signed: false,
+                    decimal: false,
+                  ),
+                  enabled: _containingDepartment,
+                ),
+              ),
+              Text(
+                'رقم الشقة',
+                style: TextStyle(
+                  fontSize: _screenUtil.setSp(40),
+                ),
+              ),
+              Checkbox(
+                value: _containingDepartment,
+                onChanged: (value) {
+                  setState(() {
+                    _containingDepartment = value;
+                    _data['department'] = value
+                        ? _departmentController.text.isEmpty
+                            ? -2
+                            : int.parse(_departmentController.text)
+                        : -1;
+                  });
+                  widget.onAddressAdded(_data);
+                },
+              ),
+            ],
+          ),
+        ),
+
+        Padding(
+          padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+          child: GovernoratesCitiesWidget(
+            onGovernorateSelected: (governorateId, governorateName) {
+              setState(() {
+                _governorateId = governorateId;
+                _governorateName = governorateName;
+                _data['governorate']['id'] = _governorateId;
+                _data['governorate']['name'] = _governorateName;
+              });
+              // print(_data);
+              widget.onAddressAdded(_data);
+            },
+            onCitySelected: (cityId, cityName) {
+              setState(() {
+                _cityId = cityId;
+                _cityName = cityName;
+                _data['city']['id'] = _cityId;
+                _data['city']['name'] = _cityName;
+              });
+              // print(_data);
+              widget.onAddressAdded(_data);
+            },
+          ),
+        ),
       ],
     );
   }
@@ -177,17 +230,26 @@ class _NewAddressState extends State<NewAddress> {
     String hintTitle,
     IconData icon, {
     @required final TextEditingController controller,
+    @required final String addressField,
+    @required final dynamic addressFieldValue,
     final bool obscureText = false,
     final TextInputType inputType = TextInputType.text,
     final int maxLines = 1,
+    final bool enabled = true,
   }) {
     return Stack(
       children: [
         Container(
           child: TextFormField(
+            enabled: enabled,
+            onChanged: (value) {
+              _data[addressField] =
+                  addressFieldValue is int ? int.parse(value) : value;
+              widget.onAddressAdded(_data);
+            },
+            textAlign: TextAlign.end,
             controller: controller,
             obscureText: obscureText,
-            textAlign: TextAlign.end,
             maxLines: maxLines,
             decoration: InputDecoration(
               fillColor: Color(0xfff4f4f8),
@@ -221,7 +283,7 @@ class _NewAddressState extends State<NewAddress> {
                   padding: EdgeInsets.all(_screenUtil.setWidth(28)),
                   child: Icon(
                     icon,
-                    // color: Color(0xffd9d9d9),
+                    color: Color(0xffd9d9d9),
                     size: _screenUtil.setSp(40),
                   ),
                 ),

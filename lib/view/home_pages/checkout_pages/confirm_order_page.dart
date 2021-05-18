@@ -11,9 +11,11 @@ class ConfirmOrderPage extends StatefulWidget {
 
   // final Function onChangePaymentMethod;
   final Function onConfirmOrder;
+  final Map<String, dynamic> address;
 
   ConfirmOrderPage({
     @required this.onChangeAddress,
+    @required this.address,
     // @required this.onChangePaymentMethod,
     @required this.onConfirmOrder,
   });
@@ -28,7 +30,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
   @override
   Widget build(BuildContext context) {
     _screenUtil.init(context);
-
+    // print('Received Address: ${widget.address}');
     return ListView(
       children: [
         Padding(
@@ -140,14 +142,16 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
           ),
         ),
         AddressItem(
-          firstLine: '40 السويسري ب ، الحي العاشر',
-          secondLine: 'أمام مدرسة سعد بن أبي وقاص',
-          city: 'مدينة نصر',
-          state: 'القاهرة',
-          // country: 'مصر',
-          // zipPostalCode: '3432432',
-          locationLatitude: 0.0,
-          locationLongitude: 0.0,
+          id: widget.address['id'],
+          buildingNo: widget.address['buildingNo'],
+          city: widget.address['city'] as Map<String, dynamic>,
+          governorate: widget.address['governorate'] as Map<String, dynamic>,
+          // country: _addressesList[index]['country'],
+          // zipPostalCode: _addressesList[index]['zipPostalCode'],
+          department: widget.address['department'],
+          floor: widget.address['floor'],
+          street: widget.address['street'],
+          moreDescription: widget.address['moreDescription'],
         ),
         Padding(
           padding: EdgeInsets.all(_screenUtil.setWidth(10)),
