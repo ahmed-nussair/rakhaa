@@ -71,18 +71,19 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                         ),
                       );
                     } else {
-                      return Stack(
-                        children: [
-                          Column(
-                            children: [
-                              Expanded(
-                                child: ListView(
-                                  children: List.generate(
-                                      _list.length,
-                                      (index) => Padding(
-                                            padding: EdgeInsets.all(
-                                                _screenUtil.setWidth(30)),
-                                            child: Stack(
+                      return _list.length > 0
+                          ? Stack(
+                              children: [
+                                Column(
+                                  children: [
+                                    Expanded(
+                                      child: ListView(
+                                        children: List.generate(
+                                            _list.length,
+                                            (index) => Padding(
+                                                  padding: EdgeInsets.all(
+                                                      _screenUtil.setWidth(30)),
+                                                  child: Stack(
                                               children: [
                                                 CartItem(
                                                   title: _list[index].name,
@@ -272,17 +273,26 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Container(
-                                            width: 100,
-                                            height: 100,
-                                            child: CircularProgressIndicator()),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : Container(),
-                        ],
-                      );
+                                              Container(
+                                                  width: 100,
+                                                  height: 100,
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
+                              ],
+                            )
+                          : Center(
+                              child: Text(
+                                'ليس لديك أي صنف في عربة التسوق',
+                                style: TextStyle(
+                                  fontSize: _screenUtil.setSp(50),
+                                ),
+                              ),
+                            );
                     }
                   },
                 ),
