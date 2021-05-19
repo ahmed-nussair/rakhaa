@@ -228,10 +228,18 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              CheckoutPage()));
-                                                },
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        CheckoutPage(
+                                                                          onOrderConfirmed:
+                                                                              () {
+                                                                            setState(() {
+                                                                              _list.clear();
+                                                                            });
+                                                                          },
+                                                                        )));
+                                                      },
                                                 child: Text(
                                                   'متابعة الشراء',
                                                   style: TextStyle(

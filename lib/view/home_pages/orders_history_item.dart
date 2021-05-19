@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rakhaa/bloc/orders/orders_bloc.dart';
 
 import '../screen_util.dart';
 
 class OrdersHistoryItem extends StatefulWidget {
+  final String token;
   final int orderId;
-  final String orderDateTime;
+  final DateTime orderDateTime;
   final String orderStatus;
   final int statusColor;
 
   OrdersHistoryItem({
+    @required this.token,
     @required this.orderId,
     @required this.orderDateTime,
     @required this.orderStatus,
@@ -24,8 +28,11 @@ class _OrdersHistoryItemState extends State<OrdersHistoryItem> {
 
   bool _purchasedItemsShowed;
 
+  List<Map<String, dynamic>> _cartItems;
+
   @override
   void initState() {
+    _cartItems = [];
     _purchasedItemsShowed = false;
     super.initState();
   }
@@ -34,69 +41,111 @@ class _OrdersHistoryItemState extends State<OrdersHistoryItem> {
   Widget build(BuildContext context) {
     _screenUtil.init(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _purchasedItemsShowed = _purchasedItemsShowed ? false : true;
+    return BlocProvider(
+      create: (_) => OrdersBloc(),
+      child: BlocListener<OrdersBloc, OrdersState>(
+        listener: (context, state) {
+          if (state is OrderItemLoadedState) {
+            // print(state.detailedOrder.toJson());
+            setState(() {
+              _purchasedItemsShowed = true;
+              for (var item in state.detailedOrder.items) {
+                _cartItems.add({
+                  'quantity': item.quantity,
+                  'price': item.totalPrice,
+                  'item': {
+                    'imageUrl': item.imageUrl,
+                    'title': item.name,
+                    'price': item.price,
+                    'afterDiscount':
+                        item.price - (item.price * item.discount / 100),
+                  },
                 });
-              },
-              child: Padding(
-                padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                child: Icon(
-                  _purchasedItemsShowed
-                      ? Icons.keyboard_arrow_down
-                      : Icons.keyboard_arrow_left,
-                  size: _screenUtil.setSp(70),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(_screenUtil.setWidth(30)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+              }
+            });
+          }
+        },
+        child: BlocBuilder<OrdersBloc, OrdersState>(
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      ' ${widget.orderId} رقم الطلب',
-                      style: TextStyle(
-                        fontSize: _screenUtil.setSp(50),
+                    GestureDetector(
+                      onTap: () {
+                        if (!_purchasedItemsShowed) {
+                          BlocProvider.of<OrdersBloc>(context).add(
+                              LoadingOrderItem(widget.token, widget.orderId));
+                        } else {
+                          setState(() {
+                            _purchasedItemsShowed = false;
+                          });
+                        }
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+                        child: state is LoadingOrderItemState
+                            ? Container(
+                                alignment: Alignment.center,
+                                width: _screenUtil.setWidth(70),
+                                height: _screenUtil.setHeight(70),
+                                child: CircularProgressIndicator(),
+                              )
+                            : Icon(
+                                _purchasedItemsShowed
+                                    ? Icons.keyboard_arrow_down
+                                    : Icons.keyboard_arrow_left,
+                                size: _screenUtil.setSp(70),
+                              ),
                       ),
-                      textAlign: TextAlign.end,
                     ),
-                    Text(
-                      '${widget.orderDateTime}',
-                      style: TextStyle(
-                        fontSize: _screenUtil.setSp(50),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(_screenUtil.setWidth(30)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              ' ${widget.orderId} رقم الطلب',
+                              style: TextStyle(
+                                fontSize: _screenUtil.setSp(50),
+                              ),
+                              textAlign: TextAlign.end,
+                            ),
+                            Text(
+                              '${widget.orderDateTime}',
+                              style: TextStyle(
+                                fontSize: _screenUtil.setSp(50),
+                              ),
+                              textAlign: TextAlign.end,
+                            ),
+                            Text(
+                              '${widget.orderStatus}',
+                              style: TextStyle(
+                                fontSize: _screenUtil.setSp(50),
+                                color: Color(widget.statusColor),
+                              ),
+                              textAlign: TextAlign.end,
+                            ),
+                          ],
+                        ),
                       ),
-                      textAlign: TextAlign.end,
-                    ),
-                    Text(
-                      '${widget.orderStatus}',
-                      style: TextStyle(
-                        fontSize: _screenUtil.setSp(50),
-                        color: Color(widget.statusColor),
-                      ),
-                      textAlign: TextAlign.end,
                     ),
                   ],
                 ),
-              ),
-            ),
-          ],
+                Divider(),
+                _purchasedItemsShowed
+                    ? OrderPurchasedItems(
+                        items: _cartItems,
+                      )
+                    : Container(),
+              ],
+            );
+          },
         ),
-        Divider(),
-        _purchasedItemsShowed
-            ? OrderPurchasedItems(
-                items: _cartItems,
-              )
-            : Container(),
-      ],
+      ),
     );
   }
 }
