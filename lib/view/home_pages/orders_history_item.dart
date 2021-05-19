@@ -280,36 +280,3 @@ class OrderPurchasedItems extends StatelessWidget {
     );
   }
 }
-
-List _cartItems = [
-  {
-    'quantity': 2,
-    'price': 3.0,
-    'item': {
-      'imageUrl': 'https://i.ibb.co/M9f86L6/aquafina-0-5.jpg',
-      'title': 'أكوافينا 0.5 لتر',
-      'price': 3.0,
-      'afterDiscount': 3.0,
-    },
-  },
-  {
-    'quantity': 1,
-    'price': 100.0,
-    'item': {
-      'imageUrl': 'https://i.ibb.co/80CFJtt/aquafina-19.jpg',
-      'title': 'أكوافينا 19 جالون',
-      'price': 100.0,
-      'afterDiscount': 100.0,
-    },
-  },
-  {
-    'quantity': 3,
-    'price': 5.0,
-    'item': {
-      'imageUrl': 'https://i.ibb.co/LSpKByw/baraka-1-5.jpg',
-      'title': 'بركة 1.5 لتر',
-      'price': 5.0,
-      'afterDiscount': 5.0,
-    },
-  },
-];
