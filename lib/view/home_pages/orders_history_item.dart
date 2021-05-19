@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import '../../bloc/orders/orders_bloc.dart';
 
 import '../screen_util.dart';
@@ -49,6 +50,7 @@ class _OrdersHistoryItemState extends State<OrdersHistoryItem> {
             // print(state.detailedOrder.toJson());
             setState(() {
               _purchasedItemsShowed = true;
+              _cartItems.clear();
               for (var item in state.detailedOrder.items) {
                 _cartItems.add({
                   'quantity': item.quantity,
@@ -115,7 +117,7 @@ class _OrdersHistoryItemState extends State<OrdersHistoryItem> {
                               textAlign: TextAlign.end,
                             ),
                             Text(
-                              '${widget.orderDateTime}',
+                              '${DateFormat('yyyy/MM/dd HH:mm:ss').format(widget.orderDateTime)}',
                               style: TextStyle(
                                 fontSize: _screenUtil.setSp(50),
                               ),
@@ -137,8 +139,12 @@ class _OrdersHistoryItemState extends State<OrdersHistoryItem> {
                 ),
                 Divider(),
                 _purchasedItemsShowed
-                    ? OrderPurchasedItems(
-                        items: _cartItems,
+                    ? Column(
+                        children: [
+                          OrderPurchasedItems(
+                            items: _cartItems,
+                          ),
+                        ],
                       )
                     : Container(),
               ],
