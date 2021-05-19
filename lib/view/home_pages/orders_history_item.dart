@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rakhaa/bloc/orders/orders_bloc.dart';
+import '../../bloc/orders/orders_bloc.dart';
 
 import '../screen_util.dart';
 
