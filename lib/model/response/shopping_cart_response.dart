@@ -4,14 +4,16 @@ import 'purchased_product.dart';
 
 @JsonSerializable()
 class ShoppingCartResponse {
+  int id;
   int userId;
   List<PurchasedProduct> items;
   double totalPrice;
 
-  ShoppingCartResponse(this.userId, this.items, this.totalPrice);
+  ShoppingCartResponse(this.id, this.userId, this.items, this.totalPrice);
 
   factory ShoppingCartResponse.fromJson(Map<String, dynamic> json) =>
       ShoppingCartResponse(
+        json['id'] as int,
         json['userId'] as int,
         (json['items'] as List)
             ?.map((e) => e == null
@@ -21,7 +23,9 @@ class ShoppingCartResponse {
         (json['totalPrice'] as num).toDouble(),
       );
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{
+        'id': id,
         'userId': userId,
         'items': List.generate(items.length, (index) => items[index].toJson()),
         'totalPrice': totalPrice,
