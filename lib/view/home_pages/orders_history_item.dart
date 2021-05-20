@@ -31,6 +31,8 @@ class _OrdersHistoryItemState extends State<OrdersHistoryItem> {
 
   List<Map<String, dynamic>> _cartItems;
 
+  double _itemsTotalPrice;
+
   @override
   void initState() {
     _cartItems = [];
@@ -51,6 +53,7 @@ class _OrdersHistoryItemState extends State<OrdersHistoryItem> {
             setState(() {
               _purchasedItemsShowed = true;
               _cartItems.clear();
+              _itemsTotalPrice = state.detailedOrder.itemsTotalPrice;
               for (var item in state.detailedOrder.items) {
                 _cartItems.add({
                   'quantity': item.quantity,
@@ -143,6 +146,7 @@ class _OrdersHistoryItemState extends State<OrdersHistoryItem> {
                         children: [
                           OrderPurchasedItems(
                             items: _cartItems,
+                            itemsTotalPrice: _itemsTotalPrice,
                           ),
                         ],
                       )
@@ -158,10 +162,12 @@ class _OrdersHistoryItemState extends State<OrdersHistoryItem> {
 
 class OrderPurchasedItems extends StatelessWidget {
   final List items;
+  final double itemsTotalPrice;
   final ScreenUtil _screenUtil = ScreenUtil();
 
   OrderPurchasedItems({
     @required this.items,
+    @required this.itemsTotalPrice,
   });
 
   @override
@@ -280,6 +286,76 @@ class OrderPurchasedItems extends StatelessWidget {
                       ),
                     ),
                   )),
+        ),
+        // The total price and shipping price
+        Column(
+          children: [
+            // The total price
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'ج.م',
+                      style: TextStyle(
+                        fontSize: _screenUtil.setSp(50),
+                      ),
+                    ),
+                    SizedBox(
+                      width: _screenUtil.setWidth(20),
+                    ),
+                    Text(
+                      '${itemsTotalPrice.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontSize: _screenUtil.setSp(50),
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  'الحساب الكلي',
+                  style: TextStyle(
+                    fontSize: _screenUtil.setSp(50),
+                  ),
+                ),
+              ],
+            ),
+
+            // The shipping price
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'ج.م',
+                      style: TextStyle(
+                        fontSize: _screenUtil.setSp(50),
+                      ),
+                    ),
+                    SizedBox(
+                      width: _screenUtil.setWidth(20),
+                    ),
+                    Text(
+                      '${20.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontSize: _screenUtil.setSp(50),
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  'مصاريف الشحن',
+                  style: TextStyle(
+                    fontSize: _screenUtil.setSp(50),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
         Divider(),
       ],
