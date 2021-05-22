@@ -69,17 +69,29 @@ class _OrdersHistoryState extends State<OrdersHistory> {
                       ),
                     );
                   }
-                  return ListView(
-                    children: List.generate(
-                        _ordersHistory.length,
-                        (index) => OrdersHistoryItem(
-                              token: token,
-                              orderId: _ordersHistory[index]['id'],
-                              orderDateTime: _ordersHistory[index]['dateTime'],
-                              orderStatus: _ordersHistory[index]['status'],
-                              statusColor: _ordersHistory[index]['statusColor'],
-                            )),
-                  );
+                  return _ordersHistory.length > 0
+                      ? ListView(
+                          children: List.generate(
+                              _ordersHistory.length,
+                              (index) => OrdersHistoryItem(
+                                    token: token,
+                                    orderId: _ordersHistory[index]['id'],
+                                    orderDateTime: _ordersHistory[index]
+                                        ['dateTime'],
+                                    orderStatus: _ordersHistory[index]
+                                        ['status'],
+                                    statusColor: _ordersHistory[index]
+                                        ['statusColor'],
+                                  )),
+                        )
+                      : Center(
+                          child: Text(
+                            'ليس لديك أي طلب حتى الآن',
+                            style: TextStyle(
+                              fontSize: _screenUtil.setSp(50),
+                            ),
+                          ),
+                        );
                 },
               ),
             ),

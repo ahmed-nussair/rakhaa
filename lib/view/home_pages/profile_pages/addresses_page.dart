@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -155,18 +156,20 @@ class _AddressesPageState extends State<AddressesPage> {
                       child: CircularProgressIndicator(),
                     );
                   }
-                  return Stack(
-                    children: [
-                      // Addresses List
-                      ListView(
-                        children: List.generate(_addressesList.length, (index) {
-                          return Column(
-                            children: [
-                              Padding(
-                                padding:
-                                    EdgeInsets.all(_screenUtil.setHeight(50)),
-                                child: Row(
+                  return _addressesList.length > 0
+                      ? Stack(
+                          children: [
+                            // Addresses List
+                            ListView(
+                              children:
+                                  List.generate(_addressesList.length, (index) {
+                                return Column(
                                   children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(
+                                          _screenUtil.setHeight(50)),
+                                      child: Row(
+                                        children: [
                                     // Updating or deleting address
                                     Column(
                                       children: [
@@ -180,51 +183,51 @@ class _AddressesPageState extends State<AddressesPage> {
                                             showDialog(
                                               builder: (context) =>
                                                   CustomAlertDialog(
-                                                titlePadding:
+                                                    titlePadding:
                                                     EdgeInsets.all(0.0),
-                                                contentPadding:
+                                                    contentPadding:
                                                     EdgeInsets.all(0.0),
-                                                content: UpdateAddress(
-                                                  token: token,
-                                                  data: {
-                                                    'id': _addressesList[index]
+                                                    content: UpdateAddress(
+                                                      token: token,
+                                                      data: {
+                                                        'id': _addressesList[index]
                                                         ['id'],
-                                                    'buildingNo':
+                                                        'buildingNo':
                                                         _addressesList[index]
-                                                            ['buildingNo'],
-                                                    'city':
+                                                        ['buildingNo'],
+                                                        'city':
                                                         _addressesList[index]
-                                                            ['city'],
-                                                    'governorate':
+                                                        ['city'],
+                                                        'governorate':
                                                         _addressesList[index]
-                                                            ['governorate'],
-                                                    // country: _addressesList[index]['country'],
-                                                    // zipPostalCode: _addressesList[index]['zipPostalCode'],
-                                                    'department':
+                                                        ['governorate'],
+                                                        // country: _addressesList[index]['country'],
+                                                        // zipPostalCode: _addressesList[index]['zipPostalCode'],
+                                                        'department':
                                                         _addressesList[index]
-                                                            ['department'],
-                                                    'floor':
+                                                        ['department'],
+                                                        'floor':
                                                         _addressesList[index]
-                                                            ['floor'],
-                                                    'street':
+                                                        ['floor'],
+                                                        'street':
                                                         _addressesList[index]
-                                                            ['street'],
-                                                    'moreDescription':
+                                                        ['street'],
+                                                        'moreDescription':
                                                         _addressesList[index]
-                                                            ['moreDescription'],
-                                                  },
-                                                  onAddressUpdated: (address) {
-                                                    bloc.add(UpdatingAddress(
-                                                        address));
-                                                    // bloc.add(AddingAddress(address));
-                                                    // List newList = _addressesList;
-                                                    // newList.add(address);
-                                                    // setState(() {
-                                                    //   _addressesList = newList;
-                                                    // });
-                                                  },
-                                                ),
-                                              ),
+                                                        ['moreDescription'],
+                                                      },
+                                                      onAddressUpdated: (address) {
+                                                        bloc.add(UpdatingAddress(
+                                                            address));
+                                                        // bloc.add(AddingAddress(address));
+                                                        // List newList = _addressesList;
+                                                        // newList.add(address);
+                                                        // setState(() {
+                                                        //   _addressesList = newList;
+                                                        // });
+                                                      },
+                                                    ),
+                                                  ),
                                               context: context,
                                             );
                                           },
@@ -251,18 +254,18 @@ class _AddressesPageState extends State<AddressesPage> {
                                       child: AddressItem(
                                         id: _addressesList[index]['id'],
                                         buildingNo: _addressesList[index]
-                                            ['buildingNo'],
+                                        ['buildingNo'],
                                         city: _addressesList[index]['city'],
                                         governorate: _addressesList[index]
-                                            ['governorate'],
+                                        ['governorate'],
                                         // country: _addressesList[index]['country'],
                                         // zipPostalCode: _addressesList[index]['zipPostalCode'],
                                         department: _addressesList[index]
-                                            ['department'],
+                                        ['department'],
                                         floor: _addressesList[index]['floor'],
                                         street: _addressesList[index]['street'],
                                         moreDescription: _addressesList[index]
-                                            ['moreDescription'],
+                                        ['moreDescription'],
                                       ),
                                     ),
                                   ],
@@ -312,29 +315,73 @@ class _AddressesPageState extends State<AddressesPage> {
 
                       // Circular progress bar
                       state is AddingAddressState ||
-                              state is DeletingAddressState ||
-                              state is UpdatingAddressState
+                          state is DeletingAddressState ||
+                          state is UpdatingAddressState
                           ? Positioned(
-                              top: 0.0,
-                              bottom: 0.0,
-                              left: 0.0,
-                              right: 0.0,
-                              child: Container(
-                                color: Colors.black.withOpacity(0.5),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                        width: 100,
-                                        height: 100,
-                                        child: CircularProgressIndicator()),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : Container(),
-                    ],
-                  );
+                        top: 0.0,
+                        bottom: 0.0,
+                        left: 0.0,
+                        right: 0.0,
+                        child: Container(
+                          color: Colors.black.withOpacity(0.5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                                          Container(
+                                              width: 100,
+                                              height: 100,
+                                              child:
+                                                  CircularProgressIndicator()),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        )
+                      : Center(
+                          child: RichText(
+                            text: TextSpan(
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: _screenUtil.setSp(55)),
+                                children: [
+                                  TextSpan(
+                                    text: 'ليس لديك أي عناوين. بإمكانك ',
+                                  ),
+                                  TextSpan(
+                                    text: ' إنشاء عنوان',
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () => showDialog(
+                                            builder: (context) =>
+                                                CustomAlertDialog(
+                                              titlePadding: EdgeInsets.all(0.0),
+                                              contentPadding:
+                                                  EdgeInsets.all(0.0),
+                                              content: AddAddress(
+                                                token: token,
+                                                onAddressAdded: (address) {
+                                                  bloc.add(
+                                                      AddingAddress(address));
+                                                  // List newList = _addressesList;
+                                                  // newList.add(address);
+                                                  // setState(() {
+                                                  //   _addressesList = newList;
+                                                  // });
+                                                },
+                                              ),
+                                            ),
+                                            context: context,
+                                          ),
+                                  ),
+                                ]),
+                          ),
+                        );
                 },
               ),
             ),

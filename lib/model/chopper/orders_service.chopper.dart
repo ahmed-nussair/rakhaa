@@ -29,9 +29,14 @@ class _$OrdersService extends OrdersService {
   }
 
   Future<Response<OrderResponse>> addOrder(
-      String token, int addressId, int cartId) {
+      String token, int addressId, int cartId, String dateTime) {
     final $url = '/api/Orders/AddOrder';
-    final $body = {'token': token, 'addressId': addressId, 'cartId': cartId};
+    final $body = {
+      'token': token,
+      'addressId': addressId,
+      'cartId': cartId,
+      'dateTime': dateTime
+    };
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<OrderResponse, OrderResponse>($request);
   }

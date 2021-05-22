@@ -64,7 +64,7 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
         if (snapshot.hasData) {
           String token = snapshot.data.getString(Globals.token);
           return BlocProvider(
-            create: (_) => AddressesBloc(),
+            create: (_) => AddressesBloc()..add(LoadingAddresses(token)),
             child: BlocListener<AddressesBloc, AddressesState>(
               listener: (context, state) {
                 if (state is AddressesLoadedState) {
@@ -88,6 +88,25 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
                         'moreDescription': state.addresses[i].moreDescription,
                       };
                       addresses.add(address);
+                    }
+                    if (addresses.isEmpty) {
+                      _address = ShippingAddress.NewAddress;
+                      chosenAddress = {
+                        'id': 0,
+                        'buildingNo': '',
+                        'street': '',
+                        'governorate': {
+                          'id': 0,
+                          'name': '',
+                        },
+                        'city': {
+                          'id': 0,
+                          'name': '',
+                        },
+                        'floor': -1,
+                        'department': -1,
+                        'moreDescription': '',
+                      };
                     }
                   });
                 } else if (state is AddressAddedState) {
@@ -124,29 +143,35 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
                                   ),
 
                                   // Option 1: Choose from your addresses list.
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        'اختر من قائمة عناوينك',
-                                        style: TextStyle(
-                                          fontSize: _screenUtil.setSp(50),
-                                        ),
-                                      ),
-                                      Radio(
-                                          value: ShippingAddress.FromAddresses,
-                                          groupValue: _address,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _address = value;
-                                              chosenAddress = {};
-                                            });
-                                            BlocProvider.of<AddressesBloc>(
-                                                    context)
-                                                .add(LoadingAddresses(token));
-                                          }),
-                                    ],
-                                  ),
+                                  addresses.length > 0
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              'اختر من قائمة عناوينك',
+                                              style: TextStyle(
+                                                fontSize: _screenUtil.setSp(50),
+                                              ),
+                                            ),
+                                            Radio(
+                                                value: ShippingAddress
+                                                    .FromAddresses,
+                                                groupValue: _address,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _address = value;
+                                                    chosenAddress = {};
+                                                  });
+                                                  BlocProvider.of<
+                                                              AddressesBloc>(
+                                                          context)
+                                                      .add(LoadingAddresses(
+                                                          token));
+                                                }),
+                                          ],
+                                        )
+                                      : Container(),
 
                                   // Addresses list when the option 1 is chosen
                                   _address == ShippingAddress.FromAddresses

@@ -37,9 +37,18 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     } else if (event is AddingOrder) {
       yield AddingOrderState();
 
+      var dateTime = DateTime.now();
+
       var service = OrdersService.create();
-      var response =
-          await service.addOrder(event.token, event.addressId, event.cartId);
+      var response = await service.addOrder(
+          event.token,
+          event.addressId,
+          event.cartId,
+          '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-'
+          '${dateTime.day.toString().padLeft(2, '0')} '
+          '${dateTime.hour.toString().padLeft(2, '0')}:'
+          '${dateTime.minute.toString().padLeft(2, '0')}:'
+          '${dateTime.second.toString().padLeft(2, '0')}');
 
       if (response.isSuccessful) {
         var addingOrderResponse = response.body;

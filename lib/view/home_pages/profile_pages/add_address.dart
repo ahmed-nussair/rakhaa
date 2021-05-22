@@ -396,6 +396,8 @@ class _AddAddressState extends State<AddAddress> {
                           fontSize: _screenUtil.setSp(50),
                         );
                         return;
+                      } else {
+                        floor = int.parse(_floorController.text);
                       }
                     }
 
@@ -411,6 +413,8 @@ class _AddAddressState extends State<AddAddress> {
                           fontSize: _screenUtil.setSp(50),
                         );
                         return;
+                      } else {
+                        department = int.parse(_departmentController.text);
                       }
                     }
 
