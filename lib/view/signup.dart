@@ -52,6 +52,16 @@ class _SignUpState extends State<SignUp> {
       child: BlocListener<SignUpBloc, SignUpState>(
         listener: (context, state) {
           if (state is SuccessState) {
+            Navigator.of(context).pop();
+            Fluttertoast.showToast(
+              msg: state.message,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black54,
+              textColor: Colors.white,
+              fontSize: _screenUtil.setSp(50),
+            );
             print(state.message);
           } else if (state is FailedState) {
             print(state.message);

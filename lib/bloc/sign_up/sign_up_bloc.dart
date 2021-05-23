@@ -35,9 +35,10 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           final signUpResponse = response.body;
 
           if (signUpResponse.result) {
-            yield SuccessState(signUpResponse.message);
+            yield SuccessState(
+                'تم تسجيلك بنجاح. يمكنك الآن تسجيل الدخول باسم المستخدم الخاص بك أو رقم هاتفك أو بريدك الإلكتروني.');
           } else {
-            yield FailedState('تم التسجيل بنجاح');
+            yield FailedState('فشل في عملية التسجيل');
           }
         } else {
           yield ErrorState('حدث خطأ .. يمكنك محاولة التسجيل في وقت آخر.');
