@@ -1,7 +1,5 @@
 import 'address.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-@JsonSerializable()
 class AddressUpdatingResponse {
   bool result;
   String message;

@@ -1,8 +1,5 @@
-import 'package:json_annotation/json_annotation.dart';
-
 import 'user.dart';
 
-@JsonSerializable()
 class LoginResponse {
   bool result;
   User data;

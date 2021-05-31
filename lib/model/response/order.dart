@@ -1,8 +1,6 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'order_status.dart';
 import 'purchased_product.dart';
 
-@JsonSerializable()
 class Order {
   int id;
   DateTime dateTime;

@@ -1,6 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
-
-@JsonSerializable()
 class CodeResendingResponse {
   int userId;
   bool result;

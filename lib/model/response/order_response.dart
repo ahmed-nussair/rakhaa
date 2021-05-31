@@ -1,7 +1,5 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'order.dart';
 
-@JsonSerializable()
 class OrderResponse {
   bool result;
   String message;

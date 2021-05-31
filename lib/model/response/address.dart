@@ -1,8 +1,6 @@
 import 'governorate.dart';
 import 'city.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-@JsonSerializable()
 class Address {
   int id;
   String buildingNo;

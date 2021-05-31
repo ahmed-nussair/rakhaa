@@ -1,15 +1,9 @@
-import 'package:json_annotation/json_annotation.dart';
-
-@JsonSerializable()
 class User {
   int id;
   String name;
   String username;
   String email;
   String phone;
-  @JsonKey(
-    name: 'image_Url',
-  )
   String imageUrl;
 
   User(

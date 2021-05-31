@@ -1,8 +1,5 @@
-import 'package:json_annotation/json_annotation.dart';
-
 import 'product.dart';
 
-@JsonSerializable()
 class PurchasedProduct extends Product {
   final int quantity;
   final double totalPrice;
