@@ -21,15 +21,111 @@ import '../globals.dart' as Globals;
 
 import 'signin.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   final String name;
 
+  const Home({Key key, @required this.name}) : super(key: key);
+
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   final ScreenUtil _screenUtil = ScreenUtil();
 
   final TextEditingController _keywordController = TextEditingController();
   final _key = GlobalKey<ScaffoldState>();
 
-  Home({@required this.name});
+  Widget _profileImage;
+
+  _updateProfileImage() {
+    setState(() {
+      _profileImage = FutureBuilder<SharedPreferences>(
+        future: SharedPreferences.getInstance(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            String userImageUrl = snapshot.data.get(Globals.imageUrl);
+            return userImageUrl != null && userImageUrl.isNotEmpty
+                ? CachedNetworkImage(
+                    imageUrl: userImageUrl,
+                    imageBuilder: (context, imageProvider) => Container(
+                      width: _screenUtil.setWidth(150),
+                      height: _screenUtil.setWidth(150),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover),
+                      ),
+                    ),
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            CircularProgressIndicator(
+                                value: downloadProgress.progress),
+                    errorWidget: (context, url, error) =>
+                        Image.asset('assets/person.png'),
+                  )
+                : CircleAvatar(
+                    radius: _screenUtil.setWidth(70),
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: AssetImage('assets/person.png'),
+                  );
+          }
+          return Container(
+            alignment: Alignment.center,
+            child: Container(
+              height: _screenUtil.setWidth(70),
+              width: _screenUtil.setWidth(70),
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+      );
+    });
+  }
+
+  @override
+  void initState() {
+    _profileImage = FutureBuilder<SharedPreferences>(
+      future: SharedPreferences.getInstance(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          String userImageUrl = snapshot.data.get(Globals.imageUrl);
+          return userImageUrl != null && userImageUrl.isNotEmpty
+              ? CachedNetworkImage(
+                  imageUrl: userImageUrl,
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: _screenUtil.setWidth(150),
+                    height: _screenUtil.setWidth(150),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.cover),
+                    ),
+                  ),
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                          value: downloadProgress.progress),
+                  errorWidget: (context, url, error) =>
+                      Image.asset('assets/person.png'),
+                )
+              : CircleAvatar(
+                  radius: _screenUtil.setWidth(70),
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: AssetImage('assets/person.png'),
+                );
+        }
+        return Container(
+          alignment: Alignment.center,
+          child: Container(
+            height: _screenUtil.setWidth(70),
+            width: _screenUtil.setWidth(70),
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,11 +188,11 @@ class Home extends StatelessWidget {
                             key: _key,
                             appBar: PreferredSize(
                               preferredSize:
-                                  Size.fromHeight(_screenUtil.setHeight(400)),
+                              Size.fromHeight(_screenUtil.setHeight(400)),
                               child: GestureDetector(
                                 onTap: () {
                                   FocusScopeNode currentFocus =
-                                      FocusScope.of(context);
+                                  FocusScope.of(context);
                                   if (!currentFocus.hasPrimaryFocus &&
                                       currentFocus.focusedChild != null) {
                                     currentFocus.focusedChild.unfocus();
@@ -113,96 +209,17 @@ class Home extends StatelessWidget {
                                         children: [
                                           Column(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.end,
+                                            MainAxisAlignment.end,
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
+                                                MainAxisAlignment
+                                                    .spaceEvenly,
                                                 children: [
                                                   // profile image
                                                   Flexible(
                                                     flex: 1,
-                                                    child: FutureBuilder<
-                                                        SharedPreferences>(
-                                                      future: SharedPreferences
-                                                          .getInstance(),
-                                                      builder:
-                                                          (context, snapshot) {
-                                                        if (snapshot
-                                                                .connectionState ==
-                                                            ConnectionState
-                                                                .done) {
-                                                          String userImageUrl =
-                                                              snapshot.data.get(
-                                                                  Globals
-                                                                      .imageUrl);
-                                                          return userImageUrl !=
-                                                                      null &&
-                                                                  userImageUrl
-                                                                      .isNotEmpty
-                                                              ? CachedNetworkImage(
-                                                                  imageUrl:
-                                                                      userImageUrl,
-                                                                  imageBuilder:
-                                                                      (context,
-                                                                              imageProvider) =>
-                                                                          Container(
-                                                                    width: _screenUtil
-                                                                        .setWidth(
-                                                                            150),
-                                                                    height: _screenUtil
-                                                                        .setWidth(
-                                                                            150),
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      shape: BoxShape
-                                                                          .circle,
-                                                                      image: DecorationImage(
-                                                                          image:
-                                                                              imageProvider,
-                                                                          fit: BoxFit
-                                                                              .cover),
-                                                                    ),
-                                                                  ),
-                                                                  progressIndicatorBuilder: (context,
-                                                                          url,
-                                                                          downloadProgress) =>
-                                                                      CircularProgressIndicator(
-                                                                          value:
-                                                                              downloadProgress.progress),
-                                                                  errorWidget: (context,
-                                                                          url,
-                                                                          error) =>
-                                                                      Image.asset(
-                                                                          'assets/person.png'),
-                                                                )
-                                                              : CircleAvatar(
-                                                                  radius: _screenUtil
-                                                                      .setWidth(
-                                                                          70),
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  backgroundImage:
-                                                                      AssetImage(
-                                                                          'assets/person.png'),
-                                                                );
-                                                        }
-                                                        return Container(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: Container(
-                                                            height: _screenUtil
-                                                                .setWidth(70),
-                                                            width: _screenUtil
-                                                                .setWidth(70),
-                                                            child:
-                                                                CircularProgressIndicator(),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
+                                                    child: _profileImage,
                                                   ),
 
                                                   // Search bar
@@ -215,33 +232,33 @@ class Home extends StatelessWidget {
                                                               .setHeight(150),
                                                           child: TextFormField(
                                                             controller:
-                                                                _keywordController,
+                                                            _keywordController,
                                                             textAlign:
-                                                                TextAlign.right,
+                                                            TextAlign.right,
                                                             textAlignVertical:
-                                                                TextAlignVertical
-                                                                    .center,
+                                                            TextAlignVertical
+                                                                .center,
                                                             textDirection:
-                                                                TextDirection
-                                                                    .rtl,
+                                                            TextDirection
+                                                                .rtl,
                                                             decoration:
-                                                                InputDecoration(
+                                                            InputDecoration(
                                                               hintText:
-                                                                  'اكتب هنا ما تريد',
+                                                              'اكتب هنا ما تريد',
                                                               hintStyle: TextStyle(
                                                                   fontSize:
-                                                                      _screenUtil
-                                                                          .setSp(
-                                                                              50)),
+                                                                  _screenUtil
+                                                                      .setSp(
+                                                                      50)),
                                                               filled: true,
                                                               fillColor:
-                                                                  Colors.white,
+                                                              Colors.white,
                                                               border:
-                                                                  OutlineInputBorder(
+                                                              OutlineInputBorder(
                                                                 borderRadius: BorderRadius
                                                                     .circular(_screenUtil
-                                                                        .setWidth(
-                                                                            100)),
+                                                                    .setWidth(
+                                                                    100)),
                                                               ),
                                                             ),
                                                           ),
@@ -254,71 +271,71 @@ class Home extends StatelessWidget {
                                                             width: _screenUtil
                                                                 .setWidth(130),
                                                             decoration:
-                                                                BoxDecoration(
+                                                            BoxDecoration(
                                                               color: Color(
                                                                   0xff3573ac),
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .only(
+                                                              BorderRadius
+                                                                  .only(
                                                                 topLeft: Radius.circular(
                                                                     _screenUtil
                                                                         .setWidth(
-                                                                            100)),
+                                                                        100)),
                                                                 bottomLeft: Radius
                                                                     .circular(_screenUtil
-                                                                        .setWidth(
-                                                                            100)),
+                                                                    .setWidth(
+                                                                    100)),
                                                               ),
                                                             ),
                                                             child:
-                                                                GestureDetector(
+                                                            GestureDetector(
                                                               onTap: () {
                                                                 FocusScope.of(
-                                                                        context)
+                                                                    context)
                                                                     .requestFocus(
-                                                                        new FocusNode());
+                                                                    new FocusNode());
                                                                 if (_keywordController
                                                                     .text
                                                                     .isEmpty) {
                                                                   Fluttertoast
                                                                       .showToast(
                                                                     msg:
-                                                                        'اكتب ما تريد البحث عنه أولًا',
+                                                                    'اكتب ما تريد البحث عنه أولًا',
                                                                     toastLength:
-                                                                        Toast
-                                                                            .LENGTH_LONG,
+                                                                    Toast
+                                                                        .LENGTH_LONG,
                                                                     gravity:
-                                                                        ToastGravity
-                                                                            .BOTTOM,
+                                                                    ToastGravity
+                                                                        .BOTTOM,
                                                                     timeInSecForIosWeb:
-                                                                        1,
+                                                                    1,
                                                                     backgroundColor:
-                                                                        Colors
-                                                                            .black54,
+                                                                    Colors
+                                                                        .black54,
                                                                     textColor:
-                                                                        Colors
-                                                                            .white,
+                                                                    Colors
+                                                                        .white,
                                                                     fontSize: _screenUtil
                                                                         .setSp(
-                                                                            50),
+                                                                        50),
                                                                   );
                                                                   return;
                                                                 }
                                                                 BlocProvider.of<
-                                                                            HomePageBloc>(
-                                                                        context)
+                                                                    HomePageBloc>(
+                                                                    context)
                                                                     .add(NavigateToSearchResult(
-                                                                        _keywordController
-                                                                            .text));
+                                                                    _keywordController
+                                                                        .text));
                                                               },
                                                               child: Icon(
                                                                 Icons.search,
                                                                 color: Colors
                                                                     .white,
                                                                 size:
-                                                                    _screenUtil
-                                                                        .setSp(
-                                                                            70),
+                                                                _screenUtil
+                                                                    .setSp(
+                                                                    70),
                                                               ),
                                                             ),
                                                           ),
@@ -346,7 +363,7 @@ class Home extends StatelessWidget {
                                               ),
                                               SizedBox(
                                                 height:
-                                                    _screenUtil.setHeight(50),
+                                                _screenUtil.setHeight(50),
                                               ),
                                             ],
                                           ),
@@ -358,7 +375,7 @@ class Home extends StatelessWidget {
                                             child: Container(
                                               alignment: Alignment.centerRight,
                                               height:
-                                                  _screenUtil.setHeight(150),
+                                              _screenUtil.setHeight(150),
                                               width: _screenUtil.setWidth(700),
                                               decoration: BoxDecoration(
                                                 color: Color(0xff3573ac),
@@ -372,12 +389,12 @@ class Home extends StatelessWidget {
                                                     _screenUtil.setWidth(30)),
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.end,
+                                                  MainAxisAlignment.end,
                                                   children: [
                                                     Text(
-                                                      name.isEmpty
+                                                      widget.name.isEmpty
                                                           ? 'عزيزي الزائر'
-                                                          : '$name',
+                                                          : '${widget.name}',
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: _screenUtil
@@ -417,7 +434,7 @@ class Home extends StatelessWidget {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   var token =
-                                      snapshot.data.getString(Globals.token);
+                                  snapshot.data.getString(Globals.token);
                                   return Container(
                                     width: _screenUtil.setWidth(700),
                                     color: Colors.white,
@@ -434,33 +451,33 @@ class Home extends StatelessWidget {
                                           flex: 8,
                                           child: token != null
                                               ? ListView(
-                                                  children: <Widget>[
-                                                    ListTile(
-                                                      onTap: () {
-                                                        FocusScope.of(context)
-                                                            .requestFocus(
-                                                                new FocusNode());
-                                                        BlocProvider.of<
-                                                                    HomePageBloc>(
-                                                                context)
-                                                            .add(
-                                                                NavigateToMainPage());
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      title: _drawerItem(
-                                                          context,
-                                                          Icons.home,
-                                                          'الصفحة الرئيسية'),
-                                                    ),
-                                                    ListTile(
-                                                      onTap: () {
-                                                        FocusScope.of(context)
-                                                            .requestFocus(
-                                                                new FocusNode());
-                                                        BlocProvider.of<
-                                                                    HomePageBloc>(
-                                                                context)
+                                            children: <Widget>[
+                                              ListTile(
+                                                onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                      new FocusNode());
+                                                  BlocProvider.of<
+                                                      HomePageBloc>(
+                                                      context)
+                                                      .add(
+                                                      NavigateToMainPage());
+                                                  Navigator.of(context)
+                                                      .pop();
+                                                },
+                                                title: _drawerItem(
+                                                    context,
+                                                    Icons.home,
+                                                    'الصفحة الرئيسية'),
+                                              ),
+                                              ListTile(
+                                                onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                      new FocusNode());
+                                                  BlocProvider.of<
+                                                      HomePageBloc>(
+                                                      context)
                                                             .add(
                                                                 NavigateToProfilePage());
                                                         Navigator.of(context)
@@ -471,8 +488,8 @@ class Home extends StatelessWidget {
                                                           Icons.person_outline,
                                                           'الملف الشخصي'),
                                                     ),
-                                              ListTile(
-                                                onTap: () {
+                                                    ListTile(
+                                                      onTap: () {
                                                         FocusScope.of(context)
                                                             .requestFocus(
                                                                 new FocusNode());
@@ -489,8 +506,8 @@ class Home extends StatelessWidget {
                                                           Icons.list,
                                                           'سجل الطلبات'),
                                                     ),
-                                              ListTile(
-                                                onTap: () {
+                                                    ListTile(
+                                                      onTap: () {
                                                         FocusScope.of(context)
                                                             .requestFocus(
                                                                 new FocusNode());
@@ -507,8 +524,8 @@ class Home extends StatelessWidget {
                                                           Icons.favorite,
                                                           'المفضلة'),
                                                     ),
-                                              ListTile(
-                                                onTap: () {
+                                                    ListTile(
+                                                      onTap: () {
                                                         FocusScope.of(context)
                                                             .requestFocus(
                                                                 new FocusNode());
@@ -525,9 +542,9 @@ class Home extends StatelessWidget {
                                                           Icons.shopping_cart,
                                                           'عربة التسوق'),
                                                     ),
-                                              ListTile(
-                                                onTap: () async {
-                                                  FocusScope.of(context)
+                                                    ListTile(
+                                                      onTap: () async {
+                                                        FocusScope.of(context)
                                                             .requestFocus(
                                                                 new FocusNode());
                                                         SharedPreferences
@@ -539,78 +556,78 @@ class Home extends StatelessWidget {
                                                             Globals.token));
 
                                                         BlocProvider.of<
-                                                                    HomePageBloc>(
-                                                                context)
-                                                            .add(SignOut(prefs
-                                                                .get(Globals
-                                                                    .token)));
+                                                      HomePageBloc>(
+                                                      context)
+                                                      .add(SignOut(prefs
+                                                      .get(Globals
+                                                      .token)));
 
-                                                        await prefs.remove(
-                                                            Globals.token);
-                                                        await prefs.remove(
-                                                            Globals.name);
-                                                        await prefs.remove(
-                                                            Globals.username);
-                                                        await prefs.remove(
-                                                            Globals.imageUrl);
-                                                        await prefs.remove(
-                                                            Globals.email);
-                                                        await prefs.remove(
-                                                            Globals.phone);
-                                                        await prefs.remove(
-                                                            Globals.password);
+                                                  await prefs.remove(
+                                                      Globals.token);
+                                                  await prefs.remove(
+                                                      Globals.name);
+                                                  await prefs.remove(
+                                                      Globals.username);
+                                                  await prefs.remove(
+                                                      Globals.imageUrl);
+                                                  await prefs.remove(
+                                                      Globals.email);
+                                                  await prefs.remove(
+                                                      Globals.phone);
+                                                  await prefs.remove(
+                                                      Globals.password);
 
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      title: _drawerItem(
-                                                          context,
-                                                          Icons.exit_to_app,
-                                                          'تسجيل الخروج'),
-                                                    ),
-                                                  ],
-                                                )
+                                                  Navigator.of(context)
+                                                      .pop();
+                                                },
+                                                title: _drawerItem(
+                                                    context,
+                                                    Icons.exit_to_app,
+                                                    'تسجيل الخروج'),
+                                              ),
+                                            ],
+                                          )
                                               : ListView(
-                                                  children: <Widget>[
-                                                    ListTile(
-                                                      onTap: () {
-                                                        FocusScope.of(context)
-                                                            .requestFocus(
-                                                                new FocusNode());
-                                                        BlocProvider.of<
-                                                                    HomePageBloc>(
-                                                                context)
-                                                            .add(
-                                                                NavigateToMainPage());
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      title: _drawerItem(
-                                                          context,
-                                                          Icons.home,
-                                                          'الصفحة الرئيسية'),
-                                                    ),
-                                                    ListTile(
-                                                      onTap: () {
-                                                        FocusScope.of(context)
-                                                            .requestFocus(
-                                                                new FocusNode());
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.of(context)
-                                                            .pushReplacement(
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            SignIn()));
-                                                      },
-                                                      title: _drawerItem(
-                                                          context,
-                                                          Icons.person_outline,
-                                                          'تسجيل دخول'),
-                                                    ),
-                                                  ],
-                                                ),
+                                            children: <Widget>[
+                                              ListTile(
+                                                onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                      new FocusNode());
+                                                  BlocProvider.of<
+                                                      HomePageBloc>(
+                                                      context)
+                                                      .add(
+                                                      NavigateToMainPage());
+                                                  Navigator.of(context)
+                                                      .pop();
+                                                },
+                                                title: _drawerItem(
+                                                    context,
+                                                    Icons.home,
+                                                    'الصفحة الرئيسية'),
+                                              ),
+                                              ListTile(
+                                                onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                      new FocusNode());
+                                                  Navigator.of(context)
+                                                      .pop();
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                      MaterialPageRoute(
+                                                          builder:
+                                                              (context) =>
+                                                              SignIn()));
+                                                },
+                                                title: _drawerItem(
+                                                    context,
+                                                    Icons.person_outline,
+                                                    'تسجيل دخول'),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -621,24 +638,28 @@ class Home extends StatelessWidget {
                             ),
                             body: state is MainPageState
                                 ? MainPage(
-                                    onCategoryTapped:
-                                        (int categoryId, String categoryName) {
-                                      BlocProvider.of<HomePageBloc>(context)
-                                          .add(NavigateToCategoryPage(
-                                              categoryId, categoryName));
-                                    },
-                                  )
+                              onCategoryTapped:
+                                  (int categoryId, String categoryName) {
+                                BlocProvider.of<HomePageBloc>(context)
+                                    .add(NavigateToCategoryPage(
+                                    categoryId, categoryName));
+                              },
+                            )
                                 : state is CategoryPageState
-                                    ? CategoryPage(
-                                        categoryId: state.categoryId,
-                                        categoryName: state.categoryName,
-                                        onBackTapped: () {
-                                          BlocProvider.of<HomePageBloc>(context)
-                                              .add(NavigateToMainPage());
-                                        },
-                                      )
-                                    : state is ProfilePageState
-                                        ? ProfilePage()
+                                ? CategoryPage(
+                              categoryId: state.categoryId,
+                              categoryName: state.categoryName,
+                              onBackTapped: () {
+                                BlocProvider.of<HomePageBloc>(context)
+                                    .add(NavigateToMainPage());
+                              },
+                            )
+                                : state is ProfilePageState
+                                        ? ProfilePage(
+                                            onProfileImageUpdated: () {
+                                              _updateProfileImage();
+                                            },
+                                          )
                                         : state is OrdersHistoryPageState
                                             ? OrdersHistory()
                                             : state is WishListPageState
@@ -650,27 +671,27 @@ class Home extends StatelessWidget {
                                                             keyword:
                                                                 _keywordController
                                                                     .text,
-                                                          )
-                                                        : Container()),
+                            )
+                                : Container()),
                         state is SigningOutState
                             ? Positioned(
-                                top: 0.0,
-                                bottom: 0.0,
-                                left: 0.0,
-                                right: 0.0,
-                                child: Container(
-                                  color: Colors.black.withOpacity(0.5),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          width: 100,
-                                          height: 100,
-                                          child: CircularProgressIndicator()),
-                                    ],
-                                  ),
-                                ),
-                              )
+                          top: 0.0,
+                          bottom: 0.0,
+                          left: 0.0,
+                          right: 0.0,
+                          child: Container(
+                            color: Colors.black.withOpacity(0.5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                    width: 100,
+                                    height: 100,
+                                    child: CircularProgressIndicator()),
+                              ],
+                            ),
+                          ),
+                        )
                             : Container(),
                       ],
                     ),

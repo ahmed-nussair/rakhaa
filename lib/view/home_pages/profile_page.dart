@@ -7,6 +7,10 @@ import 'profile_pages/details_page.dart';
 import '../../globals.dart' as Globals;
 
 class ProfilePage extends StatefulWidget {
+  final Function onProfileImageUpdated;
+
+  ProfilePage({@required this.onProfileImageUpdated});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -82,6 +86,9 @@ class _ProfilePageState extends State<ProfilePage>
                     password: snapshot.data.getString(Globals.password),
                     phone: snapshot.data.getString(Globals.phone),
                     token: snapshot.data.getString(Globals.token),
+                    onProfileImageUpdated: () {
+                      widget.onProfileImageUpdated();
+                    },
                   );
                 }
                 return Container();
