@@ -39,6 +39,7 @@ dependencies:
   cached_network_image: ^3.0.0
   connectivity: ^3.0.3
   intl: ^0.17.0
+  simple_tooltip: ^0.1.16
   flutter:
     sdk: flutter
 
